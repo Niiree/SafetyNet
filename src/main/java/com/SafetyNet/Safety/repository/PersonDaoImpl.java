@@ -1,4 +1,4 @@
-package com.SafetyNet.Safety.dao;
+package com.SafetyNet.Safety.refactory;
 
 import com.SafetyNet.Safety.model.Person;
 import org.springframework.stereotype.Repository;
@@ -12,9 +12,6 @@ public class PersonDaoImpl implements PersonDao {
 
     public static List<Person>persons = new ArrayList<>();
 
-    static {
-        persons.add(new Person(1,"Nicolas","Le stunff","InfoAddresse","Ville","Zip","phone","email@email.com"));
-    }
 
     @Override
     public List<Person> findAll() {
