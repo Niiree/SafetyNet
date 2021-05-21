@@ -14,8 +14,8 @@ public class Person {
     public Person() {
     }
 
-    public Person(int id, String firstName, String lastName, String address, String city, String zip, String phone, String email) {
-        this.id = id;
+    public Person( String firstName, String lastName, String address, String city, String zip, String phone, String email) {
+
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -23,14 +23,6 @@ public class Person {
         this.zip = zip;
         this.phone = phone;
         this.email = email;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getFirstName() {
