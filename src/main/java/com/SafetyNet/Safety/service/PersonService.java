@@ -1,14 +1,14 @@
-package com.SafetyNet.Safety.repository;
+package com.SafetyNet.Safety.service;
 
 import com.SafetyNet.Safety.model.Person;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-@Repository
-public class PersonDaoImpl   {
+@Service
+public class PersonService {
 
     public static List<Person>persons = new ArrayList<>();
 
@@ -16,7 +16,6 @@ public class PersonDaoImpl   {
     public List<Person> findAll() {
         return persons;
     }
-
     /*public Person PersonfindById(int id) {
         for(Person person : persons){
             if(person.getId() == id){
@@ -25,7 +24,6 @@ public class PersonDaoImpl   {
         }
         return null;
     }*/
-
 
     public void PersonSave(Person person) {
         persons.add(person);
