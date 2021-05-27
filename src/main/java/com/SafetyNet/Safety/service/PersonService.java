@@ -12,7 +12,6 @@ public class PersonService {
 
     public static List<Person>persons = new ArrayList<>();
 
-
     public List<Person> findAll() {
         return persons;
     }
@@ -24,7 +23,6 @@ public class PersonService {
         }
         return null;
     }*/
-
     public void PersonSave(Person person) {
         persons.add(person);
     }

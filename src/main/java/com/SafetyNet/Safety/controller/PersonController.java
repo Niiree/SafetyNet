@@ -23,11 +23,6 @@ public class PersonController {
     return personService.findAll();
     }
 
-    /*@GetMapping(value = "/personInfo/{id}")
-    public Person personById(@PathVariable int id){
-        return PersonDao.PersonfindById(id);
-    }
-*/
     @PostMapping(value = "/personInfo/save")
     public void personSave(@RequestBody Person person){
         personService.PersonSave(person);
@@ -36,9 +31,9 @@ public class PersonController {
     @GetMapping(value ="/load")
     private <JsonArray> void test () throws URISyntaxException, IOException, JSONException {
 
-
-
     }
+
+    public void Save(Person person){ personService.PersonSave(person); }
 
 
 }
