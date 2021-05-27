@@ -1,5 +1,9 @@
 package com.SafetyNet.Safety.util;
 
+import com.SafetyNet.Safety.controller.FireStationController;
+import com.SafetyNet.Safety.controller.PersonController;
+import com.SafetyNet.Safety.model.FireStation;
+import com.SafetyNet.Safety.service.FireStationService;
 import com.google.gson.*;
 import com.SafetyNet.Safety.model.Person;
 import com.SafetyNet.Safety.service.PersonService;
@@ -19,7 +23,9 @@ import java.nio.charset.Charset;
 public class ImportData {
 
     @Autowired
-    private PersonService personService;
+    private PersonController personController;
+    @Autowired
+    private FireStationController fireStationController;
 
    @PostConstruct
     public void load() throws IOException {
@@ -38,12 +44,28 @@ public class ImportData {
         JsonElement firestations = jsonObject.get("firestations");
         JsonElement medicalrecords = jsonObject.get("medicalrecords");
 
+        loadPersons(persons);
+        loadFirestations(firestations);
+
+    }
+
+    private void loadPersons(JsonElement persons){
         JsonArray personnsArray = persons.getAsJsonArray();
         for (JsonElement per:personnsArray) {
             Gson gson = new Gson();
             Person person = gson.fromJson(per,Person.class);
-            personService.PersonSave(person);
-            System.out.println(person.toString());
+            personController.personSave(person);
         }
+    }
+
+    private void loadFirestations(JsonElement firestations){
+       JsonArray firestationArray = firestations.getAsJsonArray();
+        for (JsonElement firestation:firestationArray) {
+            Gson gson = new Gson();
+            FireStation fireStation = gson.fromJson(firestation,FireStation.class);
+            fireStationController.saveFireStation(fireStation);
+        }
+
+
     }
 }
