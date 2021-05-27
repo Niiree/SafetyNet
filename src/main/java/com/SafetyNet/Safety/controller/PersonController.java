@@ -15,12 +15,10 @@ public class PersonController {
     private PersonService personService;
 
     /*
-    *Récuperation d'une liste de Person
+    Récuperation d'une liste de Person
     */
     @GetMapping(value = "/personsInfo")
-    public List<Person> listePersons(){
-    return personService.findAll();
-    }
+    public List<Person> listePersons(){ return personService.findAll(); }
 
     public void personSave(Person person){ personService.personSave(person); }
 

@@ -35,7 +35,6 @@ public class ImportData {
         String cp;
 
         while ((cp = rd.readLine()) != null) {
-            System.out.println(cp);
             sb.append(cp);
         }
         JsonObject jsonObject = new JsonParser().parse(sb.toString()).getAsJsonObject();

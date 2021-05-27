@@ -15,7 +15,9 @@ public class FireStationController {
     @Autowired
     private FireStationService fireStationService;
 
-    //Récuperation d'une liste de FireStations
+    /*
+    Récuperation d'une liste de FireStations
+     */
     @GetMapping(value = "/firestationInfo")
     public List<FireStation> listeFireStation(){ return fireStationService.findAll(); }
 
