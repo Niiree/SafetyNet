@@ -17,9 +17,7 @@ public class FireStationController {
 
     //Récuperation d'une liste de FireStations
     @GetMapping(value = "/firestationInfo")
-    public List<FireStation> listeFirestation(){
-        return fireStationService.findAll();
-    }
+    public List<FireStation> listeFireStation(){ return fireStationService.findAll(); }
 
-    public void saveFireStation(FireStation fireStation){ fireStationService.fireStationSave(fireStation); }
+    public void saveFireStation(FireStation fireStation){ fireStationService.saveFireStation(fireStation); }
 }

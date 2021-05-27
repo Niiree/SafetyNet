@@ -11,13 +11,11 @@ import java.util.List;
 @Service
 public class FireStationService {
 
-    public static List<FireStation> firestations = new ArrayList<>();
+    private static List<FireStation> firestations = new ArrayList<>();
 
     public List<FireStation> findAll() {
         return firestations;
     }
 
-    public void fireStationSave(FireStation fireStation) {
-        firestations.add(fireStation);
-    }
+    public void saveFireStation(FireStation fireStation) { firestations.add(fireStation); }
 }

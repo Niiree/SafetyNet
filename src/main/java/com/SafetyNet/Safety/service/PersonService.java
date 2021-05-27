@@ -10,20 +10,13 @@ import java.util.List;
 @Service
 public class PersonService {
 
-    public static List<Person>persons = new ArrayList<>();
+    private static List<Person>persons = new ArrayList<>();
 
     public List<Person> findAll() {
         return persons;
     }
-    /*public Person PersonfindById(int id) {
-        for(Person person : persons){
-            if(person.getId() == id){
-                return person;
-            }
-        }
-        return null;
-    }*/
-    public void PersonSave(Person person) {
+
+    public void personSave(Person person) {
         persons.add(person);
     }
 }
