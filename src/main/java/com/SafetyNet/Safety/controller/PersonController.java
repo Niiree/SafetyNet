@@ -20,7 +20,10 @@ public class PersonController {
     @GetMapping(value = "/personsInfo")
     public List<Person> listePersons(){ return personService.findAll(); }
 
-    public void personSave(Person person){ personService.personSave(person); }
+    public void addPerson(@RequestBody Person person){ personService.personSave(person); }
+
+
+
 
 
 }
