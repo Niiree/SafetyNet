@@ -16,7 +16,13 @@ public class PersonService {
         return persons;
     }
 
+    public Person findByFirstNameLastName(String firstName, String lastName){
+        return  persons.stream().filter(customer -> firstName.equals(customer.getFirstName()) && lastName.equals(customer.getLastName())).
+        findAny()  .orElse(null);
+    }
+
     public void personSave(Person person) {
         persons.add(person);
     }
+
 }
