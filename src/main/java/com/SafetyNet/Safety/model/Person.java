@@ -1,7 +1,9 @@
 package com.SafetyNet.Safety.model;
 
+import java.util.Date;
+import java.util.List;
+
 public class Person {
-    private int id;
     private String firstName;
     private String lastName;
     private String address;
@@ -9,6 +11,9 @@ public class Person {
     private String zip;
     private String phone;
     private String email;
+    private Date birthdate;
+    private List<String> allergies;
+    private List<String> medical;
 
 
     public Person() {
@@ -23,6 +28,7 @@ public class Person {
         this.zip = zip;
         this.phone = phone;
         this.email = email;
+        this.medical = null;
     }
 
     public String getFirstName() {
@@ -80,5 +86,32 @@ public class Person {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public List<String> getMedical() {
+        return medical;
+    }
+
+    public void setMedical(List<String> medical) { this.medical = medical; }
+
+    public Date getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(Date birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public List<String> getAllergies() {
+        return allergies;
+    }
+
+    public void setAllergies(List<String> allergies) {
+        this.allergies = allergies;
+    }
+
+
+
+
+
 }
 
