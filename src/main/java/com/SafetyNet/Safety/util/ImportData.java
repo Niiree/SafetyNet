@@ -16,10 +16,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+
 import java.util.List;
 
 @Service
@@ -30,11 +29,11 @@ public class ImportData {
     @Autowired
     private FireStationService fireStationService;
 
-    private  Gson gson = new Gson();
+    private Gson gson = new Gson();
 
 
     @PostConstruct
-    public void load() throws IOException, ParseException {
+    public void load() throws IOException {
         InputStream url = new URL("https://s3-eu-west-1.amazonaws.com/course.oc-static.com/projects/DA+Java+EN/P5+/data.json").openStream();
         BufferedReader rd = new BufferedReader(new InputStreamReader(url, Charset.forName("UTF-8")));
         StringBuilder sb = new StringBuilder();
@@ -75,7 +74,7 @@ public class ImportData {
     }
 
 
-    private void loadMedicalRecords(JsonElement medicalRecords) throws ParseException {
+    private void loadMedicalRecords(JsonElement medicalRecords) {
         JsonArray medicalRecordsArray = medicalRecords.getAsJsonArray();
 
         for (JsonElement medicalRecord : medicalRecordsArray
@@ -92,15 +91,11 @@ public class ImportData {
             String dateString =jsonObject.get("birthdate").getAsString();
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-
             try {
                 person.setBirthdate(formatter.parse(dateString));
-
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            //person.setAllergies(jsonObject.get("allergies").toString());
-            // personController.personSave(person);
         }
     }
 }
