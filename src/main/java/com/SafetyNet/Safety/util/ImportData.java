@@ -73,7 +73,9 @@ public class ImportData {
 
     }
 
-
+    /*
+    * Chargement des medicalRecords dans chaque Person
+    * */
     private void loadMedicalRecords(JsonElement medicalRecords) {
         JsonArray medicalRecordsArray = medicalRecords.getAsJsonArray();
 

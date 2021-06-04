@@ -21,5 +21,18 @@ public class FireStationController {
     @GetMapping(value = "/firestationInfo")
     public List<FireStation> listeFireStation(){ return fireStationService.findAll(); }
 
+    @PostMapping(value = "/firestation")
+    public void firestationPost(){
+        //TODO
+    }
+    @PutMapping(value = "/firestation")
+    public void firestationPut(){
+        //TODO
+    }
+    @DeleteMapping(value = "/firestation")
+    public void firestationDelete(){
+        //TODO
+    }
+
     public void saveFireStation(FireStation fireStation){ fireStationService.saveFireStation(fireStation); }
 }
