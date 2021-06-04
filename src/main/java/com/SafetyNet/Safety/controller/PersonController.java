@@ -34,18 +34,9 @@ public class PersonController {
         //TODO
     }
 
-    @PostMapping(value = "/medicalRecords")
-    public void medicalRecordPost(){
-        //TODO
-    }
-    @PutMapping(value = "/medicalRecords")
-    public void medicalRecordDPut(){
-        //TODO
-    }
-    @DeleteMapping(value = "/medicalRecords")
-    public void medicalRecordDelete(){
-        //TODO
-    }
+
+
+
 
 
 
