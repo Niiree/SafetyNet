@@ -26,7 +26,12 @@ public class PersonService {
     /*public List<Person> findChildByAdresse(){
     }*/
 
-    public List<String> emailAll(String city){
+    /*
+    * @param    Ville
+    * @return   Retourne une liste d'email en fonction de la ville
+    *
+    */
+    public List<String> emailByCity(String city){
         return persons.stream().filter(user -> city.equals(user.getCity())).map(Person::getEmail).collect(Collectors.toList());
     }
     public void personSave(Person person) {

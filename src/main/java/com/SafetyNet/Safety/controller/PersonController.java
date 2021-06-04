@@ -45,7 +45,7 @@ public class PersonController {
     @GetMapping (value = "/communityEmail")
     public List<String> communityEmail(){
         //TODO passage en param de la ville
-    return personService.emailAll("Culver");
+    return personService.emailByCity("Culver");
     }
 
     public void addPerson(@RequestBody Person person){ personService.personSave(person); }
