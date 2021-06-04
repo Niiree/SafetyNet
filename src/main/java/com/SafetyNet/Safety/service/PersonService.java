@@ -5,6 +5,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Service
@@ -20,9 +23,16 @@ public class PersonService {
         return  persons.stream().filter(customer -> firstName.equals(customer.getFirstName()) && lastName.equals(customer.getLastName())).
         findAny()  .orElse(null);
     }
+    /*public List<Person> findChildByAdresse(){
+    }*/
 
+    public List<String> emailAll(String city){
+        return persons.stream().filter(user -> city.equals(user.getCity())).map(Person::getEmail).collect(Collectors.toList());
+    }
     public void personSave(Person person) {
         persons.add(person);
     }
+
+
 
 }

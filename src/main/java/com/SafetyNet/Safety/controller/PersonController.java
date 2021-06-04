@@ -19,33 +19,36 @@ public class PersonController {
     @GetMapping(value = "/personsInfo")
     public List<Person> listePersons(){ return personService.findAll(); }
 
-    @PostMapping(value = "/person")
+
+    @PostMapping(value = "/person/")
     public void personPost(){
-        //TODO
+
     }
 
-    @PutMapping(value = "/person")
-    public void putPerson(){
-        //TODO
+    @PutMapping(value = "/person/{firstName}/{lastName}")
+    public void putPerson( ){
+
     }
 
-    @DeleteMapping(value = "/person")
-    public void personDelete(){
-        //TODO
+    @DeleteMapping(value = "/person/{firstName}/{lastName}")
+    public void personDelete(@PathVariable String firstname,@PathVariable String lastName){
+        System.out.println(firstname + lastName);
     }
 
 
+    @GetMapping(value = "/childAlert")
+    public List<Person> childAlert(){
+        //todo
+        return null;
+    }
 
-
-
-
+    @GetMapping (value = "/communityEmail")
+    public List<String> communityEmail(){
+        //TODO passage en param de la ville
+    return personService.emailAll("Culver");
+    }
 
     public void addPerson(@RequestBody Person person){ personService.personSave(person); }
-
-
-
-
-
 
 
 }
