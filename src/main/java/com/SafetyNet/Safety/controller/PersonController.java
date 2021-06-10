@@ -16,23 +16,22 @@ public class PersonController {
     /*
     Récuperation d'une liste de Person
     */
-    @GetMapping(value = "/personsInfo")
+    @GetMapping(value = "/personInfo")
     public List<Person> listePersons(){ return personService.findAll(); }
 
 
-    @PostMapping(value = "/person/")
-    public void personPost(){
-
+    @PostMapping(value = "/persons")
+    public void createPerson(@RequestBody Person person){
+        personService.personSave(person);
     }
 
     @PutMapping(value = "/person/{firstName}/{lastName}")
     public void putPerson( ){
-
     }
 
     @DeleteMapping(value = "/person/{firstName}/{lastName}")
-    public void personDelete(@PathVariable String firstname,@PathVariable String lastName){
-        System.out.println(firstname + lastName);
+    public void personDelete(@PathVariable String firstName,@PathVariable String lastName){
+        personService.personDelete(firstName,lastName);
     }
 
 
@@ -46,6 +45,11 @@ public class PersonController {
     public List<String> communityEmail(){
         //TODO passage en param de la ville
     return personService.emailByCity("Culver");
+    }
+
+    @GetMapping(value = "/personInfo/Name/{lastName}")
+    public List<Person> personInfoName(@PathVariable String lastName){
+        return personService.personByName(lastName);
     }
 
     public void addPerson(@RequestBody Person person){ personService.personSave(person); }
