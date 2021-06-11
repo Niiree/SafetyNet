@@ -12,6 +12,9 @@ public class FireStation {
     public FireStation() {
     }
 
+    public FireStation(FireStation s) {
+    }
+
     public String getAddress() {
         return address;
     }
@@ -20,11 +23,10 @@ public class FireStation {
         this.address = address;
     }
 
-    public int getStation() {
-        return station;
+    public int getIdStation() { return station;
     }
 
-    public void setStation(int station) {
+    public void setIdStation(int station) {
         this.station = station;
     }
 }

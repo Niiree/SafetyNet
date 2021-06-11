@@ -1,5 +1,6 @@
 package com.SafetyNet.Safety.controller;
 
+import com.SafetyNet.Safety.service.MedicalRecordsService;
 import com.SafetyNet.Safety.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,10 +13,11 @@ public class MedicalRecordsController {
 
     @Autowired
     private PersonService personService;
+    private MedicalRecordsService medicalRecordsService;
 
     @PostMapping(value = "/medicalRecords")
     public void medicalRecordPost(){
-        //TODO
+
     }
     @PutMapping(value = "/medicalRecords")
     public void medicalRecordDPut(){
@@ -23,7 +25,7 @@ public class MedicalRecordsController {
     }
     @DeleteMapping(value = "/medicalRecords")
     public void medicalRecordDelete(){
-        //TODO
+
     }
 
 }

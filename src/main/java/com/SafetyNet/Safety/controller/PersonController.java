@@ -28,6 +28,7 @@ public class PersonController {
     @PutMapping(value = "/person/{firstName}/{lastName}")
     public void personUpdate(@PathVariable String firstName,String lastName,@RequestBody Person person){
         personService.personUpdate(firstName,lastName,person);
+        //TODO Boolean réponse à rajouter partout
     }
 
     /*
@@ -46,16 +47,14 @@ public class PersonController {
         return null;
     }
 
-    @GetMapping (value = "/communityEmail/{City}")
-    public List<String> communityEmail(@PathVariable String city){
+    @GetMapping (value = "/communityEmail")
+    public List<String> communityEmail(@RequestParam String city){
     return personService.emailByCity(city);
     }
 
     @GetMapping(value = "/personInfo/Name/{lastName}")
     public List<Person> personInfoName(@PathVariable String lastName){ return personService.personByName(lastName);
     }
-
-    public void addPerson(@RequestBody Person person){ personService.personSave(person); }
 
 
 }

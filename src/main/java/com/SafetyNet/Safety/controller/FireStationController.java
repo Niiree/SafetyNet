@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
+//TODO Refactor à faire concernant l'id
 @RestController
 public class FireStationController {
 
@@ -22,16 +24,16 @@ public class FireStationController {
     public List<FireStation> listeFireStation(){ return fireStationService.findAll(); }
 
     @PostMapping(value = "/firestation")
-    public void firestationPost(){
-        //TODO
+    public void firestationPost(@RequestBody FireStation fireStation){
+        fireStationService.saveFireStation(fireStation);
     }
-    @PutMapping(value = "/firestation")
-    public void firestationPut(){
-        //TODO
+    @PutMapping(value = "/firestation/{id}")
+    public void firestationPut(@RequestBody FireStation firestation, @PathVariable int id){
+  //      fireStationService.updateFireStation(id);
     }
     @DeleteMapping(value = "/firestation")
-    public void firestationDelete(){
-        //TODO
+    public void firestationDelete(@RequestBody FireStation firestation){
+        fireStationService.removeFireStation(firestation);
     }
 
 
