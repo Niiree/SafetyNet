@@ -21,14 +21,19 @@ public class PersonController {
 
 
     @PostMapping(value = "/persons")
-    public void createPerson(@RequestBody Person person){
+    public void personCreate(@RequestBody Person person){
         personService.personSave(person);
     }
 
     @PutMapping(value = "/person/{firstName}/{lastName}")
-    public void putPerson( ){
+    public void personUpdate(@PathVariable String firstName,String lastName,@RequestBody Person person){
+        personService.personUpdate(firstName,lastName,person);
     }
 
+    /*
+    Suppresion d'un utilisateur en fonction de son firstname et lastname
+    @Param Nom et prénom
+     */
     @DeleteMapping(value = "/person/{firstName}/{lastName}")
     public void personDelete(@PathVariable String firstName,@PathVariable String lastName){
         personService.personDelete(firstName,lastName);
@@ -41,15 +46,13 @@ public class PersonController {
         return null;
     }
 
-    @GetMapping (value = "/communityEmail")
-    public List<String> communityEmail(){
-        //TODO passage en param de la ville
-    return personService.emailByCity("Culver");
+    @GetMapping (value = "/communityEmail/{City}")
+    public List<String> communityEmail(@PathVariable String city){
+    return personService.emailByCity(city);
     }
 
     @GetMapping(value = "/personInfo/Name/{lastName}")
-    public List<Person> personInfoName(@PathVariable String lastName){
-        return personService.personByName(lastName);
+    public List<Person> personInfoName(@PathVariable String lastName){ return personService.personByName(lastName);
     }
 
     public void addPerson(@RequestBody Person person){ personService.personSave(person); }
