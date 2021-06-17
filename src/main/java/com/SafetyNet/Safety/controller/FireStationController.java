@@ -25,7 +25,7 @@ public class FireStationController {
 
     @PostMapping(value = "/firestation")
     public void firestationPost(@RequestBody FireStation fireStation){
-        fireStationService.saveFireStation(fireStation);
+        fireStationService.save(fireStation);
     }
     @PutMapping(value = "/firestation/{id}")
     public void firestationPut(@RequestBody FireStation firestation, @PathVariable int id){
@@ -33,10 +33,10 @@ public class FireStationController {
     }
     @DeleteMapping(value = "/firestation")
     public void firestationDelete(@RequestBody FireStation firestation){
-        fireStationService.removeFireStation(firestation);
+        fireStationService.remove(firestation);
     }
 
 
 
-    public void saveFireStation(FireStation fireStation){ fireStationService.saveFireStation(fireStation); }
+    public void saveFireStation(FireStation fireStation){ fireStationService.save(fireStation); }
 }

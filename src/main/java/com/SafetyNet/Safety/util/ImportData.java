@@ -63,12 +63,25 @@ public class ImportData {
         }
     }
 
+    
     private void loadFireStations(JsonElement fireStations){
         JsonArray firestationArray = fireStations.getAsJsonArray();
-        for (JsonElement firestation:firestationArray
+
+        for (JsonElement jsonfirestation:firestationArray
             ) {
-            FireStation fireStation = gson.fromJson(firestation,FireStation.class);
-            fireStationService.saveFireStation(fireStation);
+
+            JsonObject jsonObject = jsonfirestation.getAsJsonObject();
+            int id = jsonObject.get("station").getAsInt();
+            String addresse = jsonObject.get("address").getAsString();
+            FireStation fireStation = new FireStation();
+            fireStation.setAddress(addresse);
+            fireStation.setIdStation(id);
+
+            if(fireStationService.findById(fireStation.getIdStation())!= null){
+                fireStationService.update(fireStation,test);
+            }else{
+                fireStationService.save(fireStation);
+            }
         }
 
     }
