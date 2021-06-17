@@ -12,8 +12,6 @@ import java.util.List;
 @Service
 public class MedicalRecordsService {
 
-    @Autowired
-    private PersonService personService;
 
 //    public void deleteMedicalRecords(MedicalRecords medicalRecords)
 
