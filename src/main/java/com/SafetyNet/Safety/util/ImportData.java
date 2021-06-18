@@ -34,67 +34,68 @@ public class ImportData {
 
     @PostConstruct
     public void load() throws IOException {
+        //Récuperation du fichier Json et extraction des données.
         InputStream url = new URL("https://s3-eu-west-1.amazonaws.com/course.oc-static.com/projects/DA+Java+EN/P5+/data.json").openStream();
         BufferedReader rd = new BufferedReader(new InputStreamReader(url, Charset.forName("UTF-8")));
         StringBuilder sb = new StringBuilder();
         String cp;
-
         while ((cp = rd.readLine()) != null) {
             sb.append(cp);
         }
         JsonObject jsonObject = new JsonParser().parse(sb.toString()).getAsJsonObject();
-
         JsonElement persons = jsonObject.get("persons");
         JsonElement firestations = jsonObject.get("firestations");
         JsonElement medicalrecords = jsonObject.get("medicalrecords");
 
+        //Traitement des differentes informations
         loadPersons(persons);
         loadFireStations(firestations);
         loadMedicalRecords(medicalrecords);
-
     }
 
+    /*
+  Chargement des Persons
+  */
     private void loadPersons(JsonElement persons){
         JsonArray personsArray = persons.getAsJsonArray();
-        for (JsonElement per:personsArray
+        for (JsonElement jsonPerson:personsArray
             ) {
-            Person person = gson.fromJson(per,Person.class);
+            Person person = gson.fromJson(jsonPerson,Person.class);
             personService.personSave(person);
         }
     }
 
-    
+    /*
+     Chargement des FireStations
+     */
     private void loadFireStations(JsonElement fireStations){
         JsonArray firestationArray = fireStations.getAsJsonArray();
-
-        for (JsonElement jsonfirestation:firestationArray
+        for (JsonElement jsonFireStation:firestationArray
             ) {
-
-            JsonObject jsonObject = jsonfirestation.getAsJsonObject();
+            JsonObject jsonObject = jsonFireStation.getAsJsonObject();
             int id = jsonObject.get("station").getAsInt();
             String addresse = jsonObject.get("address").getAsString();
             FireStation fireStation = new FireStation();
             fireStation.setAddress(addresse);
-            fireStation.setIdStation(id);
-
-            if(fireStationService.findById(fireStation.getIdStation())!= null){
-                fireStationService.update(fireStation,test);
+            fireStation.setStation(id);
+            // Si l'ID existe, alors on ajoute l'adresse, sinon on sauvegarde.
+            if(fireStationService.findById(fireStation.getStation())!= null){
+                fireStationService.update(fireStation,fireStation.getStation());
             }else{
                 fireStationService.save(fireStation);
             }
         }
-
     }
 
     /*
-    * Chargement des medicalRecords dans chaque Person
-    * */
+     Chargement des medicalRecords dans chaque Person
+     */
     private void loadMedicalRecords(JsonElement medicalRecords) {
         JsonArray medicalRecordsArray = medicalRecords.getAsJsonArray();
 
-        for (JsonElement medicalRecord : medicalRecordsArray
+        for (JsonElement jsonMedicalRecord : medicalRecordsArray
             ){
-            JsonObject jsonObject = medicalRecord.getAsJsonObject();
+            JsonObject jsonObject = jsonMedicalRecord.getAsJsonObject();
             String firstName = jsonObject.get("firstName").getAsString();
             String lastName = jsonObject.get("lastName").getAsString();
 
