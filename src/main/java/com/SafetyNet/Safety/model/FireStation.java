@@ -26,7 +26,10 @@ public class FireStation {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(List<String> address) {
+        this.address = address;
+    }
+    public void addAddress(String address){
         this.address.add(address);
     }
 }

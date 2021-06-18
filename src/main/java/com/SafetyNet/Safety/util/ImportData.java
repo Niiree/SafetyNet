@@ -76,11 +76,11 @@ public class ImportData {
             int id = jsonObject.get("station").getAsInt();
             String addresse = jsonObject.get("address").getAsString();
             FireStation fireStation = new FireStation();
-            fireStation.setAddress(addresse);
+            fireStation.addAddress(addresse);
             fireStation.setStation(id);
             // Si l'ID existe, alors on ajoute l'adresse, sinon on sauvegarde.
             if(fireStationService.findById(fireStation.getStation())!= null){
-                fireStationService.update(fireStation,fireStation.getStation());
+                fireStationService.addaddress(fireStation,fireStation.getStation());
             }else{
                 fireStationService.save(fireStation);
             }
