@@ -4,18 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FireStation {
-    private List<String> address = new ArrayList<String>();
     private int station;
+    private List<String> address = new ArrayList<String>();
 
     public FireStation(List<String> address, int station) {
-        this.address = address;
         this.station = station;
+        this.address = address;
     }
 
-    public FireStation() {
-    }
+    public FireStation() { }
 
-    public FireStation(FireStation s) {
+    public FireStation(FireStation fireStation) { }
+
+    public int getStation() { return station; }
+
+    public void setStation(int station) {
+        this.station = station;
     }
 
     public List<String> getAddress() {
@@ -24,12 +28,5 @@ public class FireStation {
 
     public void setAddress(String address) {
         this.address.add(address);
-    }
-
-    public int getIdStation() { return station;
-    }
-
-    public void setIdStation(int station) {
-        this.station = station;
     }
 }
