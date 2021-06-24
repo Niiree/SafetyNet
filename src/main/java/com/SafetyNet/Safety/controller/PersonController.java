@@ -13,14 +13,9 @@ public class PersonController {
     @Autowired
     private PersonService personService;
 
-    /*
-    Récuperation d'une liste de Person
-    */
-    @GetMapping(value = "/personInfo")
-    public List<Person> listePersons(){ return personService.findAll(); }
 
 
-    @PostMapping(value = "/persons")
+    @PostMapping(value = "/person")
     public void personCreate(@RequestBody Person person){
         personService.personSave(person);
     }
@@ -30,6 +25,12 @@ public class PersonController {
         personService.personUpdate(firstName,lastName,person);
         //TODO Boolean réponse à rajouter partout
     }
+
+    /*
+ Récuperation d'une liste de Person
+ */
+    @GetMapping(value = "/personList")
+    public List<Person> listePersons(){ return personService.findAll(); }
 
     /*
     Suppresion d'un utilisateur en fonction de son firstname et lastname

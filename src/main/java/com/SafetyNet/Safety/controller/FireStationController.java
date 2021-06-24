@@ -6,6 +6,7 @@ import com.SafetyNet.Safety.model.Person;
 import com.SafetyNet.Safety.service.*;
 
 import com.SafetyNet.Safety.util.ServiceDate;
+import com.SafetyNet.Safety.util.UtilDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ public class FireStationController {
     @Autowired
     private FireStationService fireStationService;
     private PersonService personService = new PersonService();
-    private ServiceDate serviceDate = new ServiceDate();
+    private UtilDate utilDate = new UtilDate();
 
 
     /*
@@ -69,12 +70,11 @@ public class FireStationController {
         for (Person p:personFirestation
              ) {
                 result.add(p.getLastName()+" "+p.getFirstName()+" "+p.getAddress()+" "+p.getPhone());
-                if(serviceDate.isAdult(p.getBirthdate())) {
+                if(utilDate.isAdult(p.getBirthdate())) {
                     adulte.getAndIncrement();
                 }else{
                     child.getAndIncrement();
                 }
-
         }
         result.add(adulte + " Adultes");
         result.add(child + " enfants");
