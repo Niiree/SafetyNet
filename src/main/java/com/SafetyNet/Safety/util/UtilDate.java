@@ -3,7 +3,7 @@ package com.SafetyNet.Safety.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ServiceDate {
+public class UtilDate {
 
 
     public boolean isAdult(Date date){
