@@ -41,9 +41,11 @@ public class PersonController {
         personService.personDelete(firstName,lastName);
     }
 
-
+    /*
+     * URl doit retourner une liste d'enfants (tout individu âgé de 18 ans ou moins) habitant à cette adresse.
+     */
     @GetMapping(value = "/childAlert")
-    public List<Person> childAlert(){
+    public List<Person> childAlert(@RequestParam String adress){
         //todo
         return null;
     }

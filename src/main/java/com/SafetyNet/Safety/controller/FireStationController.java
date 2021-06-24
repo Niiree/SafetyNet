@@ -5,7 +5,6 @@ import com.SafetyNet.Safety.model.FireStation;
 import com.SafetyNet.Safety.model.Person;
 import com.SafetyNet.Safety.service.*;
 
-import com.SafetyNet.Safety.util.ServiceDate;
 import com.SafetyNet.Safety.util.UtilDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -82,8 +81,32 @@ public class FireStationController {
 
     }
 
+    /*
+     * Cette url doit retourner une liste des numéros de téléphone des résidents desservis par la caserne depompiers
+     */
+    @GetMapping(value = "/phoneAlert")
+    public List<String> phoneAlert(@RequestParam int firestation){
+        //TODO A FAIRE
+        return null;
+    }
 
+    /*
+     * Cette url doit retourner la liste des habitants vivant à l’adresse donnée ainsi que le numéro de la casernede pompiers la desservant.
+     */
+    @GetMapping(value = "/fire")
+    public List<String> fire(@RequestParam String address){
+        //TODO A FAIRE
+        return null;
+    }
 
+    /*
+     * Cette url doit retourner une liste de tous les foyers desservis par la caserne. Cette liste doit regrouper lespersonnes par adresse.
+     */
+    @GetMapping(value = "/flood/stations")
+    public List<String> flood(@RequestParam String addess){
+        //TODO A FAIRE
+        return null;
+    }
 
 
     /*
@@ -93,6 +116,8 @@ public class FireStationController {
     public List<FireStation> listeFireStation(){
         return fireStationService.findAll();
     }
+
+
 
 
 }
