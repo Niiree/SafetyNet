@@ -29,7 +29,7 @@ public class FireStation {
     public void setAddress(List<String> address) {
         this.address = address;
     }
-    public void addAddress(String address){
+    public void addAddressList(String address){
         this.address.add(address);
     }
 }

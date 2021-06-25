@@ -21,20 +21,26 @@ public class FireStationService {
 
     public void remove(FireStation fireStation){ listFirestations.removeIf(fireStation::equals); }
 
-    public void addaddress(FireStation fireStation, int id){
-        FireStation fir =  listFirestations.stream()
-                .filter(sfireStation -> id== sfireStation.getStation())
-                .findAny().orElse(null);
+    public void addAddress(String address, int id){
+        FireStation fir = this.findById(id);
         if (fir != null){
-            fir.addAddress(fireStation.getAddress().get(0));
+            fir.addAddressList(address);
         }
     }
 
     //TODO Return à ajouter
-    public void update(FireStation fireStations, int id){
-         listFirestations.stream()
+    public boolean update(FireStation fireStations, int id){
+        FireStation fire = listFirestations.stream()
                 .filter(fireStation -> id == fireStation.getStation())
-                .forEach(fireStation -> fireStation.setAddress(fireStations.getAddress()));
+                .findAny()
+                .orElse(null);
+        if (fire != null){
+            fire.setAddress(fireStations.getAddress());
+            return true;
+        }else{
+            return false;
+        }
+
     }
 }
 
