@@ -5,11 +5,15 @@ import com.SafetyNet.Safety.model.FireStation;
 import com.SafetyNet.Safety.model.Person;
 import com.SafetyNet.Safety.service.*;
 
-import com.SafetyNet.Safety.util.UtilDate;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -22,7 +26,6 @@ public class FireStationController {
     @Autowired
     private FireStationService fireStationService;
     private PersonService personService = new PersonService();
-    private UtilDate utilDate = new UtilDate();
 
 
     /*
@@ -37,9 +40,15 @@ public class FireStationController {
     * Put Firestation
     */
     @PutMapping(value = "/firestation/{id}")
-    public void firestationPut(@RequestBody FireStation firestation, @PathVariable int id){
-        //      fireStationService.updateFireStation(id);
-        //TODO A FINIR
+    public String firestationPut(@RequestBody FireStation firestation, @PathVariable int id){
+              if(fireStationService.update(firestation,id)){
+                  return "Mise à jour de la firestation "+id;
+              }else{
+                  return "La mise à jour n'a pas eu lieu ";
+              }
+              //TODO Vérifier si c'est une Firestation?
+
+
     }
     /*
     * Delete Firestation
@@ -53,7 +62,7 @@ public class FireStationController {
     * URl retourne une liste des personnes par caserne de pompiers correspondantes
     */
     @GetMapping(value = "/firestation")
-    public List<String> firestation(@RequestParam int stationNumber ){
+    public String firestation(@RequestParam int stationNumber ){
 
         FireStation firestation = fireStationService.findById(stationNumber);
         List<Person> person = personService.findAll();
@@ -64,20 +73,27 @@ public class FireStationController {
                 .filter(persons -> firestation.getAddress().contains(persons.getAddress()))
                 .collect(Collectors.toList());
     
-        List<String> result = new ArrayList<>();
-        
-        for (Person p:personFirestation
-             ) {
-                result.add(p.getLastName()+" "+p.getFirstName()+" "+p.getAddress()+" "+p.getPhone());
-                if(utilDate.isAdult(p.getBirthdate())) {
-                    adulte.getAndIncrement();
-                }else{
-                    child.getAndIncrement();
-                }
+        JsonObject result = new JsonObject();
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonArray jsonArray = new JsonArray();
+
+        for (Person personk:personFirestation){
+            jsonArray.add(gson.toJson(personk,Person.class));
+            if(personk.isAdult()){
+                adulte.getAndIncrement();
+            }else {
+                child.getAndIncrement();
+            }
+
+
         }
-        result.add(adulte + " Adultes");
-        result.add(child + " enfants");
-        return result;
+        result.add("Person", gson.toJsonTree(personFirestation));
+        //TODO APPLIQUER FILTRE SUR PERSON
+        result.addProperty("adulte",adulte);
+        result.addProperty("enfants",child);
+
+        return result.toString();
 
     }
 
