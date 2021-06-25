@@ -1,5 +1,6 @@
 package com.SafetyNet.Safety.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -109,6 +110,17 @@ public class Person {
         this.allergies = allergies;
     }
 
+    public boolean isAdult(){
+        Date dateNow = new Date(System.currentTimeMillis());
+        SimpleDateFormat simpleDateNow = new SimpleDateFormat("dd/MM/yyyy");
+        long between = dateNow.getTime() - birthdate.getTime();
+
+        if (between/(1000*60*60*24) > 6570 ){
+            return true;
+        }
+        return false;
+    }
+    }
 
 
 
