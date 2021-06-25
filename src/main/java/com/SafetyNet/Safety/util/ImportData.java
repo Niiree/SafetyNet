@@ -19,6 +19,9 @@ import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -73,15 +76,17 @@ public class ImportData {
         for (JsonElement jsonFireStation:firestationArray
             ) {
             JsonObject jsonObject = jsonFireStation.getAsJsonObject();
+
             int id = jsonObject.get("station").getAsInt();
-            String addresse = jsonObject.get("address").getAsString();
-            FireStation fireStation = new FireStation();
-            fireStation.addAddress(addresse);
-            fireStation.setStation(id);
+            String address = jsonObject.get("address").getAsString();
+
             // Si l'ID existe, alors on ajoute l'adresse, sinon on sauvegarde.
-            if(fireStationService.findById(fireStation.getStation())!= null){
-                fireStationService.addaddress(fireStation,fireStation.getStation());
+            if(fireStationService.findById(id)!= null){
+                fireStationService.addAddress(address,id);
             }else{
+              //  List<String> temp = Arrays.asList(new String[]{address});
+               // temp.add(address);
+                FireStation fireStation = new FireStation(new ArrayList<String>(Arrays.asList(new String[]{address})),id);
                 fireStationService.save(fireStation);
             }
         }
