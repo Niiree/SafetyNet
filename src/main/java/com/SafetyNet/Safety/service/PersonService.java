@@ -1,6 +1,7 @@
 package com.SafetyNet.Safety.service;
 
 import com.SafetyNet.Safety.model.Person;
+import com.SafetyNet.Safety.util.exceptions.PersonIntrouvableException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,36 +14,6 @@ import java.util.stream.Collectors;
 public class PersonService {
 
     private static List<Person> personsList = new ArrayList<>();
-
-    public List<Person> findAll() {
-        return personsList;
-    }
-
-    public Person findByFirstNameLastName(String firstName, String lastName){
-        return  personsList.stream().filter(person -> firstName.equals(person.getFirstName()) && lastName.equals(person.getLastName())).
-        findAny()  .orElse(null);
-    }
-    /*public List<Person> findChildByAdresse(){
-    }*/
-
-    /*
-     @param    Ville
-     @return   Retourne une liste d'email en fonction de la ville
-    */
-    public List<String> emailByCity(String city){
-        return personsList.stream().filter(user -> city.equals(user.getCity()))
-                .map(Person::getEmail)
-                .collect(Collectors.toList());
-    }
-    /*
-    @param  Ville
-    @return Cette url doit retourner le nom, l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments,posologie, allergies) de chaque habitant. Si plusieurs personnes portent le même nom, elles doiventtoutes apparaître.
-     */
-    public List<Person> personByName(String name){
-        List<Person> test = personsList.stream().filter(person -> name.equals(person.getLastName())).collect(Collectors.toList());
-        //TODO A FINIR
-        return null;
-    }
 
     public void personSave(Person person) {
         personsList.add(person);
@@ -60,6 +31,29 @@ public class PersonService {
         //TODO A FINIR
     }
 
+    public List<Person> findAll() { return personsList; }
 
+    public Person findByFirstNameLastName(String firstName, String lastName){
+        Person user = personsList.stream().filter(person -> firstName.equals(person.getFirstName()) && lastName.equals(person.getLastName())).
+                findAny().orElse(null);
+        if (user == null) throw new PersonIntrouvableException("L'utilisateur n'existe pas");
+        return  user;
+    }
 
+    /*
+     @param    Ville
+     @return   Retourne une liste d'email en fonction de la ville
+    */
+    public List<String> emailByCity(String city){
+        return personsList.stream().filter(user -> city.equals(user.getCity()))
+                .map(Person::getEmail)
+                .collect(Collectors.toList());
+    }
+    /*
+    @param  Name
+    @return Cette url doit retourner le nom, l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments,posologie, allergies) de chaque habitant. Si plusieurs personnes portent le même nom, elles doiventtoutes apparaître.
+     */
+    public List<Person> personByName(String name){
+        return personsList.stream().filter(person -> name.equals(person.getLastName())).collect(Collectors.toList());
+    }
 }

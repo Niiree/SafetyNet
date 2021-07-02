@@ -16,7 +16,7 @@ public class PersonController {
 
 
     @PostMapping(value = "/person")
-    public void personCreate(@RequestBody Person person){
+    public void personPost(@RequestBody Person person){
         personService.personSave(person);
     }
 
@@ -26,11 +26,7 @@ public class PersonController {
         //TODO Boolean réponse à rajouter partout
     }
 
-    /*
- Récuperation d'une liste de Person
- */
-    @GetMapping(value = "/personList")
-    public List<Person> listePersons(){ return personService.findAll(); }
+
 
     /*
     Suppresion d'un utilisateur en fonction de son firstname et lastname
@@ -42,22 +38,46 @@ public class PersonController {
     }
 
     /*
+ Récuperation d'une liste de Person
+  */
+    @GetMapping(value = "/personList")
+    public List<Person> listePersons(){ return personService.findAll(); }
+
+
+
+    ///////////////////////////////
+    /////          URLS       /////
+    ///////////////////////////////
+
+    /*
      * URl doit retourner une liste d'enfants (tout individu âgé de 18 ans ou moins) habitant à cette adresse.
+     * TODO A FINIR
      */
     @GetMapping(value = "/childAlert")
-    public List<Person> childAlert(@RequestParam String adress){
-        //todo
+    public List<Person> childAlert(@RequestParam String address){
+
         return null;
     }
 
+    /*
+     * URl doit retourner les adresses mail de tous les habitants de la ville
+     * TODO A FINIR
+     */
+    @GetMapping(value = "/personInfo/Name/{lastName}")
+    public List<Person> personInfoName(@PathVariable String lastName){
+        return personService.personByName(lastName);
+    }
+
+    /*
+     * URl doit retourner le nom, l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments,posologie, allergies) de chaque habitant. Si plusieurs personnes portent le même nom, elles doiventtoutes apparaître
+     * URL OK 
+     */
     @GetMapping (value = "/communityEmail")
     public List<String> communityEmail(@RequestParam String city){
     return personService.emailByCity(city);
     }
 
-    @GetMapping(value = "/personInfo/Name/{lastName}")
-    public List<Person> personInfoName(@PathVariable String lastName){ return personService.personByName(lastName);
-    }
+
 
 
 }

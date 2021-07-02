@@ -59,7 +59,22 @@ public class FireStationController {
     }
 
     /*
+     * Récuperation d'une liste de FireStations
+     *
+     */
+    @GetMapping(value = "/firestationAll")
+    public List<FireStation> listeFireStation(){
+        return fireStationService.findAll();
+    }
+
+
+    ///////////////////////////////
+    /////          URLS       /////
+    ///////////////////////////////
+
+    /*
     * URl retourne une liste des personnes par caserne de pompiers correspondantes
+    * TODO Appliquer un filtre sur le resultat + trow error
     */
     @GetMapping(value = "/firestation")
     public String firestation(@RequestParam int stationNumber ){
@@ -78,9 +93,9 @@ public class FireStationController {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         JsonArray jsonArray = new JsonArray();
 
-        for (Person personk:personFirestation){
-            jsonArray.add(gson.toJson(personk,Person.class));
-            if(personk.isAdult()){
+        for (Person pers:personFirestation){
+            jsonArray.add(gson.toJson(pers,Person.class));
+            if(pers.isAdult()){
                 adulte.getAndIncrement();
             }else {
                 child.getAndIncrement();
@@ -94,43 +109,34 @@ public class FireStationController {
         result.addProperty("enfants",child);
 
         return result.toString();
-
     }
 
     /*
      * Cette url doit retourner une liste des numéros de téléphone des résidents desservis par la caserne depompiers
+     * TODO A FAIRE
      */
     @GetMapping(value = "/phoneAlert")
-    public List<String> phoneAlert(@RequestParam int firestation){
-        //TODO A FAIRE
+    public List<String> phoneAlert(@RequestParam int firestation_number){
+
         return null;
     }
 
     /*
      * Cette url doit retourner la liste des habitants vivant à l’adresse donnée ainsi que le numéro de la casernede pompiers la desservant.
+     * TODO A FAIRE
      */
     @GetMapping(value = "/fire")
     public List<String> fire(@RequestParam String address){
-        //TODO A FAIRE
         return null;
     }
 
     /*
      * Cette url doit retourner une liste de tous les foyers desservis par la caserne. Cette liste doit regrouper lespersonnes par adresse.
+     * TODO A FAIRE
      */
     @GetMapping(value = "/flood/stations")
-    public List<String> flood(@RequestParam String addess){
-        //TODO A FAIRE
+    public List<String> flood(@RequestParam List<String> station_number){
         return null;
-    }
-
-
-    /*
-    * Récuperation d'une liste de FireStations
-    */
-    @GetMapping(value = "/firestationAll")
-    public List<FireStation> listeFireStation(){
-        return fireStationService.findAll();
     }
 
 
