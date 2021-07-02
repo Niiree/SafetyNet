@@ -5,6 +5,7 @@ import com.SafetyNet.Safety.model.FireStation;
 import com.SafetyNet.Safety.model.Person;
 import com.SafetyNet.Safety.service.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -77,7 +78,8 @@ public class FireStationController {
     * TODO Appliquer un filtre sur le resultat + trow error
     */
     @GetMapping(value = "/firestation")
-    public String firestation(@RequestParam int stationNumber ){
+    @JsonIgnoreProperties(value = {"email"})
+    public List<Person> firestation(@RequestParam int stationNumber ){
 
         FireStation firestation = fireStationService.findById(stationNumber);
         List<Person> person = personService.findAll();
@@ -105,10 +107,10 @@ public class FireStationController {
         }
         result.add("Person", gson.toJsonTree(personFirestation));
         //TODO APPLIQUER FILTRE SUR PERSON
-        result.addProperty("adulte",adulte);
-        result.addProperty("enfants",child);
+     //   result.addProperty("adulte",adulte);
+      //  result.addProperty("enfants",child);
 
-        return result.toString();
+        return personFirestation;
     }
 
     /*
