@@ -82,7 +82,10 @@ public class ImportData {
 
             // Si l'ID existe, alors on ajoute l'adresse, sinon on sauvegarde.
             if(fireStationService.findById(id)!= null){
-                fireStationService.addAddress(address,id);
+                //Vérification doublon address
+                if (!fireStationService.findById(id).getAddress().contains(address)){
+                    fireStationService.addAddress(address,id);
+                }
             }else{
               //  List<String> temp = Arrays.asList(new String[]{address});
                // temp.add(address);
