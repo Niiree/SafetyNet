@@ -1,9 +1,12 @@
 package com.SafetyNet.Safety.model;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+@JsonFilter("Filtre")
 public class Person {
     private String firstName;
     private String lastName;
