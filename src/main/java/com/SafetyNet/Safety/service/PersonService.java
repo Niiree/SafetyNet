@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Service
 public class PersonService {
 
-    private static List<Person> personsList = new ArrayList<>();
+    private static final List<Person> personsList = new ArrayList<>();
 
     public void personSave(Person person) {
         personsList.add(person);
@@ -23,15 +23,24 @@ public class PersonService {
         personsList.removeIf(person -> firstName.equals(person.getFirstName()) && lastName.equals(person.getLastName()));
     }
 
-    public void personUpdate(String firstName,String lastName, Person person){
-        Optional<Person> user = personsList.stream().filter(p -> firstName.equals(p.getLastName()) && lastName.equals(p.getLastName())).findAny();
+    public boolean personUpdate(Person person){
+        Optional<Person> user = personsList.stream().filter(p -> person.getLastName().equals(p.getLastName()) && person.getFirstName().equals(p.getFirstName())).findAny();
         if (user.isPresent()){
-            //personsBDD.
+            user.get().setCity(person.getCity()) ;
+            user.get().setZip(person.getZip());
+            user.get().setPhone(person.getPhone());
+            user.get().setAddress(person.getAddress());
+            user.get().setBirthdate(person.getBirthdate());
+            user.get().setEmail(person.getEmail());
+            return true;
+        }else{
+            return false;
         }
-        //TODO A FINIR
+        //TODO RETURN ERROR A FAIRE
     }
 
-    public List<Person> findAll() { return personsList; }
+    public List<Person> findAll() {
+        return personsList; }
 
     public Person findByFirstNameLastName(String firstName, String lastName){
         Person user = personsList.stream().filter(person -> firstName.equals(person.getFirstName()) && lastName.equals(person.getLastName())).

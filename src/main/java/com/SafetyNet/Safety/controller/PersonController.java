@@ -20,10 +20,13 @@ public class PersonController {
         personService.personSave(person);
     }
 
-    @PutMapping(value = "/person/{firstName}/{lastName}")
-    public void personUpdate(@PathVariable String firstName,String lastName,@RequestBody Person person){
-        personService.personUpdate(firstName,lastName,person);
+    @PutMapping(value = "/person")
+    public String personUpdate(@RequestBody Person person){
+        if(personService.personUpdate(person)){
+            return "Person mise à jour";
+        }
         //TODO Boolean réponse à rajouter partout
+        return "Update échoué";
     }
 
 
@@ -41,7 +44,8 @@ public class PersonController {
  Récuperation d'une liste de Person
   */
     @GetMapping(value = "/personList")
-    public List<Person> listePersons(){ return personService.findAll(); }
+    public List<Person> listePersons(){
+        return personService.findAll(); }
 
 
 

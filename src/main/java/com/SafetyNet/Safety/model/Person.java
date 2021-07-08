@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-@JsonFilter("Filtre")
+//@JsonFilter("Filtre") TODO Blocage lors d'appel all
 public class Person {
     private String firstName;
     private String lastName;
