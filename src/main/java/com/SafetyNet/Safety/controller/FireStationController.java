@@ -1,12 +1,9 @@
 package com.SafetyNet.Safety.controller;
 
-
 import com.SafetyNet.Safety.model.FireStation;
 import com.SafetyNet.Safety.model.Person;
 import com.SafetyNet.Safety.service.*;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
@@ -126,9 +123,23 @@ public class FireStationController {
      * TODO A FAIRE
      */
     @GetMapping(value = "/phoneAlert")
-    public List<String> phoneAlert(@RequestParam int firestation_number){
+    public MappingJacksonValue phoneAlert(@RequestParam int firestation_number){
+        FireStation fire = fireStationService.findById(firestation_number);
+        List<Person> personList = personService.findAll();
 
-        return null;
+        List<Person> personNum = personList.stream()
+                .filter(persons -> fire.getAddress().contains(persons.getAddress()))
+                .collect(Collectors.toList());
+
+
+        //TODO APPLIQUER LE FILTRE
+
+        SimpleBeanPropertyFilter filtreUrl = SimpleBeanPropertyFilter.serializeAllExcept("email","birthdate","allergies","medical","adult","firstName","lastName");
+        FilterProvider list = new SimpleFilterProvider().addFilter("Filtre",filtreUrl);
+        MappingJacksonValue listFiltre  = new MappingJacksonValue(personNum);
+        listFiltre.setFilters(list);
+
+        return listFiltre;
     }
 
     /*
