@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FireStationService {
@@ -16,6 +17,8 @@ public class FireStationService {
     public List<FireStation> findAll() { return listFirestations; }
 
     public FireStation findById(int id){ return listFirestations.stream().filter(fireStation -> id== fireStation.getStation()).findAny().orElse(null); }
+
+    public List<FireStation> findByAddress(String address){ return listFirestations.stream().filter(fireStation -> fireStation.getAddress().contains(address)).collect(Collectors.toList());}
 
     public void save(FireStation fireStation) { listFirestations.add(fireStation); }
 

@@ -60,7 +60,7 @@ public class PersonService {
     }
     /*
     @param  Name
-    @return Cette url doit retourner le nom, l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments,posologie, allergies) de chaque habitant. Si plusieurs personnes portent le même nom, elles doiventtoutes apparaître.
+    @return Cette url doit retourner le nom, l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments,posologie, allergies) de chaque habitant. Si plusieurs personnes portent le même nom, elles doivent toutes apparaître.
      */
     public List<Person> personByName(String name){
         return personsList.stream().filter(person -> name.equals(person.getLastName())).collect(Collectors.toList());

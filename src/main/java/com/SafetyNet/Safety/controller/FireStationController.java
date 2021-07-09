@@ -131,7 +131,6 @@ public class FireStationController {
                 .filter(persons -> fire.getAddress().contains(persons.getAddress()))
                 .collect(Collectors.toList());
 
-
         //TODO APPLIQUER LE FILTRE
 
         SimpleBeanPropertyFilter filtreUrl = SimpleBeanPropertyFilter.serializeAllExcept("email","birthdate","allergies","medical","adult","firstName","lastName");
@@ -148,7 +147,13 @@ public class FireStationController {
      */
     @GetMapping(value = "/fire")
     public List<String> fire(@RequestParam String address){
-        return null;
+        List<Person> personList = personService.findAll();
+        personList.stream()
+                .filter(person -> person.getAddress().equals(address))
+                .collect(Collectors.toList());
+        List<FireStation> firestations = fireStationService.findByAddress(address);
+        //TODO RETURN FIRE + PERSONLIST Filtre
+       return null;
     }
 
     /*
@@ -156,7 +161,18 @@ public class FireStationController {
      * TODO A FAIRE
      */
     @GetMapping(value = "/flood/stations")
-    public List<String> flood(@RequestParam List<String> station_number){
+    public List<String> flood(@RequestParam List<Integer> station_number){
+
+        for (Integer id:station_number
+             ) {
+            FireStation firestation = fireStationService.findById(id);
+            List<Person> personList = personService.findAll();
+            personList.stream()
+                    .filter(person -> firestation.getAddress().contains(person.getAddress()))
+                    .collect(Collectors.toList());
+        }
+
+        //TODO RETURN A FINIR
         return null;
     }
 
