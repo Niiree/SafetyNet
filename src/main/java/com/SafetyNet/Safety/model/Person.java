@@ -1,12 +1,14 @@
 package com.SafetyNet.Safety.model;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-//@JsonFilter("Filtre") TODO Blocage lors d'appel all
+@JsonFilter("Filtre") //TODO Blocage lors d'appel sans filtre
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Person {
     private String firstName;
     private String lastName;

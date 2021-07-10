@@ -4,15 +4,17 @@ import com.SafetyNet.Safety.model.FireStation;
 import com.SafetyNet.Safety.model.Person;
 import com.SafetyNet.Safety.service.*;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 
@@ -79,9 +81,9 @@ public class FireStationController {
     * URl retourne une liste des personnes par caserne de pompiers correspondantes
     * TODO Appliquer un filtre sur le resultat + trow error
     */
-    @GetMapping(value = "/firestation")
-    public MappingJacksonValue firestation(@RequestParam int stationNumber ){
-
+    @GetMapping(value = "/firestation",produces= MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> firestation(@RequestParam int stationNumber ) throws JsonProcessingException {
+        System.out.println("ok");
         FireStation firestation = fireStationService.findById(stationNumber);
         List<Person> person = personService.findAll();
         AtomicInteger adulte = new AtomicInteger();
@@ -94,12 +96,21 @@ public class FireStationController {
         //Initialisation du filtre
         SimpleBeanPropertyFilter filtreUrl = SimpleBeanPropertyFilter.serializeAllExcept("email","birthdate","allergies","medical","adult","phone");
         FilterProvider list = new SimpleFilterProvider().addFilter("Filtre",filtreUrl);
-        MappingJacksonValue produitsfiltre  = new MappingJacksonValue(personFirestation);
-        produitsfiltre.setFilters(list);
+        MappingJacksonValue personsfiltre  = new MappingJacksonValue(personFirestation);
+        personsfiltre.setFilters(list);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setFilterProvider(list);
 
-        JsonObject result = new JsonObject();
+        String jsonData = mapper.writerWithDefaultPrettyPrinter()
+                .writeValueAsString(personsfiltre);
+        System.out.println(jsonData);
+
+        JsonObject jsonObject = new JsonParser().parse(jsonData).getAsJsonObject();
+
+        //     JsonObject result = new JsonObject();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         JsonArray jsonArray = new JsonArray();
+
 
         for (Person pers:personFirestation){
             jsonArray.add(gson.toJson(pers,Person.class));
@@ -109,13 +120,15 @@ public class FireStationController {
                 child.getAndIncrement();
             }
         }
-        result.add("Person", gson.toJsonTree(personFirestation));
 
+        JsonObject result = new JsonObject();
+        result.add("Person", jsonObject.get("value"));
         //TODO Ajouter enfant + adults
-      // result.addProperty("adulte",adulte);
-     //  result.addProperty("enfants",child);
+       result.addProperty("adulte",adulte);
+       result.addProperty("enfants",child);
 
-        return produitsfiltre;
+       return new ResponseEntity<>(result.toString(), HttpStatus.ACCEPTED);
+     //   return result.toString();
     }
 
     /*
