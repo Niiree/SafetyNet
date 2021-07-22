@@ -84,16 +84,22 @@ public class PersonController {
      * URl doit retourner le nom, l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments,posologie, allergies) de chaque habitant. Si plusieurs personnes portent le même nom, elles doiventtoutes apparaître
      * URL OK
      */
-    @GetMapping(value = "/personInfo/Name/{lastName}")
-    public List<Person> personInfoName(@PathVariable String lastName){
-        return personService.personByName(lastName);
+    @GetMapping(value = "/personInfo/Name/{lastName}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> personInfoName(@PathVariable String lastName){
+        List<Person> person = personService.personByName(lastName);
+
+        if(person != null) {
+            return new ResponseEntity<>(person, HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 
     /*
      * URl doit retourner les adresses mail de tous les habitants de la ville
      * URL OK
      */
-    @GetMapping (value = "/communityEmail")
+    @GetMapping (value = "/communityEmail",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> communityEmail(@RequestParam String city){
         List<String> result = personService.communityEmail(city);
         if (result != null){

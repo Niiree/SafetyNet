@@ -61,8 +61,13 @@ public class FireStationController {
     * Delete Firestation
     */
     @DeleteMapping(value = "/firestation")
-    public void firestationDelete(@RequestBody FireStation firestation){
-        fireStationService.remove(firestation);
+    public ResponseEntity<?> firestationDelete(@RequestBody FireStation firestation){
+
+        if(fireStationService.remove(firestation)){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     /*
@@ -70,8 +75,7 @@ public class FireStationController {
      *
      */
     @GetMapping(value = "/firestationAll")
-    public List<FireStation> listeFireStation(){
-        return fireStationService.findAll();
+    public List<FireStation> listeFireStation(){ return fireStationService.findAll();
     }
 
 
