@@ -64,8 +64,14 @@ public class PersonController {
      * URL OK
      */
     @GetMapping(value = "/childAlert")
-    public List<Person> childAlert(@RequestParam String address){
-        return personService.findAll().stream().filter(person -> !person.isAdult() && person.getAddress().equals(address)).collect(Collectors.toList());
+    public ResponseEntity<?> childAlert(@RequestParam String address){
+        List<Person> childAlert = personService.childAlert(address);
+    if(childAlert != null){
+            return new ResponseEntity<>(childAlert,HttpStatus.ACCEPTED);
+        }
+    else {
+        return new ResponseEntity<>("Aucun utilisateur trouvées",HttpStatus.ACCEPTED);
+    }
     }
 
     /*

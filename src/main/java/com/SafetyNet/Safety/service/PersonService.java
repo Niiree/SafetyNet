@@ -70,4 +70,12 @@ public class PersonService {
     public List<Person> personByName(String name){
         return personsList.stream().filter(person -> name.equals(person.getLastName())).collect(Collectors.toList());
     }
+
+    /*
+     * @return doit retourner une liste d'enfants (tout individu âgé de 18 ans ou moins) habitant à cette adresse.
+     */
+    public List<Person> childAlert(String address){
+        return personsList.stream().filter(person -> !person.isAdult() && person.getAddress().equals(address)).collect(Collectors.toList());
+    }
+
 }
