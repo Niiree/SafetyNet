@@ -29,20 +29,21 @@ public class PersonController {
     public String personUpdate(@RequestBody Person person){
         if(personService.personUpdate(person)){
             return "Person mise à jour";
-        }
-        //TODO Boolean réponse à rajouter partout
+        }//TODO Boolean réponse à rajouter partout
         return "Update échoué";
     }
-
-
 
     /*
     Suppresion d'un utilisateur en fonction de son firstname et lastname
     @Param Nom et prénom
      */
     @DeleteMapping(value = "/person/{firstName}/{lastName}")
-    public void personDelete(@PathVariable String firstName,@PathVariable String lastName){
-        personService.personDelete(firstName,lastName);
+    public String personDelete(@PathVariable String firstName, @PathVariable String lastName){
+        if (personService.personDelete(firstName,lastName)){
+            return "Person supprimé";
+        }else{
+            return "Person introuvable";
+        }
     }
 
     /*

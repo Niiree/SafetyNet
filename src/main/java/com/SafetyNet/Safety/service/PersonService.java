@@ -19,8 +19,13 @@ public class PersonService {
         personsList.add(person);
     }
 
-    public void personDelete(String firstName, String lastName){
-        personsList.removeIf(person -> firstName.equals(person.getFirstName()) && lastName.equals(person.getLastName()));
+    public boolean personDelete(String firstName, String lastName){
+        if (findByFirstNameLastName(firstName, lastName) != null){
+            personsList.removeIf(person -> firstName.equals(person.getFirstName()) && lastName.equals(person.getLastName()));
+            return true;
+        }else{
+        return false ;
+        }
     }
 
     public boolean personUpdate(Person person){
