@@ -4,6 +4,7 @@ import com.SafetyNet.Safety.model.FireStation;
 import com.SafetyNet.Safety.model.Person;
 import com.SafetyNet.Safety.service.*;
 
+import com.SafetyNet.Safety.util.Filtre;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
@@ -31,6 +32,7 @@ public class FireStationController {
     @Autowired
     private FireStationService fireStationService;
     private PersonService personService = new PersonService();
+    private Filtre filtre  = new  Filtre();
 
 
     /*
@@ -83,52 +85,13 @@ public class FireStationController {
     */
     @GetMapping(value = "/firestation",produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> firestation(@RequestParam int stationNumber ) throws JsonProcessingException {
-        System.out.println("ok");
         FireStation firestation = fireStationService.findById(stationNumber);
-        List<Person> person = personService.findAll();
-        AtomicInteger adulte = new AtomicInteger();
-        AtomicInteger child = new AtomicInteger();
-
-        List<Person> personFirestation = person.stream()
-                .filter(persons -> firestation.getAddress().contains(persons.getAddress()))
-                .collect(Collectors.toList());
-
-        //Initialisation du filtre
-        SimpleBeanPropertyFilter filtreUrl = SimpleBeanPropertyFilter.serializeAllExcept("email","birthdate","allergies","medical","adult","phone");
-        FilterProvider list = new SimpleFilterProvider().addFilter("Filtre",filtreUrl);
-        MappingJacksonValue personsfiltre  = new MappingJacksonValue(personFirestation);
-        personsfiltre.setFilters(list);
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setFilterProvider(list);
-
-        String jsonData = mapper.writerWithDefaultPrettyPrinter()
-                .writeValueAsString(personsfiltre);
-        System.out.println(jsonData);
-
-        JsonObject jsonObject = new JsonParser().parse(jsonData).getAsJsonObject();
-
-        //     JsonObject result = new JsonObject();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        JsonArray jsonArray = new JsonArray();
-
-
-        for (Person pers:personFirestation){
-            jsonArray.add(gson.toJson(pers,Person.class));
-            if(pers.isAdult()){
-                adulte.getAndIncrement();
-            }else {
-                child.getAndIncrement();
-            }
+        JsonObject result = personService.PersonByFirestation(firestation);
+        if(result != null){
+            return new ResponseEntity<>(result.toString(), HttpStatus.OK);}
+        else{
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-
-        JsonObject result = new JsonObject();
-        result.add("Person", jsonObject.get("value"));
-        //TODO Ajouter enfant + adults
-       result.addProperty("adulte",adulte);
-       result.addProperty("enfants",child);
-
-       return new ResponseEntity<>(result.toString(), HttpStatus.ACCEPTED);
-     //   return result.toString();
     }
 
     /*

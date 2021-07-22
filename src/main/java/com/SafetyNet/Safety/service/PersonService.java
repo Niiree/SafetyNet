@@ -1,18 +1,27 @@
 package com.SafetyNet.Safety.service;
 
+import com.SafetyNet.Safety.model.FireStation;
 import com.SafetyNet.Safety.model.Person;
+import com.SafetyNet.Safety.util.Filtre;
 import com.SafetyNet.Safety.util.exceptions.PersonIntrouvableException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 
 @Service
 public class PersonService {
 
+    private Filtre filtre = new Filtre();
     private static final List<Person> personsList = new ArrayList<>();
 
     public void personSave(Person person) {
@@ -76,6 +85,40 @@ public class PersonService {
      */
     public List<Person> childAlert(String address){
         return personsList.stream().filter(person -> !person.isAdult() && person.getAddress().equals(address)).collect(Collectors.toList());
+    }
+
+    /*
+    @param
+    @return
+    */
+    public JsonObject PersonByFirestation(FireStation firestation) throws JsonProcessingException {
+
+
+        AtomicInteger adulte = new AtomicInteger();
+        AtomicInteger child = new AtomicInteger();
+        List<Person> personFirestation = personsList.stream()
+                .filter(persons -> firestation.getAddress().contains(persons.getAddress()))
+                .collect(Collectors.toList());
+
+        JsonObject jsonObject = filtre.filtreListPerson(personFirestation, "email");
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonArray jsonArray = new JsonArray();
+
+
+        for (Person pers:personFirestation){
+            jsonArray.add(gson.toJson(pers,Person.class));
+            if(pers.isAdult()){
+                adulte.getAndIncrement();
+            }else {
+                child.getAndIncrement();
+            }
+        }
+        JsonObject result = new JsonObject();
+        result.add("Person", jsonObject.get("value"));
+        result.addProperty("adulte",adulte);
+        result.addProperty("enfants",child);
+
+        return result;
     }
 
 }
