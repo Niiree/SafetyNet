@@ -1,10 +1,15 @@
 package com.SafetyNet.Safety.controller;
 
 
+import com.SafetyNet.Safety.model.FireStation;
+import com.SafetyNet.Safety.service.FireStationService;
 import com.SafetyNet.Safety.service.PersonService;
 import com.SafetyNet.Safety.model.Person;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +22,7 @@ public class PersonController {
 
     @Autowired
     private PersonService personService;
+    private FireStationService fireStationService;
 
 
 
@@ -88,15 +94,30 @@ public class PersonController {
      * URL OK
      */
     @GetMapping (value = "/communityEmail")
-    public List<String> communityEmail(@RequestParam String city){
-
-        List<Person> personList = personService.findAll().stream().filter(person -> person.getCity().equals(city)).collect(Collectors.toList());
-        List<String>listEmail = new ArrayList<>();
-        for (Person person:personList
-             ) {
-            listEmail.add(person.getEmail());
+    public ResponseEntity<?> communityEmail(@RequestParam String city){
+        List<String> result = personService.communityEmail(city);
+        if (result != null){
+            return new ResponseEntity<>(result,HttpStatus.NO_CONTENT);
+        }else{
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return listEmail;
+
+    }
+
+
+    /*
+     * Cette url doit retourner une liste des numéros de téléphone des résidents desservis par la caserne depompiers
+     *
+     */
+    @GetMapping(value = "/phoneAlert",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> phoneAlert(@RequestParam int firestation_number) throws JsonProcessingException {
+        FireStation fire = fireStationService.findById(firestation_number);
+        JsonObject result = personService.phoneAlert(fire);
+        if (result.isJsonNull()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }else {
+            return new ResponseEntity<>(result.toString(), HttpStatus.OK);
+        }
     }
 
 

@@ -94,28 +94,6 @@ public class FireStationController {
         }
     }
 
-    /*
-     * Cette url doit retourner une liste des numéros de téléphone des résidents desservis par la caserne depompiers
-     * TODO A FAIRE
-     */
-    @GetMapping(value = "/phoneAlert")
-    public MappingJacksonValue phoneAlert(@RequestParam int firestation_number){
-        FireStation fire = fireStationService.findById(firestation_number);
-        List<Person> personList = personService.findAll();
-
-        List<Person> personNum = personList.stream()
-                .filter(persons -> fire.getAddress().contains(persons.getAddress()))
-                .collect(Collectors.toList());
-
-        //TODO APPLIQUER LE FILTRE
-
-        SimpleBeanPropertyFilter filtreUrl = SimpleBeanPropertyFilter.serializeAllExcept("email","birthdate","allergies","medical","adult","firstName","lastName");
-        FilterProvider list = new SimpleFilterProvider().addFilter("Filtre",filtreUrl);
-        MappingJacksonValue listFiltre  = new MappingJacksonValue(personNum);
-        listFiltre.setFilters(list);
-
-        return listFiltre;
-    }
 
     /*
      * Cette url doit retourner la liste des habitants vivant à l’adresse donnée ainsi que le numéro de la casernede pompiers la desservant.

@@ -88,8 +88,8 @@ public class PersonService {
     }
 
     /*
-    @param
-    @return
+    @param Firestation
+    @return Json d'une liste de person trié en fonction de l'adresse de la firestation
     */
     public JsonObject PersonByFirestation(FireStation firestation) throws JsonProcessingException {
 
@@ -119,6 +119,26 @@ public class PersonService {
         result.addProperty("enfants",child);
 
         return result;
+    }
+
+    public JsonObject phoneAlert(FireStation firestation) throws JsonProcessingException {
+        List<Person> personList = personsList.stream()
+                .filter(persons -> firestation.getAddress().contains(persons.getAddress()))
+                .collect(Collectors.toList());
+
+        JsonObject result = filtre.filtreListPerson(personList, "email");
+        return result;
+
+    }
+
+    public List<String> communityEmail(String city){
+        List<Person> personList = personsList.stream().filter(person -> person.getCity().equals(city)).collect(Collectors.toList());
+        List<String>listEmail = new ArrayList<>();
+        for (Person person:personList
+        ) {
+            listEmail.add(person.getEmail());
+        }
+        return listEmail;
     }
 
 }
