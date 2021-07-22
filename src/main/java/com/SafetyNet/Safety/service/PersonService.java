@@ -141,4 +141,8 @@ public class PersonService {
         return listEmail;
     }
 
+    public void fire (){
+        //TODO A FAIRE
+    }
+
 }

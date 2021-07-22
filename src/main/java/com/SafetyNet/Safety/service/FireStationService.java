@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,7 +23,15 @@ public class FireStationService {
 
     public void save(FireStation fireStation) { listFirestations.add(fireStation); }
 
-    public void remove(FireStation fireStation){ listFirestations.removeIf(fireStation::equals); }
+    public boolean remove(FireStation fireStation){
+        Optional<FireStation> resultFirestation = listFirestations.stream().filter(fireStation1 -> fireStation == fireStation1).findAny();
+        if (resultFirestation.equals(null)){
+            return false;
+        }else {
+        listFirestations.removeIf(fireStation::equals);
+        return true;
+        }
+    }
 
     public void addAddress(String address, int id){
         FireStation fir = this.findById(id);
@@ -45,6 +54,8 @@ public class FireStationService {
         }
 
     }
+
+
 }
 
 
