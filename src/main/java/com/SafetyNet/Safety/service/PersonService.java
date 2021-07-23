@@ -33,7 +33,7 @@ public class PersonService {
             personsList.removeIf(person -> firstName.equals(person.getFirstName()) && lastName.equals(person.getLastName()));
             return true;
         }else{
-        return false ;
+            throw new PersonIntrouvableException("L'utilisateur n'existe pas");
         }
     }
 
@@ -48,7 +48,8 @@ public class PersonService {
             user.get().setEmail(person.getEmail());
             return true;
         }else{
-            return false;
+             throw new PersonIntrouvableException("L'utilisateur n'existe pas");
+
         }
         //TODO RETURN ERROR A FAIRE
     }
