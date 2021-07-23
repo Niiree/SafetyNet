@@ -25,10 +25,10 @@ public class FireStationService {
 
     public boolean remove(FireStation fireStation){
         Optional<FireStation> resultFirestation = listFirestations.stream().filter(fireStation1 -> fireStation == fireStation1).findAny();
-        if (resultFirestation.equals(null)){
+        if (resultFirestation == null){
             return false;
         }else {
-        listFirestations.removeIf(fireStation::equals);
+        listFirestations.removeIf(fireStation1 -> fireStation.getStation() == fireStation1.getStation());
         return true;
         }
     }
