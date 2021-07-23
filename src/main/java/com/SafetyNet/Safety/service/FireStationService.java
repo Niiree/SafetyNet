@@ -33,11 +33,15 @@ public class FireStationService {
         }
     }
 
-    public void addAddress(String address, int id){
+    public boolean addAddress(String address, int id){
         FireStation fir = this.findById(id);
         if (fir != null){
             fir.addAddressList(address);
+            return true;
+        }else{
+            return false;
         }
+
     }
 
     //TODO Return à ajouter
