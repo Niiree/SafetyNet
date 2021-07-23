@@ -20,7 +20,6 @@ public class FireStationServiceTest {
     @BeforeAll
     private static void setUp(){
 
-
     }
 
     @BeforeEach
@@ -85,7 +84,7 @@ public class FireStationServiceTest {
     public void addAddress(){
         fireStationService.save(fireStation1);
         assertTrue(fireStationService.addAddress("address ajouté",1));
-       // assertEquals(fireStationService.findById(1).getAddress(),);
+        assertEquals(fireStationService.findById(1).getAddress(),fireStation1.getAddress());
     }
 
     @Test
