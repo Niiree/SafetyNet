@@ -57,7 +57,12 @@ public class PersonController {
   */
     @GetMapping(value = "/personList")
     public ResponseEntity<?> listePersons(){
-        return new ResponseEntity<>(personService.findAll(), HttpStatus.ACCEPTED); }
+        List<Person> listPerson = personService.findAll();
+        if (listPerson != null){
+            return new ResponseEntity<>(listPerson, HttpStatus.ACCEPTED);
+        }else
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      }
 
 
 
@@ -76,7 +81,7 @@ public class PersonController {
             return new ResponseEntity<>(childAlert,HttpStatus.ACCEPTED);
         }
     else {
-        return new ResponseEntity<>("Aucun utilisateur trouvées",HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("Aucun utilisateur trouvées",HttpStatus.NOT_FOUND);
     }
     }
 
