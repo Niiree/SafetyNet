@@ -64,7 +64,7 @@ public class FireStationController {
     public ResponseEntity<?> firestationDelete(@RequestBody FireStation firestation){
 
         if(fireStationService.remove(firestation)){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.OK);
         }else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
