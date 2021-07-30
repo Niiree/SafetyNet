@@ -108,7 +108,7 @@ public class FireStationController {
      * URL doit retourner la liste des habitants vivant à l’adresse donnée ainsi que le numéro de la casernede pompiers la desservant.
      * UR OK
      */
-    @GetMapping(value = "/fire" ,produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/fire", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> fire(@RequestParam String address) throws JsonProcessingException {
         JsonObject result = personService.fire(address);
         if (result != null) {
@@ -122,20 +122,15 @@ public class FireStationController {
      * Cette url doit retourner une liste de tous les foyers desservis par la caserne. Cette liste doit regrouper lespersonnes par adresse.
      * TODO A FAIRE
      */
-    @GetMapping(value = "/flood/stations")
-    public List<String> flood(@RequestParam List<Integer> station_number) {
+    @GetMapping(value = "/flood/stations", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> flood(@RequestParam List<Integer> station_number) throws JsonProcessingException {
+       JsonObject result = personService.flood(station_number);
 
-        for (Integer id : station_number
-        ) {
-            FireStation firestation = fireStationService.findById(id);
-            List<Person> personList = personService.findAll();
-            personList.stream()
-                    .filter(person -> firestation.getAddress().contains(person.getAddress()))
-                    .collect(Collectors.toList());
+        if (result != null) {
+            return new ResponseEntity<>(result.toString(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-
-        //TODO RETURN A FINIR
-        return null;
     }
 
 

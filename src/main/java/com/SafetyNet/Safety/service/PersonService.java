@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.util.resources.iw.LocaleNames_iw;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -175,16 +176,42 @@ public class PersonService {
 
     public JsonObject fire(String address) throws JsonProcessingException {
         List<Person> personList = personsList.stream().filter(person -> person.getAddress().equals(address)).collect(Collectors.toList());
-        if(personList != null) {
+        if (personList != null) {
             List<FireStation> firestations = fireStationService.findByAddress(address);
             JsonObject result = new JsonObject();
             result.add("Person", filtre.filtreAllExceptListPerson(personList, "firstName", "address", "phone").get("value"));
             result.add("Firestation", filtre.filtreAllExceptListFirestation(firestations, "station").get("value"));
             return result;
-        }else {
+        } else {
             throw new PersonIntrouvableException("Aucun utilisateur trouvé à cette address");
         }
-
     }
 
+    public JsonObject flood(List<Integer> station_number) throws JsonProcessingException {
+        List<FireStation> fireStationList = new ArrayList<>();
+        for (int id : station_number) {
+            FireStation fire = fireStationService.findById(id);
+            if (fire != null) {
+                fireStationList.add(fire);
+            }
+        }
+
+        ArrayList<Object> personList = new ArrayList<>();
+        JsonObject result = new JsonObject();
+        int number = 0;
+        for (FireStation firestation : fireStationList) {
+            result.add("Firestation" + firestation.getStation(), filtre.filtreAllExceptFirestation(firestation, "station").get("value"));
+
+            // Pour chaque address, on récupere une liste de person
+            for (String address : firestation.getAddress()) {
+                List<Person> resultStream = new ArrayList<>();
+                resultStream = personsList.stream()
+                        .filter(person -> firestation.getAddress().contains(person.getAddress()))
+                        .collect(Collectors.toList());
+                result.add("Utilisateur" + firestation.getStation(), filtre.filtreAllExceptListPerson(resultStream, "lastName", "firstName", "phone", "birthdate").get("value"));
+
+            }
+        }
+        return result;
+    }
 }
