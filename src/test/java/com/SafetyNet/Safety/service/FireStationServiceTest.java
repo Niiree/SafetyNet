@@ -1,6 +1,7 @@
 package com.SafetyNet.Safety.service;
 
 import com.SafetyNet.Safety.model.FireStation;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -89,7 +90,7 @@ public class FireStationServiceTest {
 
     @Test
     @DisplayName("Mise à jour d'une firestation")
-    public void update(){
+    public void update() throws JsonProcessingException {
         fireStationService.save(fireStation1);
         List<String> updateAddress = new ArrayList<String>();
         updateAddress.add("address 5");
