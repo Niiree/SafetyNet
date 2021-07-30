@@ -1,5 +1,6 @@
 package com.SafetyNet.Safety.service;
 
+import ch.qos.logback.core.BasicStatusManager;
 import com.SafetyNet.Safety.model.FireStation;
 import com.SafetyNet.Safety.model.Person;
 import com.SafetyNet.Safety.util.Filtre;
@@ -51,7 +52,6 @@ public class PersonService {
             throw new PersonIntrouvableException("L'utilisateur n'existe pas");
 
         }
-        //TODO RETURN ERROR A FAIRE
     }
 
     public List<Person> findAll() {
@@ -92,38 +92,42 @@ public class PersonService {
     /*
      * @return doit retourner une liste d'enfants (tout individu âgé de 18 ans ou moins) habitant à cette adresse.
      */
-    public List<Person> childAlert(String address) {
-        return personsList.stream().filter(person -> !person.isAdult() && person.getAddress().equals(address)).collect(Collectors.toList());
+    public JsonObject childAlert(String address) throws JsonProcessingException {
+        List<Person> child = personsList.stream().filter(person -> !person.isAdult() && person.getAddress().equals(address)).collect(Collectors.toList());
+        if(child != null){
+            JsonObject jsonObject= filtre.filtreListPerson(child, "address","email", "city", "zip", "allergies", "birthdate", "zip", "medical", "adult");
+            JsonObject result = new JsonObject();
+            result.add("Person",jsonObject.get("value"));
+
+            return result;
+        }
+        throw new PersonIntrouvableException("Aucun enfant trouvés");
     }
 
     /*
+    * firestation?stationNumber=<station_number>
+    * URl retourne une liste des personnes par caserne de pompiers correspondantes
     @param Firestation
     @return Json d'une liste de person trié en fonction de l'adresse de la firestation
     */
     public JsonObject PersonByFirestation(FireStation firestation) throws JsonProcessingException {
-
-
         AtomicInteger adulte = new AtomicInteger();
         AtomicInteger child = new AtomicInteger();
         List<Person> personFirestation = personsList.stream()
                 .filter(persons -> firestation.getAddress().contains(persons.getAddress()))
                 .collect(Collectors.toList());
 
-
         if (personFirestation != null) {
             JsonObject jsonObject = filtre.filtreListPerson(personFirestation, "email", "city", "zip", "allergies", "birthdate", "zip", "medical", "adult");
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            JsonArray jsonArray = new JsonArray();
-
 
             for (Person pers : personFirestation) {
-                jsonArray.add(gson.toJson(pers, Person.class));
                 if (pers.isAdult()) {
                     adulte.getAndIncrement();
                 } else {
                     child.getAndIncrement();
                 }
             }
+
             JsonObject result = new JsonObject();
             result.add("Person", jsonObject.get("value"));
             result.addProperty("adulte", adulte);
