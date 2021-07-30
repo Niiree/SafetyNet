@@ -72,13 +72,13 @@ public class PersonController {
      * URl doit retourner une liste d'enfants (tout individu âgé de 18 ans ou moins) habitant à cette adresse.
      * URL OK
      */
-    @GetMapping(value = "/childAlert")
-    public ResponseEntity<?> childAlert(@RequestParam String address) {
-        List<Person> childAlert = personService.childAlert(address);
+    @GetMapping(value = "/childAlert",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> childAlert(@RequestParam String address) throws JsonProcessingException {
+        JsonObject childAlert = personService.childAlert(address);
         if (childAlert != null) {
-            return new ResponseEntity<>(childAlert, HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(childAlert.toString(), HttpStatus.ACCEPTED);
         } else {
-            return new ResponseEntity<>("Aucun utilisateur trouvées", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Aucun utilisateur trouvées", HttpStatus.NO_CONTENT);
         }
     }
 
