@@ -49,7 +49,7 @@ public class Filtre {
 
     }
 
-    public JsonObject filtreFirestation(FireStation fireStationList, String... ListAllExcept) throws JsonProcessingException {
+    public JsonObject filtreAllExceptFirestation(FireStation fireStationList, String... ListAllExcept) throws JsonProcessingException {
 
         SimpleBeanPropertyFilter filtreUrl = SimpleBeanPropertyFilter.filterOutAllExcept(ListAllExcept);
         FilterProvider list = new SimpleFilterProvider().addFilter("FiltreFire", filtreUrl);
