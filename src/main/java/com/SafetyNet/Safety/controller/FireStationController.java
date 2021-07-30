@@ -47,7 +47,7 @@ public class FireStationController {
     * Put Firestation
     */
     @PutMapping(value = "/firestation/{id}")
-    public String firestationPut(@RequestBody FireStation firestation, @PathVariable int id){
+    public String firestationPut(@RequestBody FireStation firestation, @PathVariable int id) throws JsonProcessingException {
               if(fireStationService.update(firestation,id)){
                   return "Mise à jour de la firestation "+id;
               }else{
@@ -84,8 +84,8 @@ public class FireStationController {
     ///////////////////////////////
 
     /*
+    * firestation?stationNumber=<station_number>
     * URl retourne une liste des personnes par caserne de pompiers correspondantes
-    * TODO Appliquer un filtre sur le resultat + trow error
     */
     @GetMapping(value = "/firestation",produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> firestation(@RequestParam int stationNumber ) throws JsonProcessingException {

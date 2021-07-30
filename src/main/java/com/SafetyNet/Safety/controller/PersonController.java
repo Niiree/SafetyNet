@@ -35,7 +35,7 @@ public class PersonController {
     public String personUpdate(@RequestBody Person person){
         if(personService.personUpdate(person)){
             return "Person mise à jour";
-        }//TODO Boolean réponse à rajouter partout
+        }
         return "Update échoué";
     }
 

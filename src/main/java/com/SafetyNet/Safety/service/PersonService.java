@@ -64,6 +64,12 @@ public class PersonService {
         return  user;
     }
 
+
+    ///////////////////////////////
+    /////          URLS       /////
+    ///////////////////////////////
+
+
     /*
      @param    Ville
      @return   Retourne une liste d'email en fonction de la ville
@@ -101,7 +107,7 @@ public class PersonService {
                 .filter(persons -> firestation.getAddress().contains(persons.getAddress()))
                 .collect(Collectors.toList());
 
-        JsonObject jsonObject = filtre.filtreListPerson(personFirestation, "email");
+        JsonObject jsonObject = filtre.filtreListPerson(personFirestation, "email","city","zip","allergies","birthdate","zip","medical","adult");
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         JsonArray jsonArray = new JsonArray();
 
