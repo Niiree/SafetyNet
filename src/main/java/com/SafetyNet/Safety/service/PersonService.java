@@ -107,6 +107,8 @@ public class PersonService {
                 .filter(persons -> firestation.getAddress().contains(persons.getAddress()))
                 .collect(Collectors.toList());
 
+
+        if(personFirestation != null){
         JsonObject jsonObject = filtre.filtreListPerson(personFirestation, "email","city","zip","allergies","birthdate","zip","medical","adult");
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         JsonArray jsonArray = new JsonArray();
@@ -126,6 +128,9 @@ public class PersonService {
         result.addProperty("enfants",child);
 
         return result;
+        }else{
+            throw new PersonIntrouvableException("Information manquantes"); // TODO ???
+        }
     }
 
     public JsonObject phoneAlert(FireStation firestation) throws JsonProcessingException {
