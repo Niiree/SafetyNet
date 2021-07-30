@@ -1,8 +1,13 @@
 package com.SafetyNet.Safety.model;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonFilter("FiltreFire")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class FireStation {
     private int station;
     private List<String> address = new ArrayList<String>();
