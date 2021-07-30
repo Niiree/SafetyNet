@@ -24,30 +24,38 @@ public class FireStationService {
 
     private static List<FireStation> listFirestations = new ArrayList<>();
 
-    public List<FireStation> findAll() { return listFirestations; }
+    public List<FireStation> findAll() {
+        return listFirestations;
+    }
 
-    public FireStation findById(int id){ return listFirestations.stream().filter(fireStation -> id== fireStation.getStation()).findAny().orElse(null); }
+    public FireStation findById(int id) {
+        return listFirestations.stream().filter(fireStation -> id == fireStation.getStation()).findAny().orElse(null);
+    }
 
-    public List<FireStation> findByAddress(String address){ return listFirestations.stream().filter(fireStation -> fireStation.getAddress().contains(address)).collect(Collectors.toList());}
+    public List<FireStation> findByAddress(String address) {
+        return listFirestations.stream().filter(fireStation -> fireStation.getAddress().contains(address)).collect(Collectors.toList());
+    }
 
-    public void save(FireStation fireStation) { listFirestations.add(fireStation); }
+    public void save(FireStation fireStation) {
+        listFirestations.add(fireStation);
+    }
 
-    public boolean remove(FireStation fireStation){
+    public boolean remove(FireStation fireStation) {
         Optional<FireStation> resultFirestation = listFirestations.stream().filter(fireStation1 -> fireStation == fireStation1).findAny();
-        if (resultFirestation == null){
+        if (resultFirestation == null) {
             throw new FireStationIntrouvableException("Firestation introuvable");
-        }else {
-        listFirestations.removeIf(fireStation1 -> fireStation.getStation() == fireStation1.getStation());
-        return true;
+        } else {
+            listFirestations.removeIf(fireStation1 -> fireStation.getStation() == fireStation1.getStation());
+            return true;
         }
     }
 
-    public boolean addAddress(String address, int id){
+    public boolean addAddress(String address, int id) {
         FireStation fir = this.findById(id);
-        if (fir != null){
+        if (fir != null) {
             fir.addAddressList(address);
             return true;
-        }else{
+        } else {
             throw new FireStationIntrouvableException("Firestation introuvable");
         }
 
@@ -59,10 +67,10 @@ public class FireStationService {
                 .filter(fireStation -> id == fireStation.getStation())
                 .findAny()
                 .orElse(null);
-        if (fire != null){
+        if (fire != null) {
             fire.setAddress(fireStations.getAddress());
             return true;
-        }else{
+        } else {
             throw new FireStationIntrouvableException("Firestation introuvable");
         }
 

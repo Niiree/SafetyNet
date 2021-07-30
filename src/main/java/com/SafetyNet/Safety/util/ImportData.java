@@ -59,11 +59,11 @@ public class ImportData {
     /*
   Chargement des Persons
   */
-    private void loadPersons(JsonElement persons){
+    private void loadPersons(JsonElement persons) {
         JsonArray personsArray = persons.getAsJsonArray();
-        for (JsonElement jsonPerson:personsArray
-            ) {
-            Person person = gson.fromJson(jsonPerson,Person.class);
+        for (JsonElement jsonPerson : personsArray
+        ) {
+            Person person = gson.fromJson(jsonPerson, Person.class);
             personService.personSave(person);
         }
     }
@@ -71,25 +71,25 @@ public class ImportData {
     /*
      Chargement des FireStations
      */
-    private void loadFireStations(JsonElement fireStations){
+    private void loadFireStations(JsonElement fireStations) {
         JsonArray firestationArray = fireStations.getAsJsonArray();
-        for (JsonElement jsonFireStation:firestationArray
-            ) {
+        for (JsonElement jsonFireStation : firestationArray
+        ) {
             JsonObject jsonObject = jsonFireStation.getAsJsonObject();
 
             int id = jsonObject.get("station").getAsInt();
             String address = jsonObject.get("address").getAsString();
 
             // Si l'ID existe, alors on ajoute l'adresse, sinon on sauvegarde.
-            if(fireStationService.findById(id)!= null){
+            if (fireStationService.findById(id) != null) {
                 //Vérification doublon address
-                if (!fireStationService.findById(id).getAddress().contains(address)){
-                    fireStationService.addAddress(address,id);
+                if (!fireStationService.findById(id).getAddress().contains(address)) {
+                    fireStationService.addAddress(address, id);
                 }
-            }else{
-              //  List<String> temp = Arrays.asList(new String[]{address});
-               // temp.add(address);
-                FireStation fireStation = new FireStation(new ArrayList<String>(Arrays.asList(new String[]{address})),id);
+            } else {
+                //  List<String> temp = Arrays.asList(new String[]{address});
+                // temp.add(address);
+                FireStation fireStation = new FireStation(new ArrayList<String>(Arrays.asList(new String[]{address})), id);
                 fireStationService.save(fireStation);
             }
         }
@@ -102,7 +102,7 @@ public class ImportData {
         JsonArray medicalRecordsArray = medicalRecords.getAsJsonArray();
 
         for (JsonElement jsonMedicalRecord : medicalRecordsArray
-            ){
+        ) {
             JsonObject jsonObject = jsonMedicalRecord.getAsJsonObject();
             String firstName = jsonObject.get("firstName").getAsString();
             String lastName = jsonObject.get("lastName").getAsString();
@@ -112,7 +112,7 @@ public class ImportData {
             person.setMedical(gson.fromJson(jsonObject.getAsJsonArray("medications"), List.class));
             person.setAllergies(gson.fromJson(jsonObject.getAsJsonArray("allergies"), List.class));
 
-            String dateString =jsonObject.get("birthdate").getAsString();
+            String dateString = jsonObject.get("birthdate").getAsString();
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
             try {

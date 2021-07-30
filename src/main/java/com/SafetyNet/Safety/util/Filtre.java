@@ -15,10 +15,10 @@ import java.util.List;
 
 public class Filtre {
 
-    public JsonObject filtreListPerson(List<Person> personList, String... ListAllExcept ) throws JsonProcessingException {
+    public JsonObject filtreListPerson(List<Person> personList, String... ListAllExcept) throws JsonProcessingException {
         SimpleBeanPropertyFilter filtreUrl = SimpleBeanPropertyFilter.serializeAllExcept(ListAllExcept);
-        FilterProvider list = new SimpleFilterProvider().addFilter("Filtre",filtreUrl);
-        MappingJacksonValue personsFiltre  = new MappingJacksonValue(personList);
+        FilterProvider list = new SimpleFilterProvider().addFilter("Filtre", filtreUrl);
+        MappingJacksonValue personsFiltre = new MappingJacksonValue(personList);
         personsFiltre.setFilters(list);
         ObjectMapper mapper = new ObjectMapper();
         mapper.setFilterProvider(list);
@@ -31,11 +31,11 @@ public class Filtre {
 
     }
 
-    public JsonObject filtreListFirestation(List<FireStation> fireStationList,String... ListAllExcept) throws JsonProcessingException {
+    public JsonObject filtreListFirestation(List<FireStation> fireStationList, String... ListAllExcept) throws JsonProcessingException {
 
         SimpleBeanPropertyFilter filtreUrl = SimpleBeanPropertyFilter.serializeAllExcept(ListAllExcept);
-        FilterProvider list = new SimpleFilterProvider().addFilter("FiltreFire",filtreUrl);
-        MappingJacksonValue firestationsFiltre  = new MappingJacksonValue(fireStationList);
+        FilterProvider list = new SimpleFilterProvider().addFilter("FiltreFire", filtreUrl);
+        MappingJacksonValue firestationsFiltre = new MappingJacksonValue(fireStationList);
         firestationsFiltre.setFilters(list);
         ObjectMapper mapper = new ObjectMapper();
         mapper.setFilterProvider(list);
@@ -48,11 +48,11 @@ public class Filtre {
 
     }
 
-    public JsonObject filtreFirestation(FireStation fireStationList,String... ListAllExcept) throws JsonProcessingException {
+    public JsonObject filtreFirestation(FireStation fireStationList, String... ListAllExcept) throws JsonProcessingException {
 
         SimpleBeanPropertyFilter filtreUrl = SimpleBeanPropertyFilter.serializeAllExcept(ListAllExcept);
-        FilterProvider list = new SimpleFilterProvider().addFilter("FiltreFire",filtreUrl);
-        MappingJacksonValue firestationsFiltre  = new MappingJacksonValue(fireStationList);
+        FilterProvider list = new SimpleFilterProvider().addFilter("FiltreFire", filtreUrl);
+        MappingJacksonValue firestationsFiltre = new MappingJacksonValue(fireStationList);
         firestationsFiltre.setFilters(list);
         ObjectMapper mapper = new ObjectMapper();
         mapper.setFilterProvider(list);

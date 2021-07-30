@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class FireStationIntrouvableException extends RuntimeException {
 
-    public FireStationIntrouvableException(String s){
-        super (s);
+    public FireStationIntrouvableException(String s) {
+        super(s);
     }
 }

@@ -15,15 +15,17 @@ public class MedicalRecordsController {
     private MedicalRecordsService medicalRecordsService;
 
     @PostMapping(value = "/medicalRecords")
-    public void medicalRecordPost(){
+    public void medicalRecordPost() {
 
     }
+
     @PutMapping(value = "/medicalRecords")
-    public void medicalRecordDPut(){
+    public void medicalRecordDPut() {
         //TODO
     }
+
     @DeleteMapping(value = "/medicalRecords")
-    public void medicalRecordDelete(){
+    public void medicalRecordDelete() {
 
     }
 

@@ -17,11 +17,15 @@ public class FireStation {
         this.address = address;
     }
 
-    public FireStation() { }
+    public FireStation() {
+    }
 
-    public FireStation(FireStation fireStation) { }
+    public FireStation(FireStation fireStation) {
+    }
 
-    public int getStation() { return station; }
+    public int getStation() {
+        return station;
+    }
 
     public void setStation(int station) {
         this.station = station;
@@ -34,7 +38,8 @@ public class FireStation {
     public void setAddress(List<String> address) {
         this.address = address;
     }
-    public void addAddressList(String address){
+
+    public void addAddressList(String address) {
         this.address.add(address);
     }
 }

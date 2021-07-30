@@ -32,40 +32,41 @@ public class FireStationController {
     @Autowired
     private FireStationService fireStationService;
     private PersonService personService = new PersonService();
-    private Filtre filtre  = new  Filtre();
+    private Filtre filtre = new Filtre();
 
 
     /*
-    * Save Firestation
-    */
+     * Save Firestation
+     */
     @PostMapping(value = "/firestation")
-    public void firestationPost(@RequestBody FireStation fireStation){
+    public void firestationPost(@RequestBody FireStation fireStation) {
         fireStationService.save(fireStation);
     }
 
     /*
-    * Put Firestation
-    */
+     * Put Firestation
+     */
     @PutMapping(value = "/firestation/{id}")
     public String firestationPut(@RequestBody FireStation firestation, @PathVariable int id) throws JsonProcessingException {
-              if(fireStationService.update(firestation,id)){
-                  return "Mise à jour de la firestation "+id;
-              }else{
-                  return "La mise à jour n'a pas eu lieu ";
-              }
-              //TODO Vérifier si c'est une Firestation?
+        if (fireStationService.update(firestation, id)) {
+            return "Mise à jour de la firestation " + id;
+        } else {
+            return "La mise à jour n'a pas eu lieu ";
+        }
+        //TODO Vérifier si c'est une Firestation?
 
 
     }
-    /*
-    * Delete Firestation
-    */
-    @DeleteMapping(value = "/firestation")
-    public ResponseEntity<?> firestationDelete(@RequestBody FireStation firestation){
 
-        if(fireStationService.remove(firestation)){
+    /*
+     * Delete Firestation
+     */
+    @DeleteMapping(value = "/firestation")
+    public ResponseEntity<?> firestationDelete(@RequestBody FireStation firestation) {
+
+        if (fireStationService.remove(firestation)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        }else {
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -75,7 +76,8 @@ public class FireStationController {
      *
      */
     @GetMapping(value = "/firestationAll")
-    public List<FireStation> listeFireStation(){ return fireStationService.findAll();
+    public List<FireStation> listeFireStation() {
+        return fireStationService.findAll();
     }
 
 
@@ -84,16 +86,16 @@ public class FireStationController {
     ///////////////////////////////
 
     /*
-    * firestation?stationNumber=<station_number>
-    * URl retourne une liste des personnes par caserne de pompiers correspondantes
-    */
-    @GetMapping(value = "/firestation",produces= MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> firestation(@RequestParam int stationNumber ) throws JsonProcessingException {
+     * firestation?stationNumber=<station_number>
+     * URl retourne une liste des personnes par caserne de pompiers correspondantes
+     */
+    @GetMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> firestation(@RequestParam int stationNumber) throws JsonProcessingException {
         FireStation firestation = fireStationService.findById(stationNumber);
         JsonObject result = personService.PersonByFirestation(firestation);
-        if(result != null){
-            return new ResponseEntity<>(result.toString(), HttpStatus.OK);}
-        else{
+        if (result != null) {
+            return new ResponseEntity<>(result.toString(), HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
@@ -104,14 +106,14 @@ public class FireStationController {
      * TODO A FAIRE
      */
     @GetMapping(value = "/fire")
-    public List<String> fire(@RequestParam String address){
+    public List<String> fire(@RequestParam String address) {
         List<Person> personList = personService.findAll();
         personList.stream()
                 .filter(person -> person.getAddress().equals(address))
                 .collect(Collectors.toList());
         List<FireStation> firestations = fireStationService.findByAddress(address);
         //TODO RETURN FIRE + PERSONLIST Filtre
-       return null;
+        return null;
     }
 
     /*
@@ -119,10 +121,10 @@ public class FireStationController {
      * TODO A FAIRE
      */
     @GetMapping(value = "/flood/stations")
-    public List<String> flood(@RequestParam List<Integer> station_number){
+    public List<String> flood(@RequestParam List<Integer> station_number) {
 
-        for (Integer id:station_number
-             ) {
+        for (Integer id : station_number
+        ) {
             FireStation firestation = fireStationService.findById(id);
             List<Person> personList = personService.findAll();
             personList.stream()
@@ -133,8 +135,6 @@ public class FireStationController {
         //TODO RETURN A FINIR
         return null;
     }
-
-
 
 
 }

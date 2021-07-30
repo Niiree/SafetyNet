@@ -28,40 +28,41 @@ public class PersonService {
         personsList.add(person);
     }
 
-    public boolean personDelete(String firstName, String lastName){
-        if (findByFirstNameLastName(firstName, lastName) != null){
+    public boolean personDelete(String firstName, String lastName) {
+        if (findByFirstNameLastName(firstName, lastName) != null) {
             personsList.removeIf(person -> firstName.equals(person.getFirstName()) && lastName.equals(person.getLastName()));
             return true;
-        }else{
+        } else {
             throw new PersonIntrouvableException("L'utilisateur n'existe pas");
         }
     }
 
-    public boolean personUpdate(Person person){
+    public boolean personUpdate(Person person) {
         Optional<Person> user = personsList.stream().filter(p -> person.getLastName().equals(p.getLastName()) && person.getFirstName().equals(p.getFirstName())).findAny();
-        if (user.isPresent()){
-            user.get().setCity(person.getCity()) ;
+        if (user.isPresent()) {
+            user.get().setCity(person.getCity());
             user.get().setZip(person.getZip());
             user.get().setPhone(person.getPhone());
             user.get().setAddress(person.getAddress());
             user.get().setBirthdate(person.getBirthdate());
             user.get().setEmail(person.getEmail());
             return true;
-        }else{
-             throw new PersonIntrouvableException("L'utilisateur n'existe pas");
+        } else {
+            throw new PersonIntrouvableException("L'utilisateur n'existe pas");
 
         }
         //TODO RETURN ERROR A FAIRE
     }
 
     public List<Person> findAll() {
-        return personsList; }
+        return personsList;
+    }
 
-    public Person findByFirstNameLastName(String firstName, String lastName){
+    public Person findByFirstNameLastName(String firstName, String lastName) {
         Person user = personsList.stream().filter(person -> firstName.equals(person.getFirstName()) && lastName.equals(person.getLastName())).
                 findAny().orElse(null);
         if (user == null) throw new PersonIntrouvableException("L'utilisateur n'existe pas");
-        return  user;
+        return user;
     }
 
 
@@ -74,23 +75,24 @@ public class PersonService {
      @param    Ville
      @return   Retourne une liste d'email en fonction de la ville
     */
-    public List<String> emailByCity(String city){
+    public List<String> emailByCity(String city) {
         return personsList.stream().filter(user -> city.equals(user.getCity()))
                 .map(Person::getEmail)
                 .collect(Collectors.toList());
     }
+
     /*
     @param  Name
     @return Cette url doit retourner le nom, l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments,posologie, allergies) de chaque habitant. Si plusieurs personnes portent le même nom, elles doivent toutes apparaître.
      */
-    public List<Person> personByName(String name){
+    public List<Person> personByName(String name) {
         return personsList.stream().filter(person -> name.equals(person.getLastName())).collect(Collectors.toList());
     }
 
     /*
      * @return doit retourner une liste d'enfants (tout individu âgé de 18 ans ou moins) habitant à cette adresse.
      */
-    public List<Person> childAlert(String address){
+    public List<Person> childAlert(String address) {
         return personsList.stream().filter(person -> !person.isAdult() && person.getAddress().equals(address)).collect(Collectors.toList());
     }
 
@@ -108,27 +110,27 @@ public class PersonService {
                 .collect(Collectors.toList());
 
 
-        if(personFirestation != null){
-        JsonObject jsonObject = filtre.filtreListPerson(personFirestation, "email","city","zip","allergies","birthdate","zip","medical","adult");
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        JsonArray jsonArray = new JsonArray();
+        if (personFirestation != null) {
+            JsonObject jsonObject = filtre.filtreListPerson(personFirestation, "email", "city", "zip", "allergies", "birthdate", "zip", "medical", "adult");
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            JsonArray jsonArray = new JsonArray();
 
 
-        for (Person pers:personFirestation){
-            jsonArray.add(gson.toJson(pers,Person.class));
-            if(pers.isAdult()){
-                adulte.getAndIncrement();
-            }else {
-                child.getAndIncrement();
+            for (Person pers : personFirestation) {
+                jsonArray.add(gson.toJson(pers, Person.class));
+                if (pers.isAdult()) {
+                    adulte.getAndIncrement();
+                } else {
+                    child.getAndIncrement();
+                }
             }
-        }
-        JsonObject result = new JsonObject();
-        result.add("Person", jsonObject.get("value"));
-        result.addProperty("adulte",adulte);
-        result.addProperty("enfants",child);
+            JsonObject result = new JsonObject();
+            result.add("Person", jsonObject.get("value"));
+            result.addProperty("adulte", adulte);
+            result.addProperty("enfants", child);
 
-        return result;
-        }else{
+            return result;
+        } else {
             throw new PersonIntrouvableException("Information manquantes"); // TODO ???
         }
     }
@@ -143,17 +145,17 @@ public class PersonService {
 
     }
 
-    public List<String> communityEmail(String city){
+    public List<String> communityEmail(String city) {
         List<Person> personList = personsList.stream().filter(person -> person.getCity().equals(city)).collect(Collectors.toList());
-        List<String>listEmail = new ArrayList<>();
-        for (Person person:personList
+        List<String> listEmail = new ArrayList<>();
+        for (Person person : personList
         ) {
             listEmail.add(person.getEmail());
         }
         return listEmail;
     }
 
-    public void fire (){
+    public void fire() {
         //TODO A FAIRE
     }
 
