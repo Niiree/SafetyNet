@@ -105,8 +105,8 @@ public class FireStationController {
 
     /*
      * fire?address=<address>
-     * Cette url doit retourner la liste des habitants vivant à l’adresse donnée ainsi que le numéro de la casernede pompiers la desservant.
-     *
+     * URL doit retourner la liste des habitants vivant à l’adresse donnée ainsi que le numéro de la casernede pompiers la desservant.
+     * UR OK
      */
     @GetMapping(value = "/fire" ,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> fire(@RequestParam String address) throws JsonProcessingException {
