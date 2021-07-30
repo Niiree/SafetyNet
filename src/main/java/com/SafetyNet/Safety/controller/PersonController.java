@@ -12,16 +12,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @RestController
 public class PersonController {
 
     @Autowired
     private PersonService personService;
+    @Autowired
     private FireStationService fireStationService;
 
 
@@ -84,7 +83,7 @@ public class PersonController {
 
     /*
      * URl doit retourner le nom, l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments,posologie, allergies) de chaque habitant. Si plusieurs personnes portent le même nom, elles doiventtoutes apparaître
-     * URL OK
+     *
      */
     @GetMapping(value = "/personInfo/Name/{lastName}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> personInfoName(@PathVariable String lastName) {
@@ -99,13 +98,13 @@ public class PersonController {
 
     /*
      * URl doit retourner les adresses mail de tous les habitants de la ville
-     * URL OK
+     *
      */
     @GetMapping(value = "/communityEmail", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> communityEmail(@RequestParam String city) {
         List<String> result = personService.communityEmail(city);
         if (result != null) {
-            return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -115,16 +114,16 @@ public class PersonController {
 
     /*
      * Cette url doit retourner une liste des numéros de téléphone des résidents desservis par la caserne depompiers
-     *
+     * URK OK
      */
     @GetMapping(value = "/phoneAlert", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> phoneAlert(@RequestParam int firestation_number) throws JsonProcessingException {
         FireStation fire = fireStationService.findById(firestation_number);
         JsonObject result = personService.phoneAlert(fire);
-        if (result.isJsonNull()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if (result != null) {
+            return new ResponseEntity<>(result.toString(),HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(result.toString(), HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 

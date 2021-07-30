@@ -1,15 +1,11 @@
 package com.SafetyNet.Safety.service;
 
-import ch.qos.logback.core.BasicStatusManager;
 import com.SafetyNet.Safety.model.FireStation;
 import com.SafetyNet.Safety.model.Person;
 import com.SafetyNet.Safety.util.Filtre;
 import com.SafetyNet.Safety.util.exceptions.PersonIntrouvableException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -90,23 +86,21 @@ public class PersonService {
     }
 
     /*
-     * @return doit retourner une liste d'enfants (tout individu âgé de 18 ans ou moins) habitant à cette adresse.
+    * childAlert?address=<address>
+     @param (String Address)
+     @return doit retourner une liste d'enfants (tout individu âgé de 18 ans ou moins) habitant à cette adresse.
      */
     public JsonObject childAlert(String address) throws JsonProcessingException {
         List<Person> child = personsList.stream().filter(person -> !person.isAdult() && person.getAddress().equals(address)).collect(Collectors.toList());
-        if(child != null){
-            JsonObject jsonObject= filtre.filtreListPerson(child, "address","email", "city", "zip", "allergies", "birthdate", "zip", "medical", "adult");
-            JsonObject result = new JsonObject();
-            result.add("Person",jsonObject.get("value"));
+        JsonObject result = new JsonObject();
+        JsonObject jsonObject = filtre.filtreAllExceptListPerson(child, "address", "email", "city", "zip", "allergies", "birthdate", "zip", "medical", "adult");
 
-            return result;
-        }
-        throw new PersonIntrouvableException("Aucun enfant trouvés");
+        result.add("Person", jsonObject.get("value"));
+        return result;
     }
 
     /*
     * firestation?stationNumber=<station_number>
-    * URl retourne une liste des personnes par caserne de pompiers correspondantes
     @param Firestation
     @return Json d'une liste de person trié en fonction de l'adresse de la firestation
     */
@@ -118,7 +112,6 @@ public class PersonService {
                 .collect(Collectors.toList());
 
         if (personFirestation != null) {
-            JsonObject jsonObject = filtre.filtreListPerson(personFirestation, "email", "city", "zip", "allergies", "birthdate", "zip", "medical", "adult");
 
             for (Person pers : personFirestation) {
                 if (pers.isAdult()) {
@@ -129,7 +122,7 @@ public class PersonService {
             }
 
             JsonObject result = new JsonObject();
-            result.add("Person", jsonObject.get("value"));
+            result.add("Person", filtre.filtreAllExceptListPerson(personFirestation, "lastName", "firstName", "address", "phone").get("value"));
             result.addProperty("adulte", adulte);
             result.addProperty("enfants", child);
 
@@ -139,14 +132,32 @@ public class PersonService {
         }
     }
 
+    /*
+    * phoneAlert?firestation=<firestation_number>
+    @param Firestation
+    @return doit retourner une liste des numéros de téléphone des résidents desservis par la caserne de pompiers
+    */
     public JsonObject phoneAlert(FireStation firestation) throws JsonProcessingException {
-        List<Person> personList = personsList.stream()
-                .filter(persons -> firestation.getAddress().contains(persons.getAddress()))
-                .collect(Collectors.toList());
+        if (personsList != null) {
+            List<Person> personList = personsList.stream()
+                    .filter(persons -> firestation.getAddress().contains(persons.getAddress()))
+                    .collect(Collectors.toList());
+            JsonObject result = new JsonObject();
+            List<String> listPhone = new ArrayList<>();
 
-        JsonObject result = filtre.filtreListPerson(personList, "email");
-        return result;
+            for (Person per : personList) {
+                listPhone.add(per.getPhone());
+            }
 
+            Gson gson = new Gson();
+            JsonParser jsonParser = new JsonParser();
+            JsonElement json = jsonParser.parse(gson.toJson(listPhone));
+            result.add("Phone", json);
+
+            return result;
+        } else {
+            throw new PersonIntrouvableException("Aucune utilisateur trouvé à cette address");
+        }
     }
 
     public List<String> communityEmail(String city) {
