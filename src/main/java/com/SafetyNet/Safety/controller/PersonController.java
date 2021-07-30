@@ -83,14 +83,14 @@ public class PersonController {
 
     /*
      * URl doit retourner le nom, l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments,posologie, allergies) de chaque habitant. Si plusieurs personnes portent le même nom, elles doiventtoutes apparaître
-     *
+     * URL OK
      */
-    @GetMapping(value = "/personInfo/Name/{lastName}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> personInfoName(@PathVariable String lastName) {
-        List<Person> person = personService.personByName(lastName);
+    @GetMapping(value = "/personInfo", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> personInfoName(@RequestParam String firstName, String lastName) throws JsonProcessingException {
+        JsonObject person = personService.personByName(firstName,lastName);
 
         if (person != null) {
-            return new ResponseEntity<>(person, HttpStatus.OK);
+            return new ResponseEntity<>(person.toString(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

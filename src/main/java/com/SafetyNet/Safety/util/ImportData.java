@@ -87,8 +87,6 @@ public class ImportData {
                     fireStationService.addAddress(address, id);
                 }
             } else {
-                //  List<String> temp = Arrays.asList(new String[]{address});
-                // temp.add(address);
                 FireStation fireStation = new FireStation(new ArrayList<String>(Arrays.asList(new String[]{address})), id);
                 fireStationService.save(fireStation);
             }

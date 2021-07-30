@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import springfox.documentation.spring.web.json.Json;
 import sun.util.resources.iw.LocaleNames_iw;
 
 import java.util.ArrayList;
@@ -83,11 +84,20 @@ public class PersonService {
     }
 
     /*
+    * personInfo?firstName=<firstName>&lastName=<lastName>
     @param  Name
     @return Cette url doit retourner le nom, l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments,posologie, allergies) de chaque habitant. Si plusieurs personnes portent le même nom, elles doivent toutes apparaître.
      */
-    public List<Person> personByName(String name) {
-        return personsList.stream().filter(person -> name.equals(person.getLastName())).collect(Collectors.toList());
+    public JsonObject personByName(String firstName, String lastName) throws JsonProcessingException {
+        List<Person> personlist = personsList.stream().filter(person -> lastName.equals(person.getLastName()) & firstName.equals(person.getFirstName())).collect(Collectors.toList());
+
+        if (personlist.size() != 0) {
+            JsonObject result = new JsonObject();
+            result.add("Person", filtre.filtreAllExceptListPerson(personlist, "lastName", "address", "birthdate", "email", "medical", "allergie").get("value"));
+            return result;
+        } else {
+            throw new PersonIntrouvableException("Personne introuvable");
+        }
     }
 
     /*
@@ -116,7 +126,7 @@ public class PersonService {
                 .filter(persons -> firestation.getAddress().contains(persons.getAddress()))
                 .collect(Collectors.toList());
 
-        if (personFirestation != null) {
+        if (personFirestation.size() != 0) {
 
             for (Person pers : personFirestation) {
                 if (pers.isAdult()) {
@@ -143,10 +153,10 @@ public class PersonService {
     @return doit retourner une liste des numéros de téléphone des résidents desservis par la caserne de pompiers
     */
     public JsonObject phoneAlert(FireStation firestation) throws JsonProcessingException {
-        if (personsList != null) {
-            List<Person> personList = personsList.stream()
-                    .filter(persons -> firestation.getAddress().contains(persons.getAddress()))
-                    .collect(Collectors.toList());
+        List<Person> personList = personsList.stream()
+                .filter(persons -> firestation.getAddress().contains(persons.getAddress()))
+                .collect(Collectors.toList());
+        if (personsList.size() != 0) {
             JsonObject result = new JsonObject();
             List<String> listPhone = new ArrayList<>();
             for (Person per : personList) {
@@ -163,20 +173,33 @@ public class PersonService {
         }
     }
 
-
+    /*
+    * CommunityEmail?city=<city>
+    @param //TODO
+    @return //TODO
+     */
     public List<String> communityEmail(String city) {
         List<Person> personList = personsList.stream().filter(person -> person.getCity().equals(city)).collect(Collectors.toList());
         List<String> listEmail = new ArrayList<>();
-        for (Person person : personList
-        ) {
-            listEmail.add(person.getEmail());
+        if (personList.size() != 0) {
+            for (Person person : personList
+            ) {
+                listEmail.add(person.getEmail());
+            }
+            return listEmail;
+        } else {
+            throw new PersonIntrouvableException("Aucune personne dans cette ville");
         }
-        return listEmail;
     }
 
+    /*
+    * fire?address=<address>
+    @param //TODO
+    @return //TODO
+     */
     public JsonObject fire(String address) throws JsonProcessingException {
         List<Person> personList = personsList.stream().filter(person -> person.getAddress().equals(address)).collect(Collectors.toList());
-        if (personList != null) {
+        if (personList.size() != 0) {
             List<FireStation> firestations = fireStationService.findByAddress(address);
             JsonObject result = new JsonObject();
             result.add("Person", filtre.filtreAllExceptListPerson(personList, "firstName", "address", "phone").get("value"));
@@ -187,6 +210,11 @@ public class PersonService {
         }
     }
 
+    /*
+    * flood/stations?stations=<a list of station_numbers>
+    @param //TODO
+    @return //TODO
+    */
     public JsonObject flood(List<Integer> station_number) throws JsonProcessingException {
         List<FireStation> fireStationList = new ArrayList<>();
         for (int id : station_number) {

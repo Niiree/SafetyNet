@@ -120,12 +120,11 @@ public class FireStationController {
 
     /*
      * Cette url doit retourner une liste de tous les foyers desservis par la caserne. Cette liste doit regrouper lespersonnes par adresse.
-     * TODO A FAIRE
+     * URK OK
      */
     @GetMapping(value = "/flood/stations", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> flood(@RequestParam List<Integer> station_number) throws JsonProcessingException {
        JsonObject result = personService.flood(station_number);
-
         if (result != null) {
             return new ResponseEntity<>(result.toString(), HttpStatus.OK);
         } else {
