@@ -31,7 +31,9 @@ public class FireStationController {
 
     @Autowired
     private FireStationService fireStationService;
-    private PersonService personService = new PersonService();
+    @Autowired
+    private PersonService personService;
+
     private Filtre filtre = new Filtre();
 
 
@@ -102,18 +104,18 @@ public class FireStationController {
 
 
     /*
+     * fire?address=<address>
      * Cette url doit retourner la liste des habitants vivant à l’adresse donnée ainsi que le numéro de la casernede pompiers la desservant.
-     * TODO A FAIRE
+     *
      */
-    @GetMapping(value = "/fire")
-    public List<String> fire(@RequestParam String address) {
-        List<Person> personList = personService.findAll();
-        personList.stream()
-                .filter(person -> person.getAddress().equals(address))
-                .collect(Collectors.toList());
-        List<FireStation> firestations = fireStationService.findByAddress(address);
-        //TODO RETURN FIRE + PERSONLIST Filtre
-        return null;
+    @GetMapping(value = "/fire" ,produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> fire(@RequestParam String address) throws JsonProcessingException {
+        JsonObject result = personService.fire(address);
+        if (result != null) {
+            return new ResponseEntity<>(result.toString(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 
     /*

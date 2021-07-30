@@ -6,6 +6,7 @@ import com.SafetyNet.Safety.util.Filtre;
 import com.SafetyNet.Safety.util.exceptions.PersonIntrouvableException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,6 +18,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class PersonService {
+
+    @Autowired
+    private FireStationService fireStationService;
 
     private Filtre filtre = new Filtre();
     private static final List<Person> personsList = new ArrayList<>();
@@ -144,11 +148,9 @@ public class PersonService {
                     .collect(Collectors.toList());
             JsonObject result = new JsonObject();
             List<String> listPhone = new ArrayList<>();
-
             for (Person per : personList) {
                 listPhone.add(per.getPhone());
             }
-
             Gson gson = new Gson();
             JsonParser jsonParser = new JsonParser();
             JsonElement json = jsonParser.parse(gson.toJson(listPhone));
@@ -156,9 +158,10 @@ public class PersonService {
 
             return result;
         } else {
-            throw new PersonIntrouvableException("Aucune utilisateur trouvé à cette address");
+            throw new PersonIntrouvableException("Aucun utilisateur trouvé à cette address");
         }
     }
+
 
     public List<String> communityEmail(String city) {
         List<Person> personList = personsList.stream().filter(person -> person.getCity().equals(city)).collect(Collectors.toList());
@@ -170,8 +173,18 @@ public class PersonService {
         return listEmail;
     }
 
-    public void fire() {
-        //TODO A FAIRE
+    public JsonObject fire(String address) throws JsonProcessingException {
+        List<Person> personList = personsList.stream().filter(person -> person.getAddress().equals(address)).collect(Collectors.toList());
+        if(personList != null) {
+            List<FireStation> firestations = fireStationService.findByAddress(address);
+            JsonObject result = new JsonObject();
+            result.add("Person", filtre.filtreAllExceptListPerson(personList, "firstName", "address", "phone").get("value"));
+            result.add("Firestation", filtre.filtreAllExceptListFirestation(firestations, "station").get("value"));
+            return result;
+        }else {
+            throw new PersonIntrouvableException("Aucun utilisateur trouvé à cette address");
+        }
+
     }
 
 }
