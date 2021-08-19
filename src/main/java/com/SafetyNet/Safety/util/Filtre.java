@@ -11,25 +11,30 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.bytebuddy.build.Plugin;
 import org.springframework.http.converter.json.MappingJacksonValue;
+import springfox.documentation.spring.web.json.Json;
 
 import java.util.List;
 
 public class Filtre {
 
-    public JsonObject filtreAllExceptListPerson(List<Person> personList, String... ListAllExcept) throws JsonProcessingException {
+    public JsonObject filtreAllExceptListPerson(List<Person> personList, String... ListAllExcept)  {
         SimpleBeanPropertyFilter filtreUrl = SimpleBeanPropertyFilter.filterOutAllExcept(ListAllExcept);
         FilterProvider list = new SimpleFilterProvider().addFilter("Filtre", filtreUrl);
         MappingJacksonValue personsFiltre = new MappingJacksonValue(personList);
         personsFiltre.setFilters(list);
         ObjectMapper mapper = new ObjectMapper();
         mapper.setFilterProvider(list);
+        JsonObject jsonObject = null;
 
-        String jsonData = mapper.writerWithDefaultPrettyPrinter()
-                .writeValueAsString(personsFiltre);
+        try {
+            String jsonData = mapper.writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(personsFiltre);
+           jsonObject =  new JsonParser().parse(jsonData).getAsJsonObject();
+            return jsonObject;
+        }catch (JsonProcessingException e){
 
-        JsonObject jsonObject = new JsonParser().parse(jsonData).getAsJsonObject();
+        }
         return jsonObject;
-
     }
 
     public JsonObject filtreAllExceptListFirestation(List<FireStation> fireStationList, String... ListAllExcept) throws JsonProcessingException {
