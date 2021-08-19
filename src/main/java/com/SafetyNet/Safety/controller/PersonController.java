@@ -5,6 +5,7 @@ import com.SafetyNet.Safety.model.FireStation;
 import com.SafetyNet.Safety.service.FireStationService;
 import com.SafetyNet.Safety.service.PersonService;
 import com.SafetyNet.Safety.model.Person;
+import com.SafetyNet.Safety.util.BuilderResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,44 +24,31 @@ public class PersonController {
     @Autowired
     private FireStationService fireStationService;
 
+    private BuilderResponse builderResponse = new BuilderResponse();
+
 
     @PostMapping(value = "/person")
     public void personPost(@RequestBody Person person) {
-        personService.personSave(person);
-    }
+        personService.personSave(person); }
 
     @PutMapping(value = "/person")
-    public String personUpdate(@RequestBody Person person) {
-        if (personService.personUpdate(person)) {
-            return "Person mise à jour";
-        }
-        return "Update échoué";
-    }
+    public ResponseEntity<?> personUpdate(@RequestBody Person person) {
+       return builderResponse.ResponseBoolean(personService.personUpdate(person)); }
 
     /*
     Suppresion d'un utilisateur en fonction de son firstname et lastname
     @Param Nom et prénom
      */
     @DeleteMapping(value = "/person/{firstName}/{lastName}")
-    public String personDelete(@PathVariable String firstName, @PathVariable String lastName) {
-        if (personService.personDelete(firstName, lastName)) {
-            return "Person supprimé";
-        } else {
-            return "Person introuvable";
-        }
-    }
+    public ResponseEntity<?> personDelete(@PathVariable String firstName, @PathVariable String lastName) {
+    return builderResponse.ResponseBoolean(personService.personDelete(firstName,lastName),"Person supprimé","Non trouvé"); }
 
     /*
- Récuperation d'une liste de Person
-  */
+     Récuperation d'une liste de Person
+    */
     @GetMapping(value = "/personList")
     public ResponseEntity<?> listePersons() {
-        List<Person> listPerson = personService.findAll();
-        if (listPerson != null) {
-            return new ResponseEntity<>(listPerson, HttpStatus.ACCEPTED);
-        } else
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+        return builderResponse.CustomResponse(personService.findAll(),false); }
 
 
     ///////////////////////////////
@@ -73,28 +61,15 @@ public class PersonController {
      */
     @GetMapping(value = "/childAlert",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> childAlert(@RequestParam String address) throws JsonProcessingException {
-        JsonObject childAlert = personService.childAlert(address);
-        if (childAlert != null) {
-            return new ResponseEntity<>(childAlert.toString(), HttpStatus.ACCEPTED);
-        } else {
-            return new ResponseEntity<>("Aucun utilisateur trouvées", HttpStatus.NO_CONTENT);
-        }
-    }
+        return builderResponse.CustomResponse(personService.childAlert(address),true); }
 
     /*
      * URl doit retourner le nom, l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments,posologie, allergies) de chaque habitant. Si plusieurs personnes portent le même nom, elles doiventtoutes apparaître
      * URL OK
      */
     @GetMapping(value = "/personInfo", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> personInfoName(@RequestParam String firstName, String lastName) throws JsonProcessingException {
-        JsonObject person = personService.personByName(firstName,lastName);
-
-        if (person != null) {
-            return new ResponseEntity<>(person.toString(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-    }
+    public ResponseEntity<?> personInfoName(@RequestParam String firstName, String lastName)  {
+        return builderResponse.CustomResponse(personService.personByName(firstName,lastName),true); }
 
     /*
      * URl doit retourner les adresses mail de tous les habitants de la ville
@@ -102,15 +77,7 @@ public class PersonController {
      */
     @GetMapping(value = "/communityEmail", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> communityEmail(@RequestParam String city) {
-        List<String> result = personService.communityEmail(city);
-        if (result != null) {
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-
-    }
-
+       return builderResponse.CustomResponse(personService.communityEmail(city),false); }
 
     /*
      * Cette url doit retourner une liste des numéros de téléphone des résidents desservis par la caserne depompiers
@@ -118,14 +85,7 @@ public class PersonController {
      */
     @GetMapping(value = "/phoneAlert", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> phoneAlert(@RequestParam int firestation_number) throws JsonProcessingException {
-        FireStation fire = fireStationService.findById(firestation_number);
-        JsonObject result = personService.phoneAlert(fire);
-        if (result != null) {
-            return new ResponseEntity<>(result.toString(),HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-    }
+        return builderResponse.CustomResponse(personService.phoneAlert(fireStationService.findById(firestation_number)),true); }
 
 
 }
