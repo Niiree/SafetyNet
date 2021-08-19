@@ -98,7 +98,7 @@ public class FireStationController {
         if (result != null) {
             return new ResponseEntity<>(result.toString(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
