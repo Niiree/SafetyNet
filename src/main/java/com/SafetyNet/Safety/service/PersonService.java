@@ -29,6 +29,7 @@ public class PersonService {
 
     public void personSave(Person person) {
         personsList.add(person);
+
     }
 
     public boolean personDelete(String firstName, String lastName) {
@@ -88,7 +89,7 @@ public class PersonService {
     @param  Name
     @return Cette url doit retourner le nom, l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments,posologie, allergies) de chaque habitant. Si plusieurs personnes portent le même nom, elles doivent toutes apparaître.
      */
-    public JsonObject personByName(String firstName, String lastName) throws JsonProcessingException {
+    public JsonObject personByName(String firstName, String lastName) {
         List<Person> personlist = personsList.stream().filter(person -> lastName.equals(person.getLastName()) & firstName.equals(person.getFirstName())).collect(Collectors.toList());
 
         if (personlist.size() != 0) {
@@ -105,13 +106,17 @@ public class PersonService {
      @param (String Address)
      @return doit retourner une liste d'enfants (tout individu âgé de 18 ans ou moins) habitant à cette adresse.
      */
-    public JsonObject childAlert(String address) throws JsonProcessingException {
+    public JsonObject childAlert(String address)  {
         List<Person> child = personsList.stream().filter(person -> !person.isAdult() && person.getAddress().equals(address)).collect(Collectors.toList());
-        JsonObject result = new JsonObject();
-        JsonObject jsonObject = filtre.filtreAllExceptListPerson(child, "address", "email", "city", "zip", "allergies", "birthdate", "zip", "medical", "adult");
+        if(child.isEmpty()){
+            return null;
+        }else {
+            JsonObject result = new JsonObject();
+            JsonObject jsonObject = filtre.filtreAllExceptListPerson(child, "address", "email", "city", "zip", "allergies", "birthdate", "zip", "medical", "adult");
 
-        result.add("Person", jsonObject.get("value"));
-        return result;
+            result.add("Person", jsonObject.get("value"));
+            return result;
+        }
     }
 
     /*
@@ -119,7 +124,7 @@ public class PersonService {
     @param Firestation
     @return Json d'une liste de person trié en fonction de l'adresse de la firestation
     */
-    public JsonObject PersonByFirestation(FireStation firestation) throws JsonProcessingException {
+    public JsonObject PersonByFirestation(FireStation firestation) {
         AtomicInteger adulte = new AtomicInteger();
         AtomicInteger child = new AtomicInteger();
         List<Person> personFirestation = personsList.stream()
@@ -127,7 +132,6 @@ public class PersonService {
                 .collect(Collectors.toList());
 
         if (personFirestation.size() != 0) {
-
             for (Person pers : personFirestation) {
                 if (pers.isAdult()) {
                     adulte.getAndIncrement();
@@ -143,7 +147,7 @@ public class PersonService {
 
             return result;
         } else {
-            throw new PersonIntrouvableException("Information manquantes"); // TODO ???
+            return null;
         }
     }
 
@@ -226,7 +230,6 @@ public class PersonService {
 
         ArrayList<Object> personList = new ArrayList<>();
         JsonObject result = new JsonObject();
-        int number = 0;
         for (FireStation firestation : fireStationList) {
             result.add("Firestation" + firestation.getStation(), filtre.filtreAllExceptFirestation(firestation, "station").get("value"));
 
