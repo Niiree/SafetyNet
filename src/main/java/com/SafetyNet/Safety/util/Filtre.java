@@ -14,6 +14,7 @@ import org.springframework.http.converter.json.MappingJacksonValue;
 import springfox.documentation.spring.web.json.Json;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Filtre {
 
@@ -32,12 +33,12 @@ public class Filtre {
            jsonObject =  new JsonParser().parse(jsonData).getAsJsonObject();
             return jsonObject;
         }catch (JsonProcessingException e){
-
+            Logger.getLogger(e.getMessage());
         }
         return jsonObject;
     }
 
-    public JsonObject filtreAllExceptListFirestation(List<FireStation> fireStationList, String... ListAllExcept) throws JsonProcessingException {
+    public JsonObject filtreAllExceptListFirestation(List<FireStation> fireStationList, String... ListAllExcept)  {
 
         SimpleBeanPropertyFilter filtreUrl = SimpleBeanPropertyFilter.filterOutAllExcept(ListAllExcept);
         FilterProvider list = new SimpleFilterProvider().addFilter("FiltreFire", filtreUrl);
@@ -45,16 +46,20 @@ public class Filtre {
         firestationsFiltre.setFilters(list);
         ObjectMapper mapper = new ObjectMapper();
         mapper.setFilterProvider(list);
+        JsonObject jsonObject = null;
 
-        String jsonData = mapper.writerWithDefaultPrettyPrinter()
-                .writeValueAsString(firestationsFiltre);
-
-        JsonObject jsonObject = new JsonParser().parse(jsonData).getAsJsonObject();
+        try {
+            String jsonData = mapper.writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(firestationsFiltre);
+             jsonObject = new JsonParser().parse(jsonData).getAsJsonObject();
+        }catch (JsonProcessingException e){
+            Logger.getLogger(e.getMessage());
+        }
         return jsonObject;
 
     }
 
-    public JsonObject filtreAllExceptFirestation(FireStation fireStationList, String... ListAllExcept) throws JsonProcessingException {
+    public JsonObject filtreAllExceptFirestation(FireStation fireStationList, String... ListAllExcept)  {
 
         SimpleBeanPropertyFilter filtreUrl = SimpleBeanPropertyFilter.filterOutAllExcept(ListAllExcept);
         FilterProvider list = new SimpleFilterProvider().addFilter("FiltreFire", filtreUrl);
@@ -62,11 +67,16 @@ public class Filtre {
         firestationsFiltre.setFilters(list);
         ObjectMapper mapper = new ObjectMapper();
         mapper.setFilterProvider(list);
+        JsonObject jsonObject = null;
+        try {
+            String jsonData = mapper.writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(firestationsFiltre);
 
-        String jsonData = mapper.writerWithDefaultPrettyPrinter()
-                .writeValueAsString(firestationsFiltre);
+             jsonObject = new JsonParser().parse(jsonData).getAsJsonObject();
+        }catch (JsonProcessingException e){
+            Logger.getLogger(e.getMessage());
+        }
 
-        JsonObject jsonObject = new JsonParser().parse(jsonData).getAsJsonObject();
         return jsonObject;
 
     }

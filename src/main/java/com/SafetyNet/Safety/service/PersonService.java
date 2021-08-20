@@ -37,7 +37,7 @@ public class PersonService {
             personsList.removeIf(person -> firstName.equals(person.getFirstName()) && lastName.equals(person.getLastName()));
             return true;
         } else {
-            throw new PersonIntrouvableException("L'utilisateur n'existe pas");
+           return false;
         }
     }
 
@@ -52,8 +52,7 @@ public class PersonService {
             user.get().setEmail(person.getEmail());
             return true;
         } else {
-            throw new PersonIntrouvableException("L'utilisateur n'existe pas");
-
+            return false;
         }
     }
 
@@ -64,7 +63,7 @@ public class PersonService {
     public Person findByFirstNameLastName(String firstName, String lastName) {
         Person user = personsList.stream().filter(person -> firstName.equals(person.getFirstName()) && lastName.equals(person.getLastName())).
                 findAny().orElse(null);
-        if (user == null) throw new PersonIntrouvableException("L'utilisateur n'existe pas");
+        if (user == null) return null;
         return user;
     }
 
@@ -219,7 +218,7 @@ public class PersonService {
     @param //TODO
     @return //TODO
     */
-    public JsonObject flood(List<Integer> station_number) throws JsonProcessingException {
+    public JsonObject flood(List<Integer> station_number)  {
         List<FireStation> fireStationList = new ArrayList<>();
         for (int id : station_number) {
             FireStation fire = fireStationService.findById(id);

@@ -53,13 +53,13 @@ public class FireStationService {
             fir.addAddressList(address);
             return true;
         } else {
-            throw new FireStationIntrouvableException("Firestation introuvable");
+            return false;
         }
 
     }
 
     //TODO Return à ajouter
-    public boolean update(FireStation fireStations, int id) throws JsonProcessingException {
+    public boolean update(FireStation fireStations, int id)  {
         FireStation fire = listFirestations.stream()
                 .filter(fireStation -> id == fireStation.getStation())
                 .findAny()
