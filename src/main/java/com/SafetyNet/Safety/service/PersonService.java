@@ -124,7 +124,7 @@ public class PersonService {
     @param Firestation
     @return Json d'une liste de person trié en fonction de l'adresse de la firestation
     */
-    public JsonObject PersonByFirestation(FireStation firestation) {
+    public JsonObject personByFirestation(FireStation firestation) {
         AtomicInteger adulte = new AtomicInteger();
         AtomicInteger child = new AtomicInteger();
         List<Person> personFirestation = personsList.stream()

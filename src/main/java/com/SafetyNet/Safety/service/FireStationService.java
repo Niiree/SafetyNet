@@ -6,10 +6,6 @@ import com.SafetyNet.Safety.model.FireStation;
 import com.SafetyNet.Safety.util.Filtre;
 import com.SafetyNet.Safety.util.exceptions.FireStationIntrouvableException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -36,8 +32,9 @@ public class FireStationService {
         return listFirestations.stream().filter(fireStation -> fireStation.getAddress().contains(address)).collect(Collectors.toList());
     }
 
-    public void save(FireStation fireStation) {
+    public boolean save(FireStation fireStation) {
         listFirestations.add(fireStation);
+        return true;
     }
 
     public boolean remove(FireStation fireStation) {
@@ -71,7 +68,7 @@ public class FireStationService {
             fire.setAddress(fireStations.getAddress());
             return true;
         } else {
-            throw new FireStationIntrouvableException("Firestation introuvable");
+            return false;
         }
 
     }
