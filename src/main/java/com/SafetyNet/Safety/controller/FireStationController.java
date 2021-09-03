@@ -55,7 +55,7 @@ public class FireStationController {
      */
     @GetMapping(value = "/firestationAll", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> listeFireStation() {
-        return builderResponse.CustomResponse(fireStationService.findAll(),false); }
+        return builderResponse.CustomResponse(fireStationService.findAll()); }
 
 
     ///////////////////////////////
@@ -68,7 +68,7 @@ public class FireStationController {
      */
     @GetMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> firestation(@RequestParam int stationNumber) throws JsonProcessingException {
-        return builderResponse.CustomResponse(personService.personByFirestation(fireStationService.findById(stationNumber)),true); }
+        return builderResponse.CustomResponse(personService.personByFirestation(fireStationService.findById(stationNumber))); }
 
 
     /*
@@ -78,7 +78,7 @@ public class FireStationController {
      */
     @GetMapping(value = "/fire", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> fire(@RequestParam String address) throws JsonProcessingException {
-        return  builderResponse.CustomResponse(personService.fire(address),true); }
+        return  builderResponse.CustomResponse(personService.fire(address)); }
 
     /*
      * Cette url doit retourner une liste de tous les foyers desservis par la caserne. Cette liste doit regrouper lespersonnes par adresse.
@@ -86,6 +86,6 @@ public class FireStationController {
      */
     @GetMapping(value = "/flood/stations", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> flood(@RequestParam List<Integer> station_number) throws JsonProcessingException {
-        return builderResponse.CustomResponse(personService.flood(station_number),true); }
+        return builderResponse.CustomResponse(personService.flood(station_number)); }
 
 }

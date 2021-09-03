@@ -124,7 +124,7 @@ public class PersonService {
     @param Firestation
     @return Json d'une liste de person trié en fonction de l'adresse de la firestation
     */
-    public JsonObject personByFirestation(FireStation firestation) {
+    public String personByFirestation(FireStation firestation) {
         AtomicInteger adulte = new AtomicInteger();
         AtomicInteger child = new AtomicInteger();
         List<Person> personFirestation = personsList.stream()
@@ -145,7 +145,7 @@ public class PersonService {
             result.addProperty("adulte", adulte);
             result.addProperty("enfants", child);
 
-            return result;
+            return result.toString();
         } else {
             return null;
         }
@@ -201,14 +201,14 @@ public class PersonService {
     @param //TODO
     @return //TODO
      */
-    public JsonObject fire(String address) throws JsonProcessingException {
+    public String fire(String address) throws JsonProcessingException {
         List<Person> personList = personsList.stream().filter(person -> person.getAddress().equals(address)).collect(Collectors.toList());
         if (personList.size() != 0) {
             List<FireStation> firestations = fireStationService.findByAddress(address);
             JsonObject result = new JsonObject();
             result.add("Person", filtre.filtreAllExceptListPerson(personList, "firstName", "address", "phone").get("value"));
             result.add("Firestation", filtre.filtreAllExceptListFirestation(firestations, "station").get("value"));
-            return result;
+            return result.toString();
         } else {
             throw new PersonIntrouvableException("Aucun utilisateur trouvé à cette address");
         }
@@ -219,7 +219,7 @@ public class PersonService {
     @param //TODO
     @return //TODO
     */
-    public JsonObject flood(List<Integer> station_number)  {
+    public String flood(List<Integer> station_number)  {
         List<FireStation> fireStationList = new ArrayList<>();
         for (int id : station_number) {
             FireStation fire = fireStationService.findById(id);
@@ -243,6 +243,6 @@ public class PersonService {
 
             }
         }
-        return result;
+        return result.toString();
     }
 }
