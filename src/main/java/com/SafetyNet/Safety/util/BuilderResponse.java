@@ -1,5 +1,6 @@
 package com.SafetyNet.Safety.util;
 
+import com.google.gson.JsonObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -7,23 +8,24 @@ import org.springframework.http.ResponseEntity;
 
 public class BuilderResponse<obj> {
 
-    public ResponseEntity<?> CustomResponse(obj obj,Boolean toString){
+    public ResponseEntity<?> CustomResponse(obj obj){
         if(obj != null){
-            if(toString){
-                return new ResponseEntity<>(obj.toString(),HttpStatus.ACCEPTED);
-            }else{
                 return new ResponseEntity<>(obj,HttpStatus.ACCEPTED);
-            }
         }else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
     public  ResponseEntity<?> ResponseBoolean(Boolean bool){
+        JsonObject result = new JsonObject();
+
         if(bool){
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+            result.addProperty("Message","Ok");
+            return new ResponseEntity<>(result,HttpStatus.ACCEPTED);
         }{
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            result.addProperty("Message","KO");
+            return new ResponseEntity<>(result,HttpStatus.NOT_FOUND);
+
         }
     }
 

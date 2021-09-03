@@ -41,14 +41,14 @@ public class PersonController {
      */
     @DeleteMapping(value = "/person/{firstName}/{lastName}")
     public ResponseEntity<?> personDelete(@PathVariable String firstName, @PathVariable String lastName) {
-    return builderResponse.ResponseBoolean(personService.personDelete(firstName,lastName),"Person supprimé","Non trouvé"); }
+    return builderResponse.ResponseBoolean(personService.personDelete(firstName,lastName)); }
 
     /*
      Récuperation d'une liste de Person
     */
     @GetMapping(value = "/personList")
     public ResponseEntity<?> listePersons() {
-        return builderResponse.CustomResponse(personService.findAll(),false); }
+        return builderResponse.CustomResponse(personService.findAll()); }
 
 
     ///////////////////////////////
@@ -61,23 +61,25 @@ public class PersonController {
      */
     @GetMapping(value = "/childAlert",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> childAlert(@RequestParam String address) throws JsonProcessingException {
-        return builderResponse.CustomResponse(personService.childAlert(address),true); }
+        return builderResponse.CustomResponse(personService.childAlert(address)); }
 
     /*
      * URl doit retourner le nom, l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments,posologie, allergies) de chaque habitant. Si plusieurs personnes portent le même nom, elles doiventtoutes apparaître
      * URL OK
      */
     @GetMapping(value = "/personInfo", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> personInfoName(@RequestParam String firstName, String lastName)  {
-        return builderResponse.CustomResponse(personService.personByName(firstName,lastName),true); }
+    public ResponseEntity<String> personInfoName(@RequestParam String firstName, String lastName) {
+        // return builderResponse.CustomResponse(personService.personByName(firstName,lastName),false); }
 
+        return new ResponseEntity<String>(personService.personByName(firstName, lastName).toString(), HttpStatus.ACCEPTED);
+    }
     /*
      * URl doit retourner les adresses mail de tous les habitants de la ville
      *
      */
     @GetMapping(value = "/communityEmail", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> communityEmail(@RequestParam String city) {
-       return builderResponse.CustomResponse(personService.communityEmail(city),false); }
+       return builderResponse.CustomResponse(personService.communityEmail(city)); }
 
     /*
      * Cette url doit retourner une liste des numéros de téléphone des résidents desservis par la caserne depompiers
@@ -85,7 +87,7 @@ public class PersonController {
      */
     @GetMapping(value = "/phoneAlert", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> phoneAlert(@RequestParam int firestation_number) throws JsonProcessingException {
-        return builderResponse.CustomResponse(personService.phoneAlert(fireStationService.findById(firestation_number)),true); }
+        return builderResponse.CustomResponse(personService.phoneAlert(fireStationService.findById(firestation_number))); }
 
 
 }

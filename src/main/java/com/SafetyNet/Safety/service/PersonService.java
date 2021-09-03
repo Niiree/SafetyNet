@@ -8,8 +8,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import springfox.documentation.spring.web.json.Json;
-import sun.util.resources.iw.LocaleNames_iw;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,8 +91,11 @@ public class PersonService {
 
         if (personlist.size() != 0) {
             JsonObject result = new JsonObject();
-            result.add("Person", filtre.filtreAllExceptListPerson(personlist, "lastName", "address", "birthdate", "email", "medical", "allergie").get("value"));
-            return result;
+          //  result.add("Person", filtre.filtreAllExceptListPerson(personlist, "lastName", "address", "birthdate", "email", "medical", "allergie").get("value"));
+            return  filtre.filtreAllExceptListPerson(personlist, "lastName", "address", "birthdate", "email", "medical", "allergie").get("value").getAsJsonArray().get(0).getAsJsonObject();
+                    //.getAsJsonArray().get(0).getAsJsonObject();
+
+           // return result;
         } else {
             throw new PersonIntrouvableException("Personne introuvable");
         }
@@ -105,7 +106,7 @@ public class PersonService {
      @param (String Address)
      @return doit retourner une liste d'enfants (tout individu âgé de 18 ans ou moins) habitant à cette adresse.
      */
-    public JsonObject childAlert(String address)  {
+    public String childAlert(String address)  {
         List<Person> child = personsList.stream().filter(person -> !person.isAdult() && person.getAddress().equals(address)).collect(Collectors.toList());
         if(child.isEmpty()){
             return null;
@@ -114,7 +115,7 @@ public class PersonService {
             JsonObject jsonObject = filtre.filtreAllExceptListPerson(child, "address", "email", "city", "zip", "allergies", "birthdate", "zip", "medical", "adult");
 
             result.add("Person", jsonObject.get("value"));
-            return result;
+            return result.toString();
         }
     }
 
@@ -155,7 +156,7 @@ public class PersonService {
     @param Firestation
     @return doit retourner une liste des numéros de téléphone des résidents desservis par la caserne de pompiers
     */
-    public JsonObject phoneAlert(FireStation firestation) throws JsonProcessingException {
+    public String phoneAlert(FireStation firestation) throws JsonProcessingException {
         List<Person> personList = personsList.stream()
                 .filter(persons -> firestation.getAddress().contains(persons.getAddress()))
                 .collect(Collectors.toList());
@@ -170,7 +171,7 @@ public class PersonService {
             JsonElement json = jsonParser.parse(gson.toJson(listPhone));
             result.add("Phone", json);
 
-            return result;
+            return result.toString();
         } else {
             throw new PersonIntrouvableException("Aucun utilisateur trouvé à cette address");
         }
