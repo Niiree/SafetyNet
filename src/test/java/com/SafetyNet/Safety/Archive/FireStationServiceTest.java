@@ -1,6 +1,7 @@
-package com.SafetyNet.Safety.service;
+package com.SafetyNet.Safety.controller;
 
 import com.SafetyNet.Safety.model.FireStation;
+import com.SafetyNet.Safety.service.FireStationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
