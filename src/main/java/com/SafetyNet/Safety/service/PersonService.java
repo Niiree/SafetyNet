@@ -25,9 +25,12 @@ public class PersonService {
     private Filtre filtre = new Filtre();
     private static final List<Person> personsList = new ArrayList<>();
 
-    public void personSave(Person person) {
-        personsList.add(person);
-
+    public boolean personSave(Person person) {
+        if (person != null) {
+            personsList.add(person);
+            return true;
+        };
+        return false;
     }
 
     public boolean personDelete(String firstName, String lastName) {
@@ -40,14 +43,11 @@ public class PersonService {
     }
 
     public boolean personUpdate(Person person) {
+
         Optional<Person> user = personsList.stream().filter(p -> person.getLastName().equals(p.getLastName()) && person.getFirstName().equals(p.getFirstName())).findAny();
         if (user.isPresent()) {
-            user.get().setCity(person.getCity());
-            user.get().setZip(person.getZip());
-            user.get().setPhone(person.getPhone());
-            user.get().setAddress(person.getAddress());
-            user.get().setBirthdate(person.getBirthdate());
-            user.get().setEmail(person.getEmail());
+            Person result = user.get();
+            result = person;
             return true;
         } else {
             return false;
@@ -86,13 +86,13 @@ public class PersonService {
     @param  Name
     @return Cette url doit retourner le nom, l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments,posologie, allergies) de chaque habitant. Si plusieurs personnes portent le même nom, elles doivent toutes apparaître.
      */
-    public JsonObject personByName(String firstName, String lastName) {
+    public String personByName(String firstName, String lastName) {
         List<Person> personlist = personsList.stream().filter(person -> lastName.equals(person.getLastName()) & firstName.equals(person.getFirstName())).collect(Collectors.toList());
 
         if (personlist.size() != 0) {
             JsonObject result = new JsonObject();
           //  result.add("Person", filtre.filtreAllExceptListPerson(personlist, "lastName", "address", "birthdate", "email", "medical", "allergie").get("value"));
-            return  filtre.filtreAllExceptListPerson(personlist, "lastName", "address", "birthdate", "email", "medical", "allergie").get("value").getAsJsonArray().get(0).getAsJsonObject();
+            return  filtre.filtreAllExceptListPerson(personlist, "lastName", "address", "birthdate", "email", "medical", "allergie").get("value").getAsJsonArray().get(0).getAsJsonObject().toString();
                     //.getAsJsonArray().get(0).getAsJsonObject();
 
            // return result;
@@ -183,6 +183,7 @@ public class PersonService {
     @return //TODO
      */
     public List<String> communityEmail(String city) {
+
         List<Person> personList = personsList.stream().filter(person -> person.getCity().equals(city)).collect(Collectors.toList());
         List<String> listEmail = new ArrayList<>();
         if (personList.size() != 0) {
@@ -192,7 +193,7 @@ public class PersonService {
             }
             return listEmail;
         } else {
-            throw new PersonIntrouvableException("Aucune personne dans cette ville");
+           return null;
         }
     }
 
@@ -201,7 +202,7 @@ public class PersonService {
     @param //TODO
     @return //TODO
      */
-    public String fire(String address) throws JsonProcessingException {
+    public String fire(String address)  {
         List<Person> personList = personsList.stream().filter(person -> person.getAddress().equals(address)).collect(Collectors.toList());
         if (personList.size() != 0) {
             List<FireStation> firestations = fireStationService.findByAddress(address);
@@ -210,7 +211,7 @@ public class PersonService {
             result.add("Firestation", filtre.filtreAllExceptListFirestation(firestations, "station").get("value"));
             return result.toString();
         } else {
-            throw new PersonIntrouvableException("Aucun utilisateur trouvé à cette address");
+            return null;
         }
     }
 

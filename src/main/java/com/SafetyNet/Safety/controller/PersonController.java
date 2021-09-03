@@ -28,8 +28,8 @@ public class PersonController {
 
 
     @PostMapping(value = "/person")
-    public void personPost(@RequestBody Person person) {
-        personService.personSave(person); }
+    public ResponseEntity<?> personPost(@RequestBody Person person) {
+        return builderResponse.ResponseBoolean(personService.personSave(person)); }
 
     @PutMapping(value = "/person")
     public ResponseEntity<?> personUpdate(@RequestBody Person person) {
@@ -69,9 +69,7 @@ public class PersonController {
      */
     @GetMapping(value = "/personInfo", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> personInfoName(@RequestParam String firstName, String lastName) {
-        // return builderResponse.CustomResponse(personService.personByName(firstName,lastName),false); }
-
-        return new ResponseEntity<String>(personService.personByName(firstName, lastName).toString(), HttpStatus.ACCEPTED);
+        return builderResponse.CustomResponse(personService.personByName(firstName,lastName));
     }
     /*
      * URl doit retourner les adresses mail de tous les habitants de la ville

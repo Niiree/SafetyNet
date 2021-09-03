@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-@JsonFilter("Filtre") //TODO Blocage lors d'appel sans filtre
+@JsonFilter("Filtre")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Person {
     private String firstName;

@@ -1,4 +1,4 @@
-package com.SafetyNet.Safety.controller;
+package com.SafetyNet.Safety.Archive;
 
 import com.SafetyNet.Safety.model.Person;
 import com.SafetyNet.Safety.service.PersonService;
