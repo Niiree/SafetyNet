@@ -55,10 +55,8 @@ public class FireStationService {
         } else {
             return false;
         }
-
     }
 
-    //TODO Return à ajouter
     public boolean update(FireStation fireStations, int id)  {
         FireStation fire = listFirestations.stream()
                 .filter(fireStation -> id == fireStation.getStation())

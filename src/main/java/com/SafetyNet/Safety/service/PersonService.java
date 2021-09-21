@@ -23,13 +23,13 @@ public class PersonService {
     private FireStationService fireStationService;
 
     private Filtre filtre = new Filtre();
-    private static final List<Person> personsList = new ArrayList<>();
+    private List<Person> personsList = new ArrayList<>();
 
     public boolean personSave(Person person) {
         if (person != null) {
             personsList.add(person);
             return true;
-        };
+        }
         return false;
     }
 
@@ -160,7 +160,7 @@ public class PersonService {
         List<Person> personList = personsList.stream()
                 .filter(persons -> firestation.getAddress().contains(persons.getAddress()))
                 .collect(Collectors.toList());
-        if (personsList.size() != 0) {
+        if (personList.size() != 0) {
             JsonObject result = new JsonObject();
             List<String> listPhone = new ArrayList<>();
             for (Person per : personList) {
@@ -179,8 +179,8 @@ public class PersonService {
 
     /*
     * CommunityEmail?city=<city>
-    @param //TODO
-    @return //TODO
+    @param String City
+    @return Cette url doit retourner les adresses mail de tous les habitants de la ville.
      */
     public List<String> communityEmail(String city) {
 
@@ -199,8 +199,8 @@ public class PersonService {
 
     /*
     * fire?address=<address>
-    @param //TODO
-    @return //TODO
+    @param String address
+    @return La liste doit inclure le nom, le numéro de téléphone, l'âge et les antécédents médicaux (médicaments, posologie et allergies) de chaque personne.
      */
     public String fire(String address)  {
         List<Person> personList = personsList.stream().filter(person -> person.getAddress().equals(address)).collect(Collectors.toList());
