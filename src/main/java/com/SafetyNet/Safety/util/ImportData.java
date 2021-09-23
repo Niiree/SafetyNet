@@ -16,13 +16,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ImportData {
@@ -96,7 +94,7 @@ public class ImportData {
     /*
      Chargement des medicalRecords dans chaque Person
      */
-    private void loadMedicalRecords(JsonElement medicalRecords) {
+    private void loadMedicalRecords(JsonElement medicalRecords)  {
         JsonArray medicalRecordsArray = medicalRecords.getAsJsonArray();
 
         for (JsonElement jsonMedicalRecord : medicalRecordsArray
@@ -111,13 +109,8 @@ public class ImportData {
             person.setAllergies(gson.fromJson(jsonObject.getAsJsonArray("allergies"), List.class));
 
             String dateString = jsonObject.get("birthdate").getAsString();
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            person.setBirthdate(dateString);
 
-            try {
-                person.setBirthdate(formatter.parse(dateString));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
         }
     }
 }

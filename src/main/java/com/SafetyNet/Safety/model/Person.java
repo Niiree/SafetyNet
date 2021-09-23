@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.logging.Logger;
 
 @JsonFilter("Filtre")
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -17,7 +19,7 @@ public class Person {
     private String zip;
     private String phone;
     private String email;
-    private Date birthdate;
+    private String birthdate;
     private List<String> allergies;
     private List<String> medical;
 
@@ -99,13 +101,12 @@ public class Person {
 
     public void setMedical(List<String> medical) { this.medical = medical; }
 
-    public Date getBirthdate() {
+    public String getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(Date birthdate) {
-        this.birthdate = birthdate;
-    }
+    public void setBirthdate(String birthdate) {
+        this.birthdate = birthdate.toString();}
 
     public List<String> getAllergies() {
         return allergies;
@@ -115,16 +116,22 @@ public class Person {
         this.allergies = allergies;
     }
 
-    public boolean isAdult(){
+    public Boolean isAdult() {
         Date dateNow = new Date(System.currentTimeMillis());
-        SimpleDateFormat simpleDateNow = new SimpleDateFormat("dd/MM/yyyy");
-        long between = dateNow.getTime() - birthdate.getTime();
-
-        if (between/(1000*60*60*24) > 6570 ){
-            return true;
+        Date d = new Date();
+        try {
+            Date Formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE).parse(this.birthdate);
+            long between = dateNow.getTime() - Formatter.getTime();
+            if (between/(1000*60*60*24) > 6570 ){
+                return true;
+            }
+            return false;
+        }catch (Exception e){
+            Logger.getLogger(e.getMessage());
         }
-        return false;
+        return null;
     }
+
 }
 
 
