@@ -5,25 +5,21 @@ import com.SafetyNet.Safety.model.Person;
 import com.SafetyNet.Safety.util.JacksonConfiguration;
 import com.SafetyNet.Safety.util.exceptions.PersonIntrouvableException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.gson.JsonObject;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.mockito.stubbing.Answer;
-import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,53 +31,84 @@ import static org.mockito.Mockito.when;
 @Import(JacksonConfiguration.class)
 class PersonServiceTest {
 
-    @Mock
-    private FireStationService mockFireStationService;
+    @MockBean
+    private FireStationService firestationServiceUnderTest;
 
-    @Mock
+
     private PersonService personServiceUnderTest;
 
     private FireStation firestation = new FireStation(Arrays.asList("Address1"),0);
 
 
 
-//    @BeforeAll
-//    void setUp(){
-//        final Person person = new Person("firstName", "lastName", "address", "city", "zip", "phone", "email");
-//        List<Person> personList = new ArrayList<>();
-//        personList.add(person);
-//        when(personServiceUnderTest.findAll()).thenReturn(personList);
-//    }
 
-    @Test
-    void testPersonSave() {
-        // Setup
-        final Person person = new Person("firstName", "lastName", "address", "city", "zip", "phone", "email");
+    @BeforeEach
+    void setUp() throws ParseException {
+        personServiceUnderTest = new PersonService();
+        Person person = new Person("firstName", "lastName", "Address1", "cityTest", "zip", "0606060606", "email@gmail.com");
+        Person child = new Person("User3", "User3", "Address1", "city", "zip", "0606060655", "test@gmail.com");
 
-        // Run the test
+        child.setBirthdate("21/09/2021");
+        person.setBirthdate("01/01/2000");
+        List<Person> personList = new ArrayList<>();
         personServiceUnderTest.personSave(person);
+        personServiceUnderTest.personSave(child);
+        personList.add(person);
+        personList.add(child);
 
-        // Verify the results
+        List<Person> test = personServiceUnderTest.findAll();
+
+
     }
 
     @Test
+    @DisplayName("Sauvegarde Person")
+    void testPersonSave() {
+        // Setup
+        Person person = new Person("User", "Test", "address", "city", "zip", "phone", "email");
+
+        // Run the test
+        boolean result = personServiceUnderTest.personSave(person);
+
+        Person person1 = personServiceUnderTest.findByFirstNameLastName("User","Test");
+
+        // Verify the results
+        assertThat(result).isTrue();
+        assertThat(person1).isEqualTo(person);
+
+    }
+
+    @Test
+    @DisplayName("Suppresion Person")
     void testPersonDelete() {
         // Setup
 
         // Run the test
-        final boolean result = personServiceUnderTest.personDelete("firstName", "lastName");
+        boolean result = personServiceUnderTest.personDelete("firstName", "lastName");
+        Person person = personServiceUnderTest.findByFirstNameLastName("firstName","lastName");
 
         // Verify the results
         assertThat(result).isTrue();
+        assertThat(person).isNull();
+    }
+
+    @Test
+    @DisplayName("Suppresion Person non existante")
+    void testPersonDeleteFalse() {
+        // Run the test
+        boolean result = personServiceUnderTest.personDelete("ok", "ok");
+
+        // Verify the results
+        assertThat(result).isFalse();
     }
 
     @Test
     void testPersonUpdate() {
         // Setup
-        final Person person = new Person("firstName", "lastName", "address", "city", "zip", "phone", "email");
+         Person person = new Person("firstName", "lastName", "address", "city", "zip", "phone", "email");
 
         // Run the test
-        final boolean result = personServiceUnderTest.personUpdate(person);
+         boolean result = personServiceUnderTest.personUpdate(person);
 
         // Verify the results
         assertThat(result).isTrue();
@@ -90,25 +117,27 @@ class PersonServiceTest {
     @Test
     void testFindAll() {
         // Setup
-        final Person person = new Person("firstName", "lastName", "address", "city", "zip", "phone", "email");
-        List<Person> personList = new ArrayList<>();
-        personList.add(person);
-        when(personServiceUnderTest.findAll()).thenReturn(personList);
+         Person person2 = new Person("user1", "user2", "address", "city", "zip", "phone", "email");
+         personServiceUnderTest.personSave(person2);
+
         // Run the test
-        final List<Person> result = personServiceUnderTest.findAll();
+        List<Person> result = personServiceUnderTest.findAll();
 
         // Verify the results
-        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.size()).isEqualTo(3);
     }
 
     @Test
     void testFindByFirstNameLastName() {
-        // Setup
 
         // Run the test
-        final Person result = personServiceUnderTest.findByFirstNameLastName("firstName", "lastName");
+         Person result = personServiceUnderTest.findByFirstNameLastName("firstName", "lastName");
 
-        // Verify the results
+        // Verify the result
+
+        assertThat(result.getFirstName()).isEqualTo("firstName");
+        assertThat(result.getLastName()).isEqualTo("lastName");
+
     }
 
     @Test
@@ -116,86 +145,79 @@ class PersonServiceTest {
         // Setup
 
         // Run the test
-        final List<String> result = personServiceUnderTest.emailByCity("city");
+         List<String> result = personServiceUnderTest.emailByCity("cityTest");
 
         // Verify the results
-        assertThat(result).isEqualTo(Arrays.asList("value"));
+        assertThat(result).isEqualTo(Arrays.asList("email@gmail.com"));
     }
 
     @Test
+    @Ignore
     void testPersonByName() {
-        // Setup
-        final Person person = new Person("firstName", "lastName", "address", "city", "zip", "phone", "email");
-        List<Person> personList = new ArrayList<>();
-        personList.add(person);
-        when(personServiceUnderTest.findAll()).thenReturn(personList);
+        //TODO DATE BIRTHDATE
+
         // Run the test
-        final String result = personServiceUnderTest.personByName("firstName", "lastName");
+         String result = personServiceUnderTest.personByName("firstName", "lastName");
       //  String var ='{\"firstName":"Nicolas","lastName":"Le stunff","address":"1509 Culver St","city":"Culver","zip":"97451","phone":"841-874-6512","email":"jaboyd@email.com"}';
 
-       //TODO
-        // Gson gson = new Gson();
-        //String json = gson.toJson(user);
+        assertThat(result).isEqualTo("{\"lastName\":\"lastName\",\"address\":\"Address1\",\"email\":\"email@gmail.com\",\"birthdate\":\"01/01/2000\"}");
 
-
-        // Verify the results
-    //    assertThat(result).isEqualTo(var);
     }
 
     @Test
     void testChildAlert() {
-        // Setup
 
         // Run the test
-        final String result = personServiceUnderTest.childAlert("address");
+         String result = personServiceUnderTest.childAlert("Address1");
 
         // Verify the results
-        assertThat(result).isEqualTo("result");
+        assertThat(result).isEqualTo("{\"Person\":[{\"address\":\"Address1\",\"city\":\"city\",\"zip\":\"zip\",\"email\":\"test@gmail.com\",\"birthdate\":\"21/09/2021\",\"adult\":false}]}");
+
     }
 
     @Test
     void testPersonByFirestation() {
         // Setup
-        final FireStation firestation = new FireStation(Arrays.asList("value"), 0);
+         FireStation firestation = new FireStation(Arrays.asList("Address1"), 0);
 
         // Run the test
-        final String result = personServiceUnderTest.personByFirestation(firestation);
+         String result = personServiceUnderTest.personByFirestation(firestation);
 
         // Verify the results
-        assertThat(result).isEqualTo("result");
+        assertThat(result).isEqualTo("{\"Person\":[{\"firstName\":\"firstName\",\"lastName\":\"lastName\",\"address\":\"Address1\",\"phone\":\"0606060606\"},{\"firstName\":\"User3\",\"lastName\":\"User3\",\"address\":\"Address1\",\"phone\":\"0606060655\"}],\"adulte\":1,\"enfants\":1}");
     }
 
     @Test
     void testPhoneAlert() throws Exception {
-        // Setup
-        final FireStation firestation = new FireStation(Arrays.asList("value"), 0);
-
         // Run the test
-        final String result = personServiceUnderTest.phoneAlert(firestation);
+
+         String resultat = personServiceUnderTest.phoneAlert(firestation);
+
 
         // Verify the results
-        assertThat(result).isEqualTo("result");
+        assertThat(resultat).isEqualTo("{\"Phone\":[\"0606060606\",\"0606060655\"]}");
+
     }
+
 
     @Test
     void testPhoneAlert_ThrowsJsonProcessingException() {
         // Setup
-        final FireStation firestation = new FireStation(Arrays.asList("value"), 0);
+         FireStation firestation = new FireStation(Arrays.asList("value"), 0);
 
         // Run the test
-        assertThatThrownBy(() -> personServiceUnderTest.phoneAlert(firestation)).isInstanceOf(JsonProcessingException.class);
+        assertThatThrownBy(() -> personServiceUnderTest.phoneAlert(firestation)).isInstanceOf(PersonIntrouvableException.class);
     }
 
     @Test
     void testCommunityEmail() {
-        // Setup
-        Person mock = mock(Person.class);
+
 
         // Run the test
-        final List<String> result = personServiceUnderTest.communityEmail("city");
+         List<String> result = personServiceUnderTest.communityEmail("city");
 
         // Verify the results
-        assertThat(result).isEqualTo(Arrays.asList("value"));
+        assertThat(result).isEqualTo(Arrays.asList("test@gmail.com"));
     }
 
     @Test
@@ -206,17 +228,17 @@ class PersonServiceTest {
         Stream<List<Person>> mockStream = mock(Stream.class);
 
         // Configure FireStationService.findByAddress(...).
-        final List<FireStation> fireStations = Arrays.asList(new FireStation(Arrays.asList("value"), 0));
-        final Person person = new Person("firstName", "lastName", "address", "city", "zip", "phone", "email");
+         List<FireStation> fireStations = Arrays.asList(new FireStation(Arrays.asList("value"), 0));
+         Person person = new Person("firstName", "lastName", "address", "city", "zip", "phone", "email");
 
         List<Person> personList = new ArrayList<>();
         personList.add(person);
   //      when(personList.stream()).thenReturn((Stream<Person>) person);
-        when(mockFireStationService.findByAddress("address")).thenReturn(fireStations);
+        when(firestationServiceUnderTest.findByAddress("address")).thenReturn(fireStations);
 
 
         // Run the test
-        final String result = personServiceUnderTest.fire("address");
+         String result = personServiceUnderTest.fire("address");
 
         // Verify the results
         assertThat(result).isEqualTo("result");
@@ -227,10 +249,10 @@ class PersonServiceTest {
     @Test
     void testFire_FireStationServiceReturnsNoItems() throws Exception {
         // Setup
-        when(mockFireStationService.findByAddress("address")).thenReturn(Collections.emptyList());
+        when(firestationServiceUnderTest.findByAddress("address")).thenReturn(Collections.emptyList());
 
         // Run the test
-        final String result = personServiceUnderTest.fire("address");
+         String result = personServiceUnderTest.fire("address");
 
         // Verify the results
      //   assertThat(result).isEqualTo("result");
@@ -240,11 +262,12 @@ class PersonServiceTest {
 
     @Test
     void testFlood() {
-        final FireStation fireStation = new FireStation(Arrays.asList("value"), 0);
-        when(mockFireStationService.findById(0)).thenReturn(fireStation);
+     //    FireStation fireStation = new FireStation(Arrays.asList("value"), 0);
+        FireStation fireStation = new FireStation();
+        when(firestationServiceUnderTest.findById(0)).thenReturn(fireStation);
 
         // Run the test
-        final String result = personServiceUnderTest.flood(Arrays.asList(0));
+         String result = personServiceUnderTest.flood(Arrays.asList(0));
 
         // Verify the results
         assertThat(result).isEqualTo("{\"Firestation0\":{\"station\":0},\"Utilisateur0\":[]}");
