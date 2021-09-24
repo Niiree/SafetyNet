@@ -23,7 +23,7 @@ public class BuilderResponse<obj> {
             return new ResponseEntity<>(result.toString(),HttpStatus.OK);
         }{
             result.addProperty("Message","Aucune information n'est trouvée");
-            return new ResponseEntity<>(result.toString(),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(result.toString(),HttpStatus.NO_CONTENT);
 
         }
     }

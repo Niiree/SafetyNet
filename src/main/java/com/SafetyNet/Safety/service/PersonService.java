@@ -91,11 +91,7 @@ public class PersonService {
 
         if (personlist.size() != 0) {
             JsonObject result = new JsonObject();
-          //  result.add("Person", filtre.filtreAllExceptListPerson(personlist, "lastName", "address", "birthdate", "email", "medical", "allergie").get("value"));
             return  filtre.filtreAllExceptListPerson(personlist, "lastName", "address", "birthdate", "email", "medical", "allergie").get("value").getAsJsonArray().get(0).getAsJsonObject().toString();
-                    //.getAsJsonArray().get(0).getAsJsonObject();
-
-           // return result;
         } else {
             throw new PersonIntrouvableException("Personne introuvable");
         }
@@ -156,7 +152,7 @@ public class PersonService {
     @param Firestation
     @return doit retourner une liste des numéros de téléphone des résidents desservis par la caserne de pompiers
     */
-    public String phoneAlert(FireStation firestation) throws JsonProcessingException {
+    public String phoneAlert(FireStation firestation)   {
         List<Person> personList = personsList.stream()
                 .filter(persons -> firestation.getAddress().contains(persons.getAddress()))
                 .collect(Collectors.toList());

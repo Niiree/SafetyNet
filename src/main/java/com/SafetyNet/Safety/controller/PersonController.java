@@ -60,7 +60,7 @@ public class PersonController {
      * URL OK
      */
     @GetMapping(value = "/childAlert",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> childAlert(@RequestParam String address) throws JsonProcessingException {
+    public ResponseEntity<?> childAlert(@RequestParam String address)  {
         return builderResponse.CustomResponse(personService.childAlert(address)); }
 
     /*
@@ -84,7 +84,7 @@ public class PersonController {
      * URK OK
      */
     @GetMapping(value = "/phoneAlert", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> phoneAlert(@RequestParam int firestation_number) throws JsonProcessingException {
+    public ResponseEntity<?> phoneAlert(@RequestParam int firestation_number)  {
         return builderResponse.CustomResponse(personService.phoneAlert(fireStationService.findById(firestation_number))); }
 
 

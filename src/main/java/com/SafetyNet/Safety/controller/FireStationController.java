@@ -39,7 +39,7 @@ public class FireStationController {
      * Put Firestation
      */
     @PutMapping(value = "/firestation/{id}")
-    public ResponseEntity<?> firestationPut(@RequestBody FireStation firestation, @PathVariable int id) throws JsonProcessingException {
+    public ResponseEntity<?> firestationPut(@RequestBody FireStation firestation, @PathVariable int id)  {
         return builderResponse.ResponseBoolean(fireStationService.update(firestation,id));}
 
     /*
@@ -67,7 +67,7 @@ public class FireStationController {
      * URl retourne une liste des personnes par caserne de pompiers correspondantes
      */
     @GetMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> firestation(@RequestParam int stationNumber) throws JsonProcessingException {
+    public ResponseEntity<?> firestation(@RequestParam int stationNumber)  {
         return builderResponse.CustomResponse(personService.personByFirestation(fireStationService.findById(stationNumber))); }
 
 
@@ -77,7 +77,7 @@ public class FireStationController {
      * UR OK
      */
     @GetMapping(value = "/fire", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> fire(@RequestParam String address) throws JsonProcessingException {
+    public ResponseEntity<?> fire(@RequestParam String address)   {
         return  builderResponse.CustomResponse(personService.fire(address)); }
 
     /*
@@ -85,7 +85,7 @@ public class FireStationController {
      * URK OK
      */
     @GetMapping(value = "/flood/stations", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> flood(@RequestParam List<Integer> station_number) throws JsonProcessingException {
+    public ResponseEntity<?> flood(@RequestParam List<Integer> station_number)   {
         return builderResponse.CustomResponse(personService.flood(station_number)); }
 
 }
