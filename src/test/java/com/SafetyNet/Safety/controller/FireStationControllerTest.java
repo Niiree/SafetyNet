@@ -36,85 +36,113 @@ class FireStationControllerTest {
     @MockBean
     private PersonService mockPersonService;
 
+    private String messageTrue = "{\"Message\":\"L'operation a ete realise avec succes\"}";
+    private String messageFalse = "{\"Message\":\"L'operation n'a pas ete realise\"}";
+    private String firestation = "{\n" +
+            "        \"station\": 5,\n" +
+            "        \"address\": [\n" +
+            "            \"1509 Culver St\",\n" +
+            "            \"834 Binoc Ave\",\n" +
+            "            \"748 Townings Dr\",\n" +
+            "            \"112 Steppes Pl\"\n" +
+            "        ]\n" +
+            "}";
+
+
     @Test
-    void testFirestationPost() throws Exception {
+    void testFirestationPostTrue() throws Exception {
+        // Setup
+        when(mockFireStationService.save(any(FireStation.class))).thenReturn(true);
+
+        // Run the test
+        final MockHttpServletResponse response = mockMvc.perform(post("/firestation")
+                        .content(firestation).contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+        // Verify the results
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(messageTrue, response.getContentAsString());
+    }
+
+    @Test
+    void testFirestationPostFalse() throws Exception {
         // Setup
         when(mockFireStationService.save(any(FireStation.class))).thenReturn(false);
 
         // Run the test
         final MockHttpServletResponse response = mockMvc.perform(post("/firestation")
-                        .content("content").contentType(MediaType.APPLICATION_JSON)
+                        .content(firestation).contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
         // Verify the results
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals("expectedResponse", response.getContentAsString());
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+        assertEquals(messageFalse, response.getContentAsString());
     }
 
     @Test
-    void testFirestationPut() throws Exception {
+    void testFirestationPutTrue() throws Exception {
         // Setup
         when(mockFireStationService.update(any(FireStation.class), eq(0))).thenReturn(true);
 
         // Run the test
         final MockHttpServletResponse response = mockMvc.perform(put("/firestation/{id}", 0)
-                        .content("content").contentType(MediaType.APPLICATION_JSON)
+                        .content(firestation).contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
         // Verify the results
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals("expectedResponse", response.getContentAsString());
+        assertEquals(messageTrue, response.getContentAsString());
     }
 
     @Test
-    void testFirestationDelete() throws Exception {
+    void testFirestationPutFalse() throws Exception {
+        // Setup
+        when(mockFireStationService.update(any(FireStation.class), eq(0))).thenReturn(false);
+
+        // Run the test
+        final MockHttpServletResponse response = mockMvc.perform(put("/firestation/{id}", 0)
+                        .content(firestation).contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+        // Verify the results
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+        assertEquals(messageFalse, response.getContentAsString());
+    }
+
+    @Test
+    void testFirestationDeleteTrue() throws Exception {
         // Setup
         when(mockFireStationService.remove(any(FireStation.class))).thenReturn(true);
 
         // Run the test
         final MockHttpServletResponse response = mockMvc.perform(delete("/firestation")
-                        .content("content").contentType(MediaType.APPLICATION_JSON)
+                        .content(firestation).contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
         // Verify the results
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-    //    assertEquals("expectedResponse", response.getContentAsString());
+        assertEquals(messageTrue, response.getContentAsString());
     }
 
     @Test
-    void testListeFireStation() throws Exception {
+    void testFirestationDeleteFalse() throws Exception {
         // Setup
-
-        // Configure FireStationService.findAll(...).
-        final List<FireStation> fireStations = Arrays.asList(new FireStation(Arrays.asList("value"), 0));
-        when(mockFireStationService.findAll()).thenReturn(fireStations);
+        when(mockFireStationService.remove(any(FireStation.class))).thenReturn(false);
 
         // Run the test
-        final MockHttpServletResponse response = mockMvc.perform(get("/firestationAll")
+        final MockHttpServletResponse response = mockMvc.perform(delete("/firestation")
+                        .content(firestation).contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
         // Verify the results
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals("expectedResponse", response.getContentAsString());
-    }
-
-    @Test
-    void testListeFireStation_FireStationServiceReturnsNoItems() throws Exception {
-        // Setup
-        when(mockFireStationService.findAll()).thenReturn(Collections.emptyList());
-
-        // Run the test
-        final MockHttpServletResponse response = mockMvc.perform(get("/firestationAll")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andReturn().getResponse();
-
-        // Verify the results
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals("[]", response.getContentAsString());
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+        assertEquals(messageFalse, response.getContentAsString());
     }
 
     @Test

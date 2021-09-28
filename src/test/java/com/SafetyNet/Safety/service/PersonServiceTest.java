@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -18,6 +19,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import java.util.*;
@@ -27,14 +31,16 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-@ExtendWith({MockitoExtension.class, })
+@AutoConfigureMockMvc
+@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 @Import(JacksonConfiguration.class)
 class PersonServiceTest {
 
     @MockBean
-    private FireStationService firestationServiceUnderTest = new FireStationService();
+    private FireStationService firestationServiceUnderTest;
 
-
+    @MockBean
     private PersonService personServiceUnderTest;
 
     private FireStation firestation = new FireStation(Arrays.asList("Address1"),0);
@@ -56,6 +62,9 @@ class PersonServiceTest {
         personServiceUnderTest.personSave(child);
         personList.add(person);
         personList.add(child);
+
+        //firestationServiceUnderTest = Mock(FireStationService.class);
+
     }
 
     @Test
@@ -220,21 +229,16 @@ class PersonServiceTest {
         assertThat(result).isNull();
     }
 
-  //  @Test
+    @Test
     void testFire()   {
         // Configure FireStationService.findByAddress(...).
          List<FireStation> fireStations = Arrays.asList(new FireStation(Arrays.asList("value"), 0));
          Person person = new Person("firstName", "lastName", "address", "city", "zip", "phone", "email");
-
         List<Person> personList = new ArrayList<>();
         personList.add(person);
-
         when(firestationServiceUnderTest.findByAddress("Address1")).thenReturn(fireStations);
-
-
         // Run the test
          String result = personServiceUnderTest.fire("Address1");
-
         // Verify the results
         assertThat(result).isEqualTo("result");
     }
@@ -245,7 +249,6 @@ class PersonServiceTest {
     void testFire_FireStationServiceReturnsNoItems()  {
         // Setup
         when(firestationServiceUnderTest.findByAddress("address")).thenReturn(Collections.emptyList());
-
         // Run the test
          String result = personServiceUnderTest.fire("address");
 

@@ -83,23 +83,7 @@ class PersonControllerTest {
         assertEquals("expectedResponse", response.getContentAsString());
     }
 
-    @Test
-    void testListePersons() throws Exception {
-        // Setup
 
-        // Configure PersonService.findAll(...).
-        final List<Person> people = Arrays.asList(new Person("firstName", "lastName", "address", "city", "zip", "phone", "email"));
-        when(mockPersonService.findAll()).thenReturn(people);
-
-        // Run the test
-        final MockHttpServletResponse response = mockMvc.perform(get("/personList")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andReturn().getResponse();
-
-        // Verify the results
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals("expectedResponse", response.getContentAsString());
-    }
 
     @Test
     void testListePersons_PersonServiceReturnsNoItems() throws Exception {
