@@ -43,13 +43,6 @@ public class PersonController {
     public ResponseEntity<?> personDelete(@PathVariable String firstName, @PathVariable String lastName) {
     return builderResponse.ResponseBoolean(personService.personDelete(firstName,lastName)); }
 
-    /*
-     Récuperation d'une liste de Person
-    */
-    @GetMapping(value = "/personList")
-    public ResponseEntity<?> listePersons() {
-        return builderResponse.CustomResponse(personService.findAll()); }
-
 
     ///////////////////////////////
     /////          URLS       /////

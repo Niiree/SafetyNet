@@ -20,12 +20,12 @@ public class FireStationController {
 
     @Autowired
     private FireStationService fireStationService;
+
     @Autowired
     private PersonService personService;
 
     private BuilderResponse builderResponse = new BuilderResponse();
     private Filtre filtre = new Filtre();
-
 
     /*
      * Save Firestation
@@ -48,14 +48,6 @@ public class FireStationController {
     @DeleteMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> firestationDelete(@RequestBody FireStation firestation) {
         return builderResponse.ResponseBoolean(fireStationService.remove(firestation)); }
-
-    /*
-     * Récuperation d'une liste de FireStations
-     *
-     */
-    @GetMapping(value = "/firestationAll", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> listeFireStation() {
-        return builderResponse.CustomResponse(fireStationService.findAll()); }
 
 
     ///////////////////////////////
