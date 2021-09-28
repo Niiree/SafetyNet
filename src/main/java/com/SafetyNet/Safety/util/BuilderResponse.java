@@ -22,7 +22,7 @@ public class BuilderResponse<obj> {
             result.addProperty("Message","L'operation a ete realise avec succes");
             return new ResponseEntity<>(result.toString(),HttpStatus.OK);
         }{
-            result.addProperty("Message","Aucune information n'est trouvée");
+            result.addProperty("Message","L'operation n'a pas ete realise");
             return new ResponseEntity<>(result.toString(),HttpStatus.NO_CONTENT);
 
         }

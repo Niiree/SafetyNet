@@ -12,7 +12,7 @@ import java.io.IOException;
 @EnableOpenApi
 public class SafetyApplication {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args)   {
         SpringApplication.run(SafetyApplication.class, args);
     }
 
