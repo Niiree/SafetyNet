@@ -9,9 +9,9 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.bytebuddy.build.Plugin;
+
 import org.springframework.http.converter.json.MappingJacksonValue;
-import springfox.documentation.spring.web.json.Json;
+
 
 import java.util.List;
 import java.util.logging.Logger;
