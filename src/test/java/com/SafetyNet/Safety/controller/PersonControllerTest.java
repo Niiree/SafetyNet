@@ -36,40 +36,92 @@ class PersonControllerTest {
     @MockBean
     private FireStationService mockFireStationService;
 
+    private String messageTrue = "{\"Message\":\"L'operation a ete realise avec succes\"}";
+    private String messageFalse = "{\"Message\":\"L'operation n'a pas ete realise\"}";
+    private String person = "{\"firstName\":\"John\",\"lastName\":\"Boyd\",\"address\":\"15109 Culver St\",\"city\":\"Culver\",\"zip\":\"97451\",\"phone\":\"841-874-6512\",\"email\":\"jaboyd@email.com\",\"birthdate\":\"03/06/1984\",\"allergies\":[\"nillacilan\"],\"medical\":[\"aznol:350mg\",\"hydrapermazol:100mg\"],\"adult\":true}";
+
     @Test
     void testPersonPost() throws Exception {
         // Setup
-        when(mockPersonService.personSave(any(Person.class))).thenReturn(false);
+        when(mockPersonService.personSave(any(Person.class))).thenReturn(true);
 
         // Run the test
         final MockHttpServletResponse response = mockMvc.perform(post("/person")
-                        .content("content").contentType(MediaType.APPLICATION_JSON)
+                        .content(person).contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
         // Verify the results
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals("expectedResponse", response.getContentAsString());
+        assertEquals(messageTrue, response.getContentAsString());
+    }
+
+        @Test
+        void testPersonPostFalse() throws Exception {
+            // Setup
+            when(mockPersonService.personSave(any(Person.class))).thenReturn(false);
+
+            // Run the test
+            final MockHttpServletResponse response = mockMvc.perform(post("/person")
+                            .content(person).contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andReturn().getResponse();
+
+            // Verify the results
+            assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+            assertEquals(messageFalse, response.getContentAsString());
     }
 
     @Test
     void testPersonUpdate() throws Exception {
         // Setup
-        when(mockPersonService.personUpdate(any(Person.class))).thenReturn(false);
+        when(mockPersonService.personUpdate(any(Person.class))).thenReturn(true);
 
         // Run the test
         final MockHttpServletResponse response = mockMvc.perform(put("/person")
-                        .content("content").contentType(MediaType.APPLICATION_JSON)
+                        .content(person).contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
         // Verify the results
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals("expectedResponse", response.getContentAsString());
+        assertEquals(messageTrue, response.getContentAsString());
     }
 
     @Test
+    void testPersonUpdateFalse() throws Exception {
+        // Setup
+        when(mockPersonService.personUpdate(any(Person.class))).thenReturn(false);
+
+        // Run the test
+        final MockHttpServletResponse response = mockMvc.perform(put("/person")
+                        .content(person).contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+        // Verify the results
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+        assertEquals(messageFalse, response.getContentAsString());
+    }
+
+
+    @Test
     void testPersonDelete() throws Exception {
+        // Setup
+        when(mockPersonService.personDelete("firstName", "lastName")).thenReturn(true);
+
+        // Run the test
+        final MockHttpServletResponse response = mockMvc.perform(delete("/person/{firstName}/{lastName}", "firstName", "lastName")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+        // Verify the results
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(messageTrue, response.getContentAsString());
+    }
+
+    @Test
+    void testPersonDeleteFalse() throws Exception {
         // Setup
         when(mockPersonService.personDelete("firstName", "lastName")).thenReturn(false);
 
@@ -79,25 +131,8 @@ class PersonControllerTest {
                 .andReturn().getResponse();
 
         // Verify the results
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals("expectedResponse", response.getContentAsString());
-    }
-
-
-
-    @Test
-    void testListePersons_PersonServiceReturnsNoItems() throws Exception {
-        // Setup
-        when(mockPersonService.findAll()).thenReturn(Collections.emptyList());
-
-        // Run the test
-        final MockHttpServletResponse response = mockMvc.perform(get("/personList")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andReturn().getResponse();
-
-        // Verify the results
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals("[]", response.getContentAsString());
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+        assertEquals(messageFalse, response.getContentAsString());
     }
 
     @Test

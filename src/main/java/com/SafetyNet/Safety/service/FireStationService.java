@@ -1,11 +1,8 @@
 package com.SafetyNet.Safety.service;
 
-
 import com.SafetyNet.Safety.model.FireStation;
-
-import com.SafetyNet.Safety.util.Filtre;
 import com.SafetyNet.Safety.util.exceptions.FireStationIntrouvableException;
-import com.fasterxml.jackson.core.JsonProcessingException;
+
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,7 +13,6 @@ import java.util.stream.Collectors;
 @Service
 public class FireStationService {
 
-    private Filtre filtre = new Filtre();
 
     private static List<FireStation> listFirestations = new ArrayList<>();
 

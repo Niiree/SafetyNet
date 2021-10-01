@@ -1,9 +1,7 @@
 package com.SafetyNet.Safety.service;
 
 import com.SafetyNet.Safety.model.FireStation;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,21 +25,27 @@ class FireStationServiceTest {
         fireStationServiceTest.save(fir);
     }
 
+    @AfterEach
+    void setAfter(){
+        List<FireStation> ok = fireStationServiceTest.findAll();
+    }
+
     @Test
     @DisplayName("Récuperation toutes firestations FindAll")
     void testFindAll() {
         // Run the test
-        final List<FireStation> result = fireStationServiceTest.findAll();
+        List<FireStation> result = fireStationServiceTest.findAll();
 
         // Verify the results
-        assertThat(result.get(0)).isEqualTo(fir);
+        assertThat(result.get(0).getAddress()).isEqualTo(fir.getAddress());
+        assertThat(result.get(0).getStation()).isEqualTo(fir.getStation());
     }
 
     @Test
     void testFindById() {
 
         // Run the test
-        final FireStation result = fireStationServiceTest.findById(0);
+         FireStation result = fireStationServiceTest.findById(0);
 
         // Verify the results
         assertThat(result.getAddress().get(0)).isEqualTo("address1");
@@ -52,7 +56,7 @@ class FireStationServiceTest {
     @Test
     void testFindByAddress() {
         // Run the test
-        final List<FireStation> result = fireStationServiceTest.findByAddress("address1");
+         List<FireStation> result = fireStationServiceTest.findByAddress("address1");
 
         // Verify the results
         assertThat(result.get(0).getAddress().get(0)).isEqualTo("address1");
@@ -63,10 +67,10 @@ class FireStationServiceTest {
     @Test
     void testSave() {
         // Setup
-        final FireStation fireStation = new FireStation(Arrays.asList("test"), 2);
+         FireStation fireStation = new FireStation(Arrays.asList("test"), 2);
 
         // Run the test
-        final boolean result = fireStationServiceTest.save(fireStation);
+         boolean result = fireStationServiceTest.save(fireStation);
 
 
         // Verify the results
@@ -77,10 +81,10 @@ class FireStationServiceTest {
     @Test
     void testRemove() {
         // Setup
-        final FireStation fireStation = new FireStation(Arrays.asList("value"), 0);
+        FireStation fireStation = new FireStation(Arrays.asList("value"), 0);
 
         // Run the test
-        final boolean result = fireStationServiceTest.remove(fireStation);
+         boolean result = fireStationServiceTest.remove(fireStation);
         FireStation r = fireStationServiceTest.findById(0);
 
         // Verify the results
@@ -93,7 +97,7 @@ class FireStationServiceTest {
         // Setup
 
         // Run the test
-        final boolean result = fireStationServiceTest.addAddress("address2", 0);
+         boolean result = fireStationServiceTest.addAddress("address2", 0);
 
         // Verify the results
         assertThat(fireStationServiceTest.findById(0).getAddress()).isEqualTo(Arrays.asList("address1","address2"));
@@ -103,11 +107,11 @@ class FireStationServiceTest {
     @Test
     void testUpdate() {
         // Setup
-        final FireStation fireStations = new FireStation(Arrays.asList("test"), 0);
+        FireStation fireStations = new FireStation(Arrays.asList("test"), 0);
 
         assertThat(fireStationServiceTest.findById(0).getAddress()).isEqualTo(Arrays.asList("address1"));
         // Run the test
-        final boolean result = fireStationServiceTest.update(fireStations, 0);
+         boolean result = fireStationServiceTest.update(fireStations, 0);
 
         // Verify the results
         assertThat(fireStationServiceTest.findById(0).getAddress()).isEqualTo(Arrays.asList("test"));

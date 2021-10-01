@@ -22,7 +22,7 @@ class BuilderResponseTest<obj> {
          String obj = "test";
 
         // Run the test
-        final ResponseEntity<?> result = builderResponseUnderTest.CustomResponse((obj) obj);
+        final ResponseEntity<?> result = builderResponseUnderTest.customResponse((obj) obj);
 
         // Verify the results
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -34,7 +34,7 @@ class BuilderResponseTest<obj> {
         final obj obj = null;
 
         // Run the test
-        final ResponseEntity<?> result = builderResponseUnderTest.CustomResponse(null);
+        final ResponseEntity<?> result = builderResponseUnderTest.customResponse(null);
 
         // Verify the results
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
@@ -46,7 +46,7 @@ class BuilderResponseTest<obj> {
         // Setup
 
         // Run the test
-        final ResponseEntity<?> result = builderResponseUnderTest.ResponseBoolean(true);
+        final ResponseEntity<?> result = builderResponseUnderTest.responseBoolean(true);
 
         // Verify the results
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -58,7 +58,7 @@ class BuilderResponseTest<obj> {
         // Setup
 
         // Run the test
-        final ResponseEntity<?> result = builderResponseUnderTest.ResponseBoolean(false);
+        final ResponseEntity<?> result = builderResponseUnderTest.responseBoolean(false);
 
         // Verify the results
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);

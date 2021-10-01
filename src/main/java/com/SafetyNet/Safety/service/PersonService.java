@@ -25,10 +25,13 @@ public class PersonService {
     private Filtre filtre = new Filtre();
     private List<Person> personsList = new ArrayList<>();
 
+
     public boolean personSave(Person person) {
         if (person != null) {
-            personsList.add(person);
-            return true;
+            if(person.getFirstName()!=null && person.getLastName()!=null){
+                personsList.add(person);
+                return true;
+            }
         }
         return false;
     }
@@ -46,8 +49,30 @@ public class PersonService {
 
         Optional<Person> user = personsList.stream().filter(p -> person.getLastName().equals(p.getLastName()) && person.getFirstName().equals(p.getFirstName())).findAny();
         if (user.isPresent()) {
-            Person result = user.get();
-            result = person;
+            if (person.getBirthdate()!=null){
+                user.get().setBirthdate(person.getBirthdate());
+            }
+            if (person.getMedical()!=null){
+                user.get().setMedical(person.getMedical());
+            }
+            if (person.getAllergies()!=null){
+                user.get().setAllergies(person.getAllergies());
+            }
+            if (person.getAddress()!=null){
+                user.get().setAddress(person.getAddress());
+            }
+            if (person.getCity()!=null){
+                user.get().setCity(person.getCity());
+            }
+            if (person.getPhone()!=null){
+                user.get().setPhone(person.getPhone());
+            }
+            if (person.getEmail()!=null){
+                user.get().setEmail(person.getEmail());
+            }
+            if (person.getZip()!=null){
+                user.get().setZip(person.getZip());
+            }
             return true;
         } else {
             return false;
@@ -90,7 +115,6 @@ public class PersonService {
         List<Person> personlist = personsList.stream().filter(person -> lastName.equals(person.getLastName()) & firstName.equals(person.getFirstName())).collect(Collectors.toList());
 
         if (personlist.size() != 0) {
-            JsonObject result = new JsonObject();
             return  filtre.filtreAllExceptListPerson(personlist, "lastName", "address", "birthdate", "email", "medical", "allergie").get("value").getAsJsonArray().get(0).getAsJsonObject().toString();
         } else {
             throw new PersonIntrouvableException("Personne introuvable");
@@ -213,8 +237,8 @@ public class PersonService {
 
     /*
     * flood/stations?stations=<a list of station_numbers>
-    @param //TODO
-    @return //TODO
+    @param Liste ID des Firestations
+    @return une liste de tous les foyers desservis par la caserne. Cette liste doit regrouper les personnes par adresse.
     */
     public String flood(List<Integer> station_number)  {
         List<FireStation> fireStationList = new ArrayList<>();
@@ -224,15 +248,13 @@ public class PersonService {
                 fireStationList.add(fire);
             }
         }
-
-        ArrayList<Object> personList = new ArrayList<>();
         JsonObject result = new JsonObject();
         for (FireStation firestation : fireStationList) {
             result.add("Firestation" + firestation.getStation(), filtre.filtreAllExceptFirestation(firestation, "station").get("value"));
 
             // Pour chaque address, on récupere une liste de person
             for (String address : firestation.getAddress()) {
-                List<Person> resultStream = new ArrayList<>();
+                List<Person> resultStream;
                 resultStream = personsList.stream()
                         .filter(person -> firestation.getAddress().contains(person.getAddress()))
                         .collect(Collectors.toList());
