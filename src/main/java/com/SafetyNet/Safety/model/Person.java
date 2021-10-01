@@ -118,7 +118,6 @@ public class Person {
 
     public Boolean isAdult() {
         Date dateNow = new Date(System.currentTimeMillis());
-        Date d = new Date();
         try {
             Date Formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE).parse(this.birthdate);
             long between = dateNow.getTime() - Formatter.getTime();
@@ -129,7 +128,7 @@ public class Person {
         }catch (Exception e){
             Logger.getLogger(e.getMessage());
         }
-        return null;
+        return false;
     }
 
 }
