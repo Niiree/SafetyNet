@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 
 public class BuilderResponse<obj> {
 
-    public ResponseEntity<?> CustomResponse(obj obj){
+    public ResponseEntity<?> customResponse(obj obj){
         if(obj != null){
                 return new ResponseEntity<>(obj,HttpStatus.OK);
         }else {
@@ -16,7 +16,7 @@ public class BuilderResponse<obj> {
         }
     }
 
-    public  ResponseEntity<?> ResponseBoolean(Boolean bool){
+    public  ResponseEntity<?> responseBoolean(Boolean bool){
         JsonObject result = new JsonObject();
         if(bool){
             result.addProperty("Message","L'operation a ete realise avec succes");

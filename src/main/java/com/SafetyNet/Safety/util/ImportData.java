@@ -16,9 +16,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import java.util.*;
 
@@ -36,22 +33,33 @@ public class ImportData {
     @PostConstruct
     public void load() throws IOException {
         //Récuperation du fichier Json et extraction des données.
-        InputStream url = new URL("https://s3-eu-west-1.amazonaws.com/course.oc-static.com/projects/DA+Java+EN/P5+/data.json").openStream();
-        BufferedReader rd = new BufferedReader(new InputStreamReader(url, Charset.forName("UTF-8")));
-        StringBuilder sb = new StringBuilder();
-        String cp;
-        while ((cp = rd.readLine()) != null) {
-            sb.append(cp);
-        }
-        JsonObject jsonObject = new JsonParser().parse(sb.toString()).getAsJsonObject();
-        JsonElement persons = jsonObject.get("persons");
-        JsonElement firestations = jsonObject.get("firestations");
-        JsonElement medicalrecords = jsonObject.get("medicalrecords");
+        InputStream url = null;
+       try {
+             url = new URL("https://s3-eu-west-1.amazonaws.com/course.oc-static.com/projects/DA+Java+EN/P5+/data.json").openStream();
 
-        //Traitement des differentes informations
-        loadPersons(persons);
-        loadFireStations(firestations);
-        loadMedicalRecords(medicalrecords);
+            BufferedReader rd = new BufferedReader(new InputStreamReader(url, Charset.forName("UTF-8")));
+            StringBuilder sb = new StringBuilder();
+            String cp;
+            while ((cp = rd.readLine()) != null) {
+                sb.append(cp);
+            }
+            JsonObject jsonObject = new JsonParser().parse(sb.toString()).getAsJsonObject();
+            JsonElement persons = jsonObject.get("persons");
+            JsonElement firestations = jsonObject.get("firestations");
+            JsonElement medicalrecords = jsonObject.get("medicalrecords");
+
+            //Traitement des differentes informations
+            loadPersons(persons);
+            loadFireStations(firestations);
+            loadMedicalRecords(medicalrecords);
+
+        }
+        finally {
+           if(url != null){
+               url.close();
+           }
+
+        }
     }
 
     /*
