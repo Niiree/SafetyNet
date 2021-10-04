@@ -233,7 +233,7 @@ class PersonServiceTest {
         // Run the test
          String result = personServiceUnderTest.fire("Address1");
         // Verify the results
-        assertThat(result).isEqualTo("result");
+        assertThat(result).isEqualTo("{\"Person\":[{\"firstName\":\"firstName\",\"address\":\"Address1\",\"phone\":\"0606060606\"},{\"firstName\":\"User3\",\"address\":\"Address1\",\"phone\":\"0606060655\"}],\"Firestation\":[{\"station\":0}]}");
     }
 
     //  @ExtendWith(MockitoExtension.class)
@@ -251,7 +251,7 @@ class PersonServiceTest {
     }
 
 
-    //@Test
+    @Test
     void testFlood() {
      //    FireStation fireStation = new FireStation(Arrays.asList("value"), 0);
         FireStation fireStation = new FireStation();
@@ -261,6 +261,6 @@ class PersonServiceTest {
          String result = personServiceUnderTest.flood(Arrays.asList(0));
 
         // Verify the results
-        assertThat(result).isEqualTo("{\"Firestation0\":{\"station\":0},\"Utilisateur0\":[]}");
+        assertThat(result).isEqualTo("{\"Firestation0\":{\"station\":0}}");
     }
 }
