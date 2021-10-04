@@ -50,7 +50,7 @@ class PersonServiceTest {
     void setUp()   {
         MockitoAnnotations.openMocks(this);
 
-        personServiceUnderTest = new PersonService();
+    //    personServiceUnderTest = new PersonService();
         Person person = new Person("firstName", "lastName", "Address1", "cityTest", "zip", "0606060606", "email@gmail.com");
         Person child = new Person("User3", "User3", "Address1", "city", "zip", "0606060655", "test@gmail.com");
 
@@ -198,7 +198,6 @@ class PersonServiceTest {
 
     }
 
-
     @Test
     void testPhoneAlert_ThrowsJsonProcessingException() {
         // Setup
@@ -223,7 +222,7 @@ class PersonServiceTest {
         assertThat(result).isNull();
     }
 
-   // @Test
+    @Test
     void testFire()   {
         // Configure FireStationService.findByAddress(...).
          List<FireStation> fireStations = Arrays.asList(new FireStation(Arrays.asList("value"), 0));

@@ -135,7 +135,8 @@ class FireStationControllerTest {
         when(mockFireStationService.remove(any(FireStation.class))).thenReturn(false);
 
         // Run the test
-        final MockHttpServletResponse response = mockMvc.perform(delete("/firestation")
+
+         MockHttpServletResponse response = mockMvc.perform(delete("/firestation")
                         .content(firestation).contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
