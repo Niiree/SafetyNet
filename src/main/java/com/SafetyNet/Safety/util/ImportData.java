@@ -37,9 +37,11 @@ public class ImportData {
 
     @PostConstruct
     public Boolean load() {
-        String ndd = null;
         //Récuperation du fichier Json et extraction des données.
         JsonObject jsonObject = loadFile();
+        if (jsonObject == null){
+            return false;
+        }
         if(jsonObject.isJsonNull()) {
             return false;
 
