@@ -2,12 +2,13 @@ package com.SafetyNet.Safety.model;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Logger;
 
 @JsonFilter("Filtre")
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -22,6 +23,8 @@ public class Person {
     private String birthdate;
     private List<String> allergies;
     private List<String> medical;
+
+    private final static Logger logger = LogManager.getLogger("BuilderReponse") ;
 
 
     public Person() {
@@ -126,7 +129,7 @@ public class Person {
             }
             return false;
         }catch (Exception e){
-            Logger.getLogger(e.getMessage());
+            logger.error(e.getMessage());
         }
         return false;
     }

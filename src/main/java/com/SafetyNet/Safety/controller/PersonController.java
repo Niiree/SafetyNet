@@ -43,15 +43,6 @@ public class PersonController {
         logger.info("Delete /person with param ");
     return builderResponse.responseBoolean(personService.personDelete(firstName,lastName)); }
 
-    /*
-     Récuperation d'une liste de Person
-     //TODO REMOVE NON PREVU DANS LE CONTRAT
-    */
-    @GetMapping(value = "/personList")
-    public ResponseEntity<?> listePersons() {
-        return builderResponse.customResponse(personService.findAll()); }
-
-
     ///////////////////////////////
     /////          URLS       /////
     ///////////////////////////////

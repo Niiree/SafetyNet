@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.converter.json.MappingJacksonValue;
 
 
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class Filtre {
+    private final static org.apache.logging.log4j.Logger logger = LogManager.getLogger("Filtre") ;
 
     public JsonObject filtreAllExceptListPerson(List<Person> personList, String... ListAllExcept)  {
         SimpleBeanPropertyFilter filtreUrl = SimpleBeanPropertyFilter.filterOutAllExcept(ListAllExcept);
@@ -33,7 +35,7 @@ public class Filtre {
            jsonObject =  new JsonParser().parse(jsonData).getAsJsonObject();
             return jsonObject;
         }catch (JsonProcessingException e){
-            Logger.getLogger(e.getMessage());
+           logger.error(e.getMessage());
         }
         return jsonObject;
     }
@@ -53,7 +55,7 @@ public class Filtre {
                     .writeValueAsString(firestationsFiltre);
              jsonObject = new JsonParser().parse(jsonData).getAsJsonObject();
         }catch (JsonProcessingException e){
-            Logger.getLogger(e.getMessage());
+            logger.error(e.getMessage());
         }
         return jsonObject;
 
@@ -74,7 +76,7 @@ public class Filtre {
 
              jsonObject = new JsonParser().parse(jsonData).getAsJsonObject();
         }catch (JsonProcessingException e){
-            Logger.getLogger(e.getMessage());
+            logger.error(e.getMessage());
         }
 
         return jsonObject;

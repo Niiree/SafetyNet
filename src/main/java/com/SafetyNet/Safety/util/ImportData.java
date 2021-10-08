@@ -77,13 +77,13 @@ public class ImportData {
             }
             jsonObject = new JsonParser().parse(sb.toString()).getAsJsonObject();
         }catch (Exception e){
-            logger.error(e);
+            logger.error(e.getMessage());
         }finally {
             if(urlLoad != null){
                 try{
                     urlLoad.close();
                 }catch (Exception e){
-                    logger.error(e);
+                    logger.error(e.getMessage());
                 }
             }
         }
