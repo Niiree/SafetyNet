@@ -6,6 +6,8 @@ import com.SafetyNet.Safety.util.Filtre;
 import com.SafetyNet.Safety.util.exceptions.PersonIntrouvableException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 @Service
 public class PersonService {
 
+    private final static Logger logger = LogManager.getLogger("PersonService") ;
     @Autowired
     private FireStationService fireStationService;
 
@@ -33,6 +36,7 @@ public class PersonService {
                 return true;
             }
         }
+        logger.error("Sauvegarde de la person impossible");
         return false;
     }
 
@@ -41,6 +45,7 @@ public class PersonService {
             personsList.removeIf(person -> firstName.equals(person.getFirstName()) && lastName.equals(person.getLastName()));
             return true;
         } else {
+            logger.error("Impossible de supprimer "+firstName +" "+ lastName);
            return false;
         }
     }
@@ -75,6 +80,7 @@ public class PersonService {
             }
             return true;
         } else {
+            logger.error("Update impossible");
             return false;
         }
     }
@@ -117,7 +123,8 @@ public class PersonService {
         if (personlist.size() != 0) {
             return  filtre.filtreAllExceptListPerson(personlist, "lastName", "address", "birthdate", "email", "medical", "allergie").get("value").getAsJsonArray().get(0).getAsJsonObject().toString();
         } else {
-            throw new PersonIntrouvableException("Personne introuvable");
+            logger.error("Person introuvable" + firstName +" "+ lastName);
+            return null;
         }
     }
 
@@ -176,24 +183,29 @@ public class PersonService {
     @param Firestation
     @return doit retourner une liste des numéros de téléphone des résidents desservis par la caserne de pompiers
     */
-    public String phoneAlert(FireStation firestation)   {
-        List<Person> personList = personsList.stream()
-                .filter(persons -> firestation.getAddress().contains(persons.getAddress()))
-                .collect(Collectors.toList());
-        if (personList.size() != 0) {
-            JsonObject result = new JsonObject();
-            List<String> listPhone = new ArrayList<>();
-            for (Person per : personList) {
-                listPhone.add(per.getPhone());
-            }
-            Gson gson = new Gson();
-            JsonParser jsonParser = new JsonParser();
-            JsonElement json = jsonParser.parse(gson.toJson(listPhone));
-            result.add("Phone", json);
+    public String phoneAlert(FireStation firestation) {
+        JsonObject result = new JsonObject();
+        if (firestation != null) {
+            List<Person> personList = personsList.stream()
+                    .filter(persons -> firestation.getAddress().contains(persons.getAddress()))
+                    .collect(Collectors.toList());
+            if (personList.size() != 0) {
 
-            return result.toString();
-        } else {
-            throw new PersonIntrouvableException("Aucun utilisateur trouvé à cette address");
+                List<String> listPhone = new ArrayList<>();
+                for (Person per : personList) {
+                    listPhone.add(per.getPhone());
+                }
+                Gson gson = new Gson();
+                JsonParser jsonParser = new JsonParser();
+                JsonElement json = jsonParser.parse(gson.toJson(listPhone));
+                result.add("Phone", json);
+                return result.toString();
+            } else {
+                return null;
+            }
+        }else {
+            logger.error("Aucune firestation n'est renseignée");
+            return null;
         }
     }
 
@@ -259,7 +271,6 @@ public class PersonService {
                         .filter(person -> firestation.getAddress().contains(person.getAddress()))
                         .collect(Collectors.toList());
                 result.add("Utilisateur" + firestation.getStation(), filtre.filtreAllExceptListPerson(resultStream, "lastName", "firstName", "phone", "birthdate").get("value"));
-
             }
         }
         return result.toString();

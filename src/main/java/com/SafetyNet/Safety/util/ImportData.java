@@ -6,6 +6,7 @@ import com.SafetyNet.Safety.service.PersonService;
 import com.google.gson.*;
 import com.SafetyNet.Safety.model.Person;
 
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +19,10 @@ import java.net.URL;
 import java.nio.charset.Charset;
 
 import java.util.*;
-import java.util.logging.Logger;
 
 @Service
 public class ImportData {
+    private final static org.apache.logging.log4j.Logger logger = LogManager.getLogger("ImportData") ;
 
     @Autowired
     private PersonService personService;
@@ -37,12 +38,15 @@ public class ImportData {
 
     @PostConstruct
     public Boolean load() {
+        logger.info("Chargement des données");
         //Récuperation du fichier Json et extraction des données.
         JsonObject jsonObject = loadFile();
         if (jsonObject == null){
+            logger.error("Aucune donnée n'est trouvée");
             return false;
         }
         if(jsonObject.isJsonNull()) {
+            logger.error("Aucune donnée n'est trouvée");
             return false;
 
         }else{
@@ -61,7 +65,7 @@ public class ImportData {
 
     public JsonObject loadFile()   {
 
-       InputStream urlLoad = null;
+        InputStream urlLoad = null;
         JsonObject jsonObject = null;
         try {
             urlLoad = url.openStream();
@@ -73,13 +77,13 @@ public class ImportData {
             }
             jsonObject = new JsonParser().parse(sb.toString()).getAsJsonObject();
         }catch (Exception e){
-            Logger.getLogger(e.getMessage());
+            logger.error(e);
         }finally {
             if(urlLoad != null){
                 try{
                     urlLoad.close();
                 }catch (Exception e){
-                    Logger.getLogger(e.getMessage());
+                    logger.error(e);
                 }
             }
         }
@@ -91,11 +95,16 @@ public class ImportData {
   Chargement des Persons
   */
     private void loadPersons(JsonElement persons) {
-        JsonArray personsArray = persons.getAsJsonArray();
-        for (JsonElement jsonPerson : personsArray
-        ) {
-            Person person = gson.fromJson(jsonPerson, Person.class);
-            personService.personSave(person);
+        if (persons.isJsonNull()){
+            logger.error("Aucune donnée n'est trouvée");
+        }else{
+            JsonArray personsArray = persons.getAsJsonArray();
+            for (JsonElement jsonPerson : personsArray
+            ) {
+                                Person person = gson.fromJson(jsonPerson, Person.class);
+                personService.personSave(person);
+            }
+            logger.info("Fin chargement Person");
         }
     }
 
@@ -103,24 +112,29 @@ public class ImportData {
      Chargement des FireStations
      */
     private void loadFireStations(JsonElement fireStations) {
-        JsonArray firestationArray = fireStations.getAsJsonArray();
-        for (JsonElement jsonFireStation : firestationArray
-        ) {
-            JsonObject jsonObject = jsonFireStation.getAsJsonObject();
+        if (fireStations.isJsonNull()){
+            logger.error("Aucune donnée n'est trouvée");
+        }else {
+            JsonArray firestationArray = fireStations.getAsJsonArray();
+            for (JsonElement jsonFireStation : firestationArray
+            ) {
+                JsonObject jsonObject = jsonFireStation.getAsJsonObject();
 
-            int id = jsonObject.get("station").getAsInt();
-            String address = jsonObject.get("address").getAsString();
+                int id = jsonObject.get("station").getAsInt();
+                String address = jsonObject.get("address").getAsString();
 
-            // Si l'ID existe, alors on ajoute l'adresse, sinon on sauvegarde.
-            if (fireStationService.findById(id) != null) {
-                //Vérification doublon address
-                if (!fireStationService.findById(id).getAddress().contains(address)) {
-                    fireStationService.addAddress(address, id);
+                // Si l'ID existe, alors on ajoute l'adresse, sinon on sauvegarde.
+                if (fireStationService.findById(id) != null) {
+                    //Vérification doublon address
+                    if (!fireStationService.findById(id).getAddress().contains(address)) {
+                        fireStationService.addAddress(address, id);
+                    }
+                } else {
+                    FireStation fireStation = new FireStation(new ArrayList<String>(Arrays.asList(new String[]{address})), id);
+                    fireStationService.save(fireStation);
                 }
-            } else {
-                FireStation fireStation = new FireStation(new ArrayList<String>(Arrays.asList(new String[]{address})), id);
-                fireStationService.save(fireStation);
             }
+            logger.info("Fin chargement firestation");
         }
     }
 
@@ -128,22 +142,26 @@ public class ImportData {
      Chargement des medicalRecords dans chaque Person
      */
     private void loadMedicalRecords(JsonElement medicalRecords)  {
-        JsonArray medicalRecordsArray = medicalRecords.getAsJsonArray();
+        if (medicalRecords.isJsonNull()){
 
-        for (JsonElement jsonMedicalRecord : medicalRecordsArray
-        ) {
-            JsonObject jsonObject = jsonMedicalRecord.getAsJsonObject();
-            String firstName = jsonObject.get("firstName").getAsString();
-            String lastName = jsonObject.get("lastName").getAsString();
+        }else{
+            JsonArray medicalRecordsArray = medicalRecords.getAsJsonArray();
+            for (JsonElement jsonMedicalRecord : medicalRecordsArray
+            ) {
+                JsonObject jsonObject = jsonMedicalRecord.getAsJsonObject();
+                String firstName = jsonObject.get("firstName").getAsString();
+                String lastName = jsonObject.get("lastName").getAsString();
 
-            Person person = personService.findByFirstNameLastName(firstName, lastName);
+                Person person = personService.findByFirstNameLastName(firstName, lastName);
 
-            person.setMedical(gson.fromJson(jsonObject.getAsJsonArray("medications"), List.class));
-            person.setAllergies(gson.fromJson(jsonObject.getAsJsonArray("allergies"), List.class));
+                person.setMedical(gson.fromJson(jsonObject.getAsJsonArray("medications"), List.class));
+                person.setAllergies(gson.fromJson(jsonObject.getAsJsonArray("allergies"), List.class));
 
-            String dateString = jsonObject.get("birthdate").getAsString();
-            person.setBirthdate(dateString);
+                String dateString = jsonObject.get("birthdate").getAsString();
+                person.setBirthdate(dateString);
 
+            }
+            logger.info("Fin chargement medicalRecords");
         }
     }
 }

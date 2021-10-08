@@ -5,7 +5,11 @@ import com.SafetyNet.Safety.service.*;
 
 import com.SafetyNet.Safety.util.BuilderResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +20,7 @@ import java.util.List;
 @RestController
 public class FireStationController {
 
+    private final static Logger logger = LogManager.getLogger("FirestationController") ;
     @Autowired
     private FireStationService fireStationService;
 
@@ -29,6 +34,7 @@ public class FireStationController {
      */
     @PostMapping(value = "/firestation")
     public ResponseEntity<?> firestationPost(@RequestBody FireStation fireStation) {
+        logger.info("Post /firestation");
         return builderResponse.responseBoolean(fireStationService.save(fireStation));
     }
 
@@ -37,6 +43,7 @@ public class FireStationController {
      */
     @PutMapping(value = "/firestation/{id}")
     public ResponseEntity<?> firestationPut(@RequestBody FireStation firestation, @PathVariable int id)  {
+        logger.info("Put /Firestation with param id ");
         return builderResponse.responseBoolean(fireStationService.update(firestation,id));}
 
     /*
@@ -44,7 +51,9 @@ public class FireStationController {
      */
     @DeleteMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> firestationDelete(@RequestBody FireStation firestation) {
-        return builderResponse.responseBoolean(fireStationService.remove(firestation)); }
+        logger.info("Delete /Firestation");
+        return builderResponse.responseBoolean(fireStationService.remove(firestation));
+    }
 
 
     ///////////////////////////////
@@ -75,5 +84,6 @@ public class FireStationController {
     @GetMapping(value = "/flood/stations", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> flood(@RequestParam List<Integer> station_number)   {
         return builderResponse.customResponse(personService.flood(station_number)); }
+
 
 }
