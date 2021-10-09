@@ -219,8 +219,9 @@
 				</executions>
 				<configuration>
 					<excludes>
-						<exclude>com/SafetyNet/Safety/SafetyApplication.java</exclude>m
-						<exclude>com/SafetyNet/Safety/util/exceptions/**</exclude>
+						<exclude>com/SafetyNet/Safety/SafetyApplication.class</exclude>
+						<exclude>com/SafetyNet/Safety/util/JacksonConfiguration.class</exclude>
+						<exclude>com/SafetyNet/Safety/util/exceptions/*</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
