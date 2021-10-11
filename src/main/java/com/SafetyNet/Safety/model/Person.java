@@ -110,9 +110,9 @@ public class Person {
 
     public void setBirthdate(String birthdate) {
         if(birthdate ==null){
-          this.birthdate = null;
+            this.birthdate = null;
         }else{
-        this.birthdate = birthdate.toString();}}
+            this.birthdate = birthdate.toString();}}
 
     public List<String> getAllergies() {
         return allergies;
@@ -133,12 +133,9 @@ public class Person {
             return false;
         }catch (Exception e){
             logger.error(e.getMessage());
-
         }
         return null;
-      }
-
-
+    }
 }
 
 
