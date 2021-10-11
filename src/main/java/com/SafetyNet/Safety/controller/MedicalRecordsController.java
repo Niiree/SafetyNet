@@ -18,22 +18,30 @@ public class MedicalRecordsController {
 
     private BuilderResponse builderResponse = new BuilderResponse();
 
+    /*
+     * Post Medicalrecords
+     */
     @PostMapping(value = "/medicalRecord")
     public ResponseEntity<?> medicalRecordPost(@RequestBody Person person) {
         logger.info("Post /medicalRecord");
         return builderResponse.responseBoolean(personService.personMedicalPost(person));
     }
 
+    /*
+     * Put Medicalrecords
+     */
     @PutMapping (value = "/medicalRecord")
     public ResponseEntity<?> medicalRecordPut(@RequestBody Person person) {
         logger.info("Put /medicalRecord");
         return builderResponse.responseBoolean(personService.personMedicalPut(person));
     }
 
+    /*
+     * Delete Medicalrecords
+     */
     @DeleteMapping(value = "/medicalRecord/{firstName}/{lastName}")
     public ResponseEntity<?> medicalRecordDelete(@PathVariable String firstName,@PathVariable String lastName) {
         logger.info("Delete /medicalRecord");
         return builderResponse.responseBoolean(personService.personMedicalDelete(firstName,lastName));
     }
-
 }
