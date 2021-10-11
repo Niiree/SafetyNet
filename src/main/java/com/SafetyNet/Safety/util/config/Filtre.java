@@ -1,4 +1,4 @@
-package com.SafetyNet.Safety.util;
+package com.SafetyNet.Safety.util.config;
 
 import com.SafetyNet.Safety.model.FireStation;
 import com.SafetyNet.Safety.model.Person;
@@ -13,9 +13,7 @@ import com.google.gson.JsonParser;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.http.converter.json.MappingJacksonValue;
 
-
 import java.util.List;
-import java.util.logging.Logger;
 
 public class Filtre {
     private final static org.apache.logging.log4j.Logger logger = LogManager.getLogger("Filtre") ;
@@ -32,10 +30,10 @@ public class Filtre {
         try {
             String jsonData = mapper.writerWithDefaultPrettyPrinter()
                     .writeValueAsString(personsFiltre);
-           jsonObject =  new JsonParser().parse(jsonData).getAsJsonObject();
+            jsonObject =  new JsonParser().parse(jsonData).getAsJsonObject();
             return jsonObject;
         }catch (JsonProcessingException e){
-           logger.error(e.getMessage());
+            logger.error(e.getMessage());
         }
         return jsonObject;
     }
@@ -53,7 +51,7 @@ public class Filtre {
         try {
             String jsonData = mapper.writerWithDefaultPrettyPrinter()
                     .writeValueAsString(firestationsFiltre);
-             jsonObject = new JsonParser().parse(jsonData).getAsJsonObject();
+            jsonObject = new JsonParser().parse(jsonData).getAsJsonObject();
         }catch (JsonProcessingException e){
             logger.error(e.getMessage());
         }
@@ -74,7 +72,7 @@ public class Filtre {
             String jsonData = mapper.writerWithDefaultPrettyPrinter()
                     .writeValueAsString(firestationsFiltre);
 
-             jsonObject = new JsonParser().parse(jsonData).getAsJsonObject();
+            jsonObject = new JsonParser().parse(jsonData).getAsJsonObject();
         }catch (JsonProcessingException e){
             logger.error(e.getMessage());
         }

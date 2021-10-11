@@ -6,7 +6,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-
 public class BuilderResponse<obj> {
 
     private final static Logger logger = LogManager.getLogger("BuilderReponse") ;
@@ -14,7 +13,7 @@ public class BuilderResponse<obj> {
     public ResponseEntity<?> customResponse(obj obj){
         if(obj != null){
             logger.info("Requete réalisé avec un code retour : " +HttpStatus.OK);
-                return new ResponseEntity<>(obj,HttpStatus.OK);
+            return new ResponseEntity<>(obj,HttpStatus.OK);
         }else {
             logger.info("Requete réalisé avec un code retour : "+HttpStatus.NO_CONTENT);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -31,7 +30,6 @@ public class BuilderResponse<obj> {
             result.addProperty("Message","L'operation n'a pas ete realise");
             logger.info("Requete réalisé avec un code retour : "+HttpStatus.NO_CONTENT);
             return new ResponseEntity<>(result.toString(),HttpStatus.NO_CONTENT);
-
         }
     }
 
