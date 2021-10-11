@@ -19,14 +19,19 @@ import java.util.stream.Collectors;
 @Service
 public class PersonService {
 
-    private final static Logger logger = LogManager.getLogger("PersonService") ;
+    private final static Logger logger = LogManager.getLogger("PersonService");
+
     @Autowired
     private FireStationService fireStationService;
 
     private Filtre filtre = new Filtre();
     private List<Person> personsList = new ArrayList<>();
 
-
+    /**
+     * Sauvegarde Person
+     * @param Person
+     * @return true ou false
+     */
     public boolean personSave(Person person) {
         if (person != null) {
             if(person.getFirstName()!=null && person.getLastName()!=null){
@@ -38,6 +43,11 @@ public class PersonService {
         return false;
     }
 
+    /**
+     * Delete Person
+     * @param Person
+     * @return true ou false
+     */
     public boolean personDelete(String firstName, String lastName) {
         if (findByFirstNameLastName(firstName, lastName) != null) {
             personsList.removeIf(person -> firstName.equals(person.getFirstName()) && lastName.equals(person.getLastName()));
@@ -48,7 +58,11 @@ public class PersonService {
         }
     }
 
-
+    /**
+     * Update Person
+     * @param Person
+     * @return true ou false
+     */
     public boolean personUpdate(Person person) {
         Optional<Person> user = personsList.stream().filter(p -> person.getLastName().equals(p.getLastName()) && person.getFirstName().equals(p.getFirstName())).findAny();
         if (user.isPresent()) {
@@ -83,7 +97,11 @@ public class PersonService {
         }
     }
 
-
+    /**
+     * Delete MedicalRecords
+     * @param Person
+     * @return true ou false
+     */
     public boolean personMedicalDelete(String firstName,String lastName){
         Person user = findByFirstNameLastName(firstName,lastName);
         if(user!= null){
@@ -92,21 +110,32 @@ public class PersonService {
             user.setBirthdate(null);
             return true;
         }
+        logger.error("impossible de supprimer le medicalRecords de "+ firstName + " "+lastName);
         return false;
     }
 
+    /**
+     * Sauvegarde MedicalRecords
+     * @param Person
+     * @return true ou false
+     */
     public boolean personMedicalPost(Person person){
         Optional<Person> user = personsList.stream().filter(p -> person.getLastName().equals(p.getLastName()) && person.getFirstName().equals(p.getFirstName())).findAny();
-
         if(user != null && user.get().getMedical() ==null && user.get().getAllergies()==null && user.get().getBirthdate()==null){
             user.get().setMedical(person.getMedical());
             user.get().setAllergies(person.getAllergies());
             user.get().setBirthdate(person.getBirthdate());
             return true;
         }
+        logger.error("Impossible de sauvegarder un MedicalRecord, l'utilisateur est absent ou un dossier médical existe déjà.");
         return false;
     }
 
+    /**
+     * Update Person
+     * @param Person
+     * @return true ou false
+     */
     public boolean personMedicalPut(Person person){
         Person user = findByFirstNameLastName(person.getFirstName(),person.getLastName());
         if(user != null){
@@ -115,13 +144,24 @@ public class PersonService {
             user.setBirthdate(person.getBirthdate());
             return true;
         }
+        logger.error("Impossible de mettre à jour le MedicalRecord.");
         return false;
     }
 
+    /**
+     * Récuperation de la liste des persons
+     * @param none
+     * @return toutes les persons enregistrés
+     */
     public List<Person> findAll() {
         return personsList;
     }
 
+    /**
+     * Récuperation d'une person par son firstName et Lastname
+     * @param String firstName + String lastName
+     * @return Person ou null
+     */
     public Person findByFirstNameLastName(String firstName, String lastName) {
         Person user = personsList.stream().filter(person -> firstName.equals(person.getFirstName()) && lastName.equals(person.getLastName())).
                 findAny().orElse(null);
@@ -129,13 +169,11 @@ public class PersonService {
         return user;
     }
 
-
     ///////////////////////////////
     /////          URLS       /////
     ///////////////////////////////
 
-
-    /*
+    /**
      @param    Ville
      @return   Retourne une liste d'email en fonction de la ville
     */
@@ -145,7 +183,7 @@ public class PersonService {
                 .collect(Collectors.toList());
     }
 
-    /*
+    /**
     * personInfo?firstName=<firstName>&lastName=<lastName>
     @param  Name
     @return Cette url doit retourner le nom, l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments,posologie, allergies) de chaque habitant. Si plusieurs personnes portent le même nom, elles doivent toutes apparaître.
@@ -161,7 +199,7 @@ public class PersonService {
         }
     }
 
-    /*
+    /**
     * childAlert?address=<address>
      @param (String Address)
      @return doit retourner une liste d'enfants (tout individu âgé de 18 ans ou moins) habitant à cette adresse.
@@ -179,7 +217,7 @@ public class PersonService {
         }
     }
 
-    /*
+    /**
     * firestation?stationNumber=<station_number>
     @param Firestation
     @return Json d'une liste de person trié en fonction de l'adresse de la firestation
@@ -213,7 +251,7 @@ public class PersonService {
         }
     }
 
-    /*
+    /**
     * phoneAlert?firestation=<firestation_number>
     @param Firestation
     @return doit retourner une liste des numéros de téléphone des résidents desservis par la caserne de pompiers
@@ -244,7 +282,7 @@ public class PersonService {
         }
     }
 
-    /*
+    /**
     * CommunityEmail?city=<city>
     @param String City
     @return Cette url doit retourner les adresses mail de tous les habitants de la ville.
@@ -264,7 +302,7 @@ public class PersonService {
         }
     }
 
-    /*
+    /**
     * fire?address=<address>
     @param String address
     @return La liste doit inclure le nom, le numéro de téléphone, l'âge et les antécédents médicaux (médicaments, posologie et allergies) de chaque personne.
@@ -282,7 +320,7 @@ public class PersonService {
         }
     }
 
-    /*
+    /**
     * flood/stations?stations=<a list of station_numbers>
     @param Liste ID des Firestations
     @return une liste de tous les foyers desservis par la caserne. Cette liste doit regrouper les personnes par adresse.

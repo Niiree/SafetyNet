@@ -1,7 +1,6 @@
 package com.SafetyNet.Safety.service;
 
 import com.SafetyNet.Safety.model.FireStation;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -29,10 +28,8 @@ public class FireStationService {
 
     /**
      * Recherche de firestation par Address
-     *
      * @param string address
      * @return Liste<Firestation> en fonction de l'addresse
-     * >
      **/
     public List<FireStation> findByAddress(String address) {
         return listFirestations.stream().filter(fireStation -> fireStation.getAddress().contains(address)).collect(Collectors.toList());
@@ -40,7 +37,6 @@ public class FireStationService {
 
     /**
      * Sauvegarde Firestation
-     *
      * @param fireStation
      * @return true
      **/
@@ -66,7 +62,6 @@ public class FireStationService {
 
     /**
      * Ajout d'un adresse
-     *
      * @return true or false
      * @Param String address & int identifiant
      **/
@@ -83,7 +78,6 @@ public class FireStationService {
 
     /**
      * Mise à jour de la firestation
-     *
      * @param fireStations & id de la firestation *
      * @return true ou false
      */
@@ -99,7 +93,6 @@ public class FireStationService {
             logger.error("Update impossible sur la station" + fire.getStation());
             return false;
         }
-
     }
 }
 
