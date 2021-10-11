@@ -26,8 +26,6 @@ class PersonServiceTest {
     private FireStation firestation = new FireStation(Arrays.asList("Address1"),0);
 
 
-
-
     @BeforeEach
     void setUp()   {
         MockitoAnnotations.openMocks(this);
@@ -103,6 +101,7 @@ class PersonServiceTest {
     }
 
     @Test
+    @DisplayName("Update d'une person")
     void testPersonUpdate() {
         // Setup
          Person person = new Person("firstName", "lastName", "address", "city", "zip", "phone", "email");
@@ -118,12 +117,12 @@ class PersonServiceTest {
     }
 
     @Test
+    @DisplayName("Update d'une person Null")
     void testPersonUpdateNull() {
         // Setup
         Person person = new Person("firstName", "lastName", null,null,null,null,null);
         person.setFirstName("firstname");
         person.setLastName("lastname");
-
 
         // Run the test
         boolean result = personServiceUnderTest.personUpdate(person);
@@ -132,6 +131,7 @@ class PersonServiceTest {
         assertThat(result).isFalse();
     }
     @Test
+    @DisplayName("Update d'une person not work")
     void testPersonUpdatNotWork() {
         // Setup
         Person person = new Person();
@@ -146,6 +146,7 @@ class PersonServiceTest {
     }
 
     @Test
+    @DisplayName("Post d'un Medical")
     void testPersonMedicalPost(){
 
         // Setup
@@ -169,6 +170,7 @@ class PersonServiceTest {
     }
 
     @Test
+    @DisplayName("Put d'un Medical")
     void testPersonMedicalPut(){
 
         // Setup
@@ -188,13 +190,11 @@ class PersonServiceTest {
         assertThat(resultPerson.getMedical()).isEqualTo(Arrays.asList("none"));
         assertThat(resultPerson.getAllergies()).isEqualTo(Arrays.asList("Nuts"));
         assertThat(resultPerson.getBirthdate()).isEqualTo("24/06/1994");
-
     }
 
     @Test
+    @DisplayName("Delete d'un Medical")
     void testPersonMedicalDelete(){
-        // Setup
-
         //run the test
         boolean result = personServiceUnderTest.personMedicalDelete("User3","User3");
         Person resultPerson = personServiceUnderTest.findByFirstNameLastName("User3","User3");
@@ -204,11 +204,11 @@ class PersonServiceTest {
         assertThat(resultPerson.getMedical()).isEqualTo(null);
         assertThat(resultPerson.getAllergies()).isEqualTo(null);
         assertThat(resultPerson.getBirthdate()).isEqualTo(null);
-
     }
 
 
     @Test
+    @DisplayName("Récuperation des persons")
     void testFindAll() {
         // Setup
          Person person2 = new Person("user1", "user2", "address", "city", "zip", "phone", "email");
@@ -222,18 +222,18 @@ class PersonServiceTest {
     }
 
     @Test
+    @DisplayName("Récuperation de person par firstName / lastName")
     void testFindByFirstNameLastName() {
         // Run the test
          Person result = personServiceUnderTest.findByFirstNameLastName("firstName", "lastName");
 
         // Verify the result
-
         assertThat(result.getFirstName()).isEqualTo("firstName");
         assertThat(result.getLastName()).isEqualTo("lastName");
-
     }
 
     @Test
+    @DisplayName("Email par ville")
     void testEmailByCity() {
         // Run the test
          List<String> result = personServiceUnderTest.emailByCity("cityTest");
@@ -243,14 +243,16 @@ class PersonServiceTest {
     }
 
     @Test
+    @DisplayName("Person par FirstName")
     void testPersonByName() {
         // Run the test
          String result = personServiceUnderTest.personByName("firstName", "lastName");
-      //  String var ='{\"firstName":"Nicolas","lastName":"Le stunff","address":"1509 Culver St","city":"Culver","zip":"97451","phone":"841-874-6512","email":"jaboyd@email.com"}';
+         //Verify the results
         assertThat(result).isEqualTo("{\"lastName\":\"lastName\",\"address\":\"Address1\",\"email\":\"email@gmail.com\",\"birthdate\":\"01/01/2000\"}");
     }
 
     @Test
+    @DisplayName("Person par FirstName faux")
     void testPersonByNameWrong() {
         // Run the test
         String result = personServiceUnderTest.personByName("firstNameNull", "lastNameNull");
@@ -259,17 +261,17 @@ class PersonServiceTest {
     }
 
     @Test
+    @DisplayName("URL ChildAlert")
     void testChildAlert() {
-
         // Run the test
          String result = personServiceUnderTest.childAlert("Address9");
 
         // Verify the results
         assertThat(result).isEqualTo("{\"Person\":[{\"address\":\"Address9\",\"city\":\"city9\",\"zip\":\"zip\",\"email\":\"test@gmail.com\",\"birthdate\":\"21/09/2021\",\"allergies\":[\"nuts\"],\"medical\":[\"none\"],\"adult\":false}]}");
-
     }
 
     @Test
+    @DisplayName("URL Person par Firestation")
     void testPersonByFirestation() {
         // Setup
          FireStation firestation = new FireStation(Arrays.asList("Address1"), 0);
@@ -284,13 +286,10 @@ class PersonServiceTest {
     @Test
     void testPhoneAlert() throws Exception {
         // Run the test
-
          String resultat = personServiceUnderTest.phoneAlert(firestation);
-
 
         // Verify the results
         assertThat(resultat).isEqualTo("{\"Phone\":[\"0606060606\",\"0606060655\"]}");
-
     }
 
     @Test

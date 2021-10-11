@@ -42,36 +42,36 @@ class FireStationServiceTest {
     }
 
     @Test
+    @DisplayName("Récuperation  firestation par ID")
     void testFindById() {
 
         // Run the test
-         FireStation result = fireStationServiceTest.findById(0);
+        FireStation result = fireStationServiceTest.findById(0);
 
         // Verify the results
         assertThat(result.getAddress().get(0)).isEqualTo("address1");
         assertThat(result.getStation()).isEqualTo(0);
-
     }
 
     @Test
+    @DisplayName("Récuperation  firestation par address")
     void testFindByAddress() {
         // Run the test
-         List<FireStation> result = fireStationServiceTest.findByAddress("address1");
+        List<FireStation> result = fireStationServiceTest.findByAddress("address1");
 
         // Verify the results
         assertThat(result.get(0).getAddress().get(0)).isEqualTo("address1");
         assertThat(result.get(0).getStation()).isEqualTo(0);
-
     }
 
     @Test
+    @DisplayName("sauvegarde firestation")
     void testSave() {
         // Setup
-         FireStation fireStation = new FireStation(Arrays.asList("test"), 2);
+        FireStation fireStation = new FireStation(Arrays.asList("test"), 2);
 
         // Run the test
-         boolean result = fireStationServiceTest.save(fireStation);
-
+        boolean result = fireStationServiceTest.save(fireStation);
 
         // Verify the results
         assertThat(fireStationServiceTest.findById(2)).isEqualTo(fireStation);
@@ -79,12 +79,13 @@ class FireStationServiceTest {
     }
 
     @Test
+    @DisplayName("Delete firestation")
     void testRemove() {
         // Setup
         FireStation fireStation = new FireStation(Arrays.asList("value"), 0);
 
         // Run the test
-         boolean result = fireStationServiceTest.remove(fireStation);
+        boolean result = fireStationServiceTest.remove(fireStation);
         FireStation r = fireStationServiceTest.findById(0);
 
         // Verify the results
@@ -94,11 +95,10 @@ class FireStationServiceTest {
 
 
     @Test
+    @DisplayName("Ajout d'une address firestation")
     void testAddAddress() {
-        // Setup
-
         // Run the test
-         boolean result = fireStationServiceTest.addAddress("address2", 0);
+        boolean result = fireStationServiceTest.addAddress("address2", 0);
 
         // Verify the results
         assertThat(fireStationServiceTest.findById(0).getAddress()).isEqualTo(Arrays.asList("address1","address2"));
@@ -106,18 +106,17 @@ class FireStationServiceTest {
     }
 
     @Test
+    @DisplayName("Update de firestation")
     void testUpdate() {
         // Setup
         FireStation fireStations = new FireStation(Arrays.asList("test"), 0);
 
         assertThat(fireStationServiceTest.findById(0).getAddress()).isEqualTo(Arrays.asList("address1"));
         // Run the test
-         boolean result = fireStationServiceTest.update(fireStations, 0);
+        boolean result = fireStationServiceTest.update(fireStations, 0);
 
         // Verify the results
         assertThat(fireStationServiceTest.findById(0).getAddress()).isEqualTo(Arrays.asList("test"));
         assertThat(result).isTrue();
-
-
     }
 }

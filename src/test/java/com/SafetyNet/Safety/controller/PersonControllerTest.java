@@ -4,6 +4,7 @@ import com.SafetyNet.Safety.model.FireStation;
 import com.SafetyNet.Safety.model.Person;
 import com.SafetyNet.Safety.service.FireStationService;
 import com.SafetyNet.Safety.service.PersonService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ class PersonControllerTest {
     private String person = "{\"firstName\":\"John\",\"lastName\":\"Boyd\",\"address\":\"15109 Culver St\",\"city\":\"Culver\",\"zip\":\"97451\",\"phone\":\"841-874-6512\",\"email\":\"jaboyd@email.com\",\"birthdate\":\"03/06/1984\",\"allergies\":[\"nillacilan\"],\"medical\":[\"aznol:350mg\",\"hydrapermazol:100mg\"],\"adult\":true}";
 
     @Test
+    @DisplayName("Controller Post Person")
     void testPersonPost() throws Exception {
         // Setup
         when(mockPersonService.personSave(any(Person.class))).thenReturn(true);
@@ -55,23 +57,25 @@ class PersonControllerTest {
         assertEquals(messageTrue, response.getContentAsString());
     }
 
-        @Test
-        void testPersonPostFalse() throws Exception {
-            // Setup
-            when(mockPersonService.personSave(any(Person.class))).thenReturn(false);
+    @Test
+    @DisplayName("Controller Post Person false")
+    void testPersonPostFalse() throws Exception {
+        // Setup
+        when(mockPersonService.personSave(any(Person.class))).thenReturn(false);
 
-            // Run the test
-            final MockHttpServletResponse response = mockMvc.perform(post("/person")
-                            .content(person).contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON))
-                    .andReturn().getResponse();
+        // Run the test
+        final MockHttpServletResponse response = mockMvc.perform(post("/person")
+                        .content(person).contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
 
-            // Verify the results
-            assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
-            assertEquals(messageFalse, response.getContentAsString());
+        // Verify the results
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+        assertEquals(messageFalse, response.getContentAsString());
     }
 
     @Test
+    @DisplayName("Controller Update Person")
     void testPersonUpdate() throws Exception {
         // Setup
         when(mockPersonService.personUpdate(any(Person.class))).thenReturn(true);
@@ -88,6 +92,7 @@ class PersonControllerTest {
     }
 
     @Test
+    @DisplayName("Controller Update Person false")
     void testPersonUpdateFalse() throws Exception {
         // Setup
         when(mockPersonService.personUpdate(any(Person.class))).thenReturn(false);
@@ -105,6 +110,7 @@ class PersonControllerTest {
 
 
     @Test
+    @DisplayName("Controller Delete Person")
     void testPersonDelete() throws Exception {
         // Setup
         when(mockPersonService.personDelete("firstName", "lastName")).thenReturn(true);
@@ -120,6 +126,7 @@ class PersonControllerTest {
     }
 
     @Test
+    @DisplayName("Controller Delete Person false")
     void testPersonDeleteFalse() throws Exception {
         // Setup
         when(mockPersonService.personDelete("firstName", "lastName")).thenReturn(false);
@@ -136,6 +143,7 @@ class PersonControllerTest {
 
 
     @Test
+    @DisplayName("Controller URL ChildAlert")
     void testChildAlert() throws Exception {
         // Setup
         when(mockPersonService.childAlert("address")).thenReturn("result");
@@ -152,6 +160,7 @@ class PersonControllerTest {
     }
 
     @Test
+    @DisplayName("Controller URL PersonInfoName")
     void testPersonInfoName() throws Exception {
         // Setup
         when(mockPersonService.personByName("firstName", "lastName")).thenReturn("result");
@@ -169,6 +178,7 @@ class PersonControllerTest {
     }
 
     @Test
+    @DisplayName("Controller URL CommunityEmail")
     void testCommunityEmail() throws Exception {
         // Setup
         when(mockPersonService.communityEmail("city")).thenReturn(Arrays.asList("value"));
@@ -185,6 +195,7 @@ class PersonControllerTest {
     }
 
     @Test
+    @DisplayName("Controller URL CommunityEmail False")
     void testCommunityEmail_PersonServiceReturnsNoItems() throws Exception {
         // Setup
         when(mockPersonService.communityEmail("city")).thenReturn(Collections.emptyList());
@@ -201,6 +212,7 @@ class PersonControllerTest {
     }
 
     @Test
+    @DisplayName("Controller URL phoneAlert")
     void testPhoneAlert() throws Exception {
         // Setup
         when(mockPersonService.phoneAlert(any(FireStation.class))).thenReturn("result");

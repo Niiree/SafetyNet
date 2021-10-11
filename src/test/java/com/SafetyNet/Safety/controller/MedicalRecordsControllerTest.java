@@ -2,6 +2,7 @@ package com.SafetyNet.Safety.controller;
 
 import com.SafetyNet.Safety.model.Person;
 import com.SafetyNet.Safety.service.PersonService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ public class MedicalRecordsControllerTest {
 
 
     @Test
+    @DisplayName("Controller Post medicalRecords ")
     void testMedicalRecordPost() throws Exception {
         //setup
         when(mockPersonSerivce.personMedicalPost(any(Person.class))).thenReturn(true);
@@ -50,6 +52,7 @@ public class MedicalRecordsControllerTest {
     }
 
     @Test
+    @DisplayName("Controller Post medicalRecords false")
     void testMedicalRecordPostFalse() throws Exception {
         //setup
         when(mockPersonSerivce.personMedicalPost(any(Person.class))).thenReturn(false);
@@ -65,6 +68,7 @@ public class MedicalRecordsControllerTest {
     }
 
     @Test
+    @DisplayName("Controller Put medicalRecords True")
     void testMedicalRecordPut() throws Exception {
         //setup
         when(mockPersonSerivce.personMedicalPut(any(Person.class))).thenReturn(true);
@@ -81,6 +85,7 @@ public class MedicalRecordsControllerTest {
     }
 
     @Test
+    @DisplayName("Controller Put medicalRecords false")
     void testMedicalRecordPutFalse() throws Exception {
         //setup
         when(mockPersonSerivce.personMedicalPut(any(Person.class))).thenReturn(false);
@@ -97,6 +102,7 @@ public class MedicalRecordsControllerTest {
 
 
     @Test
+    @DisplayName("Controller Delete medicalRecords true")
     void testMedicalRecordDelete() throws Exception {
         //setup
         when(mockPersonSerivce.personMedicalDelete("John","Boyd")).thenReturn(true);
@@ -112,6 +118,7 @@ public class MedicalRecordsControllerTest {
     }
 
     @Test
+    @DisplayName("Controller Delete medicalRecords false")
     void testMedicalRecordDeleteFalse() throws Exception {
         //setup
         when(mockPersonSerivce.personMedicalDelete("John","Boyd")).thenReturn(false);

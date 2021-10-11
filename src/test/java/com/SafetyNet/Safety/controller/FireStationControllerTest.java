@@ -3,6 +3,7 @@ package com.SafetyNet.Safety.controller;
 import com.SafetyNet.Safety.model.FireStation;
 import com.SafetyNet.Safety.service.FireStationService;
 import com.SafetyNet.Safety.service.PersonService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,7 @@ class FireStationControllerTest {
 
 
     @Test
+    @DisplayName("Controller Firestation post True")
     void testFirestationPostTrue() throws Exception {
         // Setup
         when(mockFireStationService.save(any(FireStation.class))).thenReturn(true);
@@ -64,6 +66,7 @@ class FireStationControllerTest {
     }
 
     @Test
+    @DisplayName("Controller Firestation post False")
     void testFirestationPostFalse() throws Exception {
         // Setup
         when(mockFireStationService.save(any(FireStation.class))).thenReturn(false);
@@ -80,6 +83,7 @@ class FireStationControllerTest {
     }
 
     @Test
+    @DisplayName("Controller Firestation Put True")
     void testFirestationPutTrue() throws Exception {
         // Setup
         when(mockFireStationService.update(any(FireStation.class), eq(0))).thenReturn(true);
@@ -96,6 +100,7 @@ class FireStationControllerTest {
     }
 
     @Test
+    @DisplayName("Controller Firestation Put False")
     void testFirestationPutFalse() throws Exception {
         // Setup
         when(mockFireStationService.update(any(FireStation.class), eq(0))).thenReturn(false);
@@ -112,6 +117,7 @@ class FireStationControllerTest {
     }
 
     @Test
+    @DisplayName("Controller Firestation Delete True")
     void testFirestationDeleteTrue() throws Exception {
         // Setup
         when(mockFireStationService.remove(any(FireStation.class))).thenReturn(true);
@@ -128,13 +134,14 @@ class FireStationControllerTest {
     }
 
     @Test
+    @DisplayName("Controller Firestation Delete False")
     void testFirestationDeleteFalse() throws Exception {
         // Setup
         when(mockFireStationService.remove(any(FireStation.class))).thenReturn(false);
 
         // Run the test
 
-         MockHttpServletResponse response = mockMvc.perform(delete("/firestation")
+        MockHttpServletResponse response = mockMvc.perform(delete("/firestation")
                         .content(firestation).contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
@@ -145,7 +152,8 @@ class FireStationControllerTest {
     }
 
     @Test
-    void testFirestation() throws Exception {
+    @DisplayName("Controller Firestation Get")
+    void testFirestationGet() throws Exception {
         // Setup
         when(mockPersonService.personByFirestation(any(FireStation.class))).thenReturn("result");
 
@@ -165,6 +173,7 @@ class FireStationControllerTest {
     }
 
     @Test
+    @DisplayName("Controller URLS fire")
     void testFire() throws Exception {
         // Setup
         when(mockPersonService.fire("address")).thenReturn("result");
@@ -181,6 +190,7 @@ class FireStationControllerTest {
     }
 
     @Test
+    @DisplayName("Controller URLS flood")
     void testFlood() throws Exception {
         // Setup
         when(mockPersonService.flood(Arrays.asList(0))).thenReturn("result");
