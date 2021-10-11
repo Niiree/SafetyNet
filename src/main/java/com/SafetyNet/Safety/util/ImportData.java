@@ -48,11 +48,10 @@ public class ImportData {
         if(jsonObject.isJsonNull()) {
             logger.error("Aucune donnée n'est trouvée");
             return false;
-
         }else{
-             JsonElement persons = jsonObject.get("persons");
-             JsonElement firestations = jsonObject.get("firestations");
-             JsonElement medicalrecords = jsonObject.get("medicalrecords");
+            JsonElement persons = jsonObject.get("persons");
+            JsonElement firestations = jsonObject.get("firestations");
+            JsonElement medicalrecords = jsonObject.get("medicalrecords");
             //Traitement des differentes informations
             loadPersons(persons);
             loadFireStations(firestations);
@@ -63,6 +62,8 @@ public class ImportData {
 
     }
 
+    /**
+     * traitement du fichier distant web*/
     public JsonObject loadFile()   {
 
         InputStream urlLoad = null;
@@ -91,27 +92,26 @@ public class ImportData {
     }
 
 
-    /*
-  Chargement des Persons
-  */
+    /**
+     * Chargement des persons à partir du jsonObject
+     **/
     private void loadPersons(JsonElement persons) {
         if ( persons == null || persons.isJsonNull()){
             logger.error("Aucune donnée n'est trouvée pour Persons lors du chargement des informations");
-
         }else{
             JsonArray personsArray = persons.getAsJsonArray();
             for (JsonElement jsonPerson : personsArray
             ) {
-                                Person person = gson.fromJson(jsonPerson, Person.class);
+                Person person = gson.fromJson(jsonPerson, Person.class);
                 personService.personSave(person);
             }
             logger.info("Fin chargement Person");
         }
     }
 
-    /*
-     Chargement des FireStations
-     */
+    /**
+     * Chargement des Firestations à partir du jsonObject
+     **/
     private void loadFireStations(JsonElement fireStations) {
         if (fireStations == null || fireStations.isJsonNull()){
             logger.error("Aucune donnée n'est trouvée pour Firestations lors du chargement des informations");
@@ -124,7 +124,7 @@ public class ImportData {
                 int id = jsonObject.get("station").getAsInt();
                 String address = jsonObject.get("address").getAsString();
 
-                // Si l'ID existe, alors on ajoute l'adresse, sinon on sauvegarde.
+                // Si l'ID existe, alors on ajoute l'adresse, sinon on effectue une nouvelle sauvegarde.
                 if (fireStationService.findById(id) != null) {
                     //Vérification doublon address
                     if (!fireStationService.findById(id).getAddress().contains(address)) {
@@ -139,28 +139,29 @@ public class ImportData {
         }
     }
 
-    /*
-     Chargement des medicalRecords dans chaque Person
-     */
+    /**
+     * Chargement des MedicalRecords à partir du jsonObject
+     **/
     private void loadMedicalRecords(JsonElement medicalRecords)  {
         if (medicalRecords ==null||medicalRecords.isJsonNull()){
             logger.error("Aucune donnée n'est trouvée pour MedicalsRecords lors du chargement des informations");
         }else{
             JsonArray medicalRecordsArray = medicalRecords.getAsJsonArray();
+
             for (JsonElement jsonMedicalRecord : medicalRecordsArray
             ) {
                 JsonObject jsonObject = jsonMedicalRecord.getAsJsonObject();
                 String firstName = jsonObject.get("firstName").getAsString();
                 String lastName = jsonObject.get("lastName").getAsString();
 
+                //Récuperation de la person
                 Person person = personService.findByFirstNameLastName(firstName, lastName);
 
+                //Sauvegarde des informations medicalRecords
                 person.setMedical(gson.fromJson(jsonObject.getAsJsonArray("medications"), List.class));
                 person.setAllergies(gson.fromJson(jsonObject.getAsJsonArray("allergies"), List.class));
-
                 String dateString = jsonObject.get("birthdate").getAsString();
                 person.setBirthdate(dateString);
-
             }
             logger.info("Fin chargement medicalRecords");
         }
