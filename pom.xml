@@ -86,8 +86,6 @@
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
@@ -98,7 +96,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
-
 	</dependencies>
 
 
@@ -221,6 +218,7 @@
 					<excludes>
 						<exclude>com/SafetyNet/Safety/SafetyApplication.class</exclude>
 						<exclude>com/SafetyNet/Safety/util/JacksonConfiguration.class</exclude>
+						<exclude>com/SafetyNet/Safety/util/HttpTraceActuatorConfiguration.class</exclude>
 						<exclude>com/SafetyNet/Safety/util/exceptions/*</exclude>
 					</excludes>
 				</configuration>
