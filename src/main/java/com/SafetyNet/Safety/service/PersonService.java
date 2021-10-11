@@ -3,8 +3,6 @@ package com.SafetyNet.Safety.service;
 import com.SafetyNet.Safety.model.FireStation;
 import com.SafetyNet.Safety.model.Person;
 import com.SafetyNet.Safety.util.Filtre;
-import com.SafetyNet.Safety.util.exceptions.PersonIntrouvableException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,8 +48,8 @@ public class PersonService {
         }
     }
 
-    public boolean personUpdate(Person person) {
 
+    public boolean personUpdate(Person person) {
         Optional<Person> user = personsList.stream().filter(p -> person.getLastName().equals(p.getLastName()) && person.getFirstName().equals(p.getFirstName())).findAny();
         if (user.isPresent()) {
             if (person.getBirthdate()!=null){
@@ -83,6 +81,41 @@ public class PersonService {
             logger.error("Update impossible");
             return false;
         }
+    }
+
+
+    public boolean personMedicalDelete(String firstName,String lastName){
+        Person user = findByFirstNameLastName(firstName,lastName);
+        if(user!= null){
+            user.setMedical(null);
+            user.setAllergies(null);
+            user.setBirthdate(null);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean personMedicalPost(Person person){
+        Optional<Person> user = personsList.stream().filter(p -> person.getLastName().equals(p.getLastName()) && person.getFirstName().equals(p.getFirstName())).findAny();
+
+        if(user != null && user.get().getMedical() ==null && user.get().getAllergies()==null && user.get().getBirthdate()==null){
+            user.get().setMedical(person.getMedical());
+            user.get().setAllergies(person.getAllergies());
+            user.get().setBirthdate(person.getBirthdate());
+            return true;
+        }
+        return false;
+    }
+
+    public boolean personMedicalPut(Person person){
+        Person user = findByFirstNameLastName(person.getFirstName(),person.getLastName());
+        if(user != null){
+            user.setMedical(person.getMedical());
+            user.setAllergies(person.getAllergies());
+            user.setBirthdate(person.getBirthdate());
+            return true;
+        }
+        return false;
     }
 
     public List<Person> findAll() {
@@ -134,7 +167,7 @@ public class PersonService {
      @return doit retourner une liste d'enfants (tout individu âgé de 18 ans ou moins) habitant à cette adresse.
      */
     public String childAlert(String address)  {
-        List<Person> child = personsList.stream().filter(person -> !person.isAdult() && person.getAddress().equals(address)).collect(Collectors.toList());
+        List<Person> child = personsList.stream().filter(person -> person.isAdult()!= null && !person.isAdult() && person.getAddress().equals(address)).collect(Collectors.toList());
         if(child.isEmpty()){
             return null;
         }else {
@@ -160,9 +193,11 @@ public class PersonService {
 
         if (personFirestation.size() != 0) {
             for (Person pers : personFirestation) {
-                if (pers.isAdult()) {
+                if (pers.isAdult() ==null) {
+                    logger.info(pers.getFirstName()+ " "+ pers.getLastName() + "ne possède pas de date de naissance");
+                } else if (pers.isAdult()) {
                     adulte.getAndIncrement();
-                } else {
+                }else{
                     child.getAndIncrement();
                 }
             }
@@ -270,7 +305,11 @@ public class PersonService {
                 resultStream = personsList.stream()
                         .filter(person -> firestation.getAddress().contains(person.getAddress()))
                         .collect(Collectors.toList());
-                result.add("Utilisateur" + firestation.getStation(), filtre.filtreAllExceptListPerson(resultStream, "lastName", "firstName", "phone", "birthdate").get("value"));
+                if (resultStream.size()!=0) {
+                    result.add("Utilisateur " + firestation.getStation(), filtre.filtreAllExceptListPerson(resultStream, "lastName", "firstName", "phone", "birthdate").get("value"));
+                }else {
+                    return null;
+                }
             }
         }
         return result.toString();
