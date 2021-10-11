@@ -92,6 +92,7 @@ class FireStationServiceTest {
         assertThat(result).isTrue();
     }
 
+
     @Test
     void testAddAddress() {
         // Setup

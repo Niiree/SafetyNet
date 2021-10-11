@@ -2,7 +2,7 @@ package com.SafetyNet.Safety.service;
 
 import com.SafetyNet.Safety.model.FireStation;
 import com.SafetyNet.Safety.model.Person;
-import com.SafetyNet.Safety.util.Filtre;
+import com.SafetyNet.Safety.util.config.Filtre;
 import com.google.gson.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

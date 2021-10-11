@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -135,6 +134,7 @@ class PersonControllerTest {
         assertEquals(messageFalse, response.getContentAsString());
     }
 
+
     @Test
     void testChildAlert() throws Exception {
         // Setup
@@ -219,4 +219,5 @@ class PersonControllerTest {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals("result", response.getContentAsString());
     }
+
 }
