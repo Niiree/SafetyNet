@@ -95,8 +95,9 @@ public class ImportData {
   Chargement des Persons
   */
     private void loadPersons(JsonElement persons) {
-        if (persons.isJsonNull()){
-            logger.error("Aucune donnée n'est trouvée");
+        if ( persons == null || persons.isJsonNull()){
+            logger.error("Aucune donnée n'est trouvée pour Persons lors du chargement des informations");
+
         }else{
             JsonArray personsArray = persons.getAsJsonArray();
             for (JsonElement jsonPerson : personsArray
@@ -112,8 +113,8 @@ public class ImportData {
      Chargement des FireStations
      */
     private void loadFireStations(JsonElement fireStations) {
-        if (fireStations.isJsonNull()){
-            logger.error("Aucune donnée n'est trouvée");
+        if (fireStations == null || fireStations.isJsonNull()){
+            logger.error("Aucune donnée n'est trouvée pour Firestations lors du chargement des informations");
         }else {
             JsonArray firestationArray = fireStations.getAsJsonArray();
             for (JsonElement jsonFireStation : firestationArray
@@ -142,8 +143,8 @@ public class ImportData {
      Chargement des medicalRecords dans chaque Person
      */
     private void loadMedicalRecords(JsonElement medicalRecords)  {
-        if (medicalRecords.isJsonNull()){
-
+        if (medicalRecords ==null||medicalRecords.isJsonNull()){
+            logger.error("Aucune donnée n'est trouvée pour MedicalsRecords lors du chargement des informations");
         }else{
             JsonArray medicalRecordsArray = medicalRecords.getAsJsonArray();
             for (JsonElement jsonMedicalRecord : medicalRecordsArray
