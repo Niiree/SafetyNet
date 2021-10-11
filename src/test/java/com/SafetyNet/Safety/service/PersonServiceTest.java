@@ -338,7 +338,6 @@ class PersonServiceTest {
 
     @Test
     void testFloodNull() {
-
         FireStation fireStation = new FireStation();
         fireStation.setStation(0);
         fireStation.setAddress(Arrays.asList("Address"));
