@@ -34,6 +34,10 @@ public class PersonService {
     public boolean personSave(Person person) {
         if (person != null) {
             if(person.getFirstName()!=null && person.getLastName()!=null){
+                //Vérification de doublon
+                if(personsList.stream().filter(person1 -> person1.getLastName().equals(person.getLastName()) && person1.getFirstName().equals(person.getFirstName())).count()!=0){
+                    return false;
+                }
                 personsList.add(person);
                 return true;
             }
