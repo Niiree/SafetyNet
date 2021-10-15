@@ -37,9 +37,10 @@ public class PersonService {
                 //Vérification de doublon
                 if(personsList.stream().filter(person1 -> person1.getLastName().equals(person.getLastName()) && person1.getFirstName().equals(person.getFirstName())).count()!=0){
                     return false;
-                }
+                }else{
                 personsList.add(person);
                 return true;
+                }
             }
         }
         logger.error("Sauvegarde de la person impossible");
@@ -48,7 +49,6 @@ public class PersonService {
 
     /**
      * Delete Person
-     * @param Person
      * @return true ou false
      */
     public boolean personDelete(String firstName, String lastName) {
@@ -107,7 +107,7 @@ public class PersonService {
      */
     public boolean personMedicalDelete(String firstName,String lastName){
         Person user = findByFirstNameLastName(firstName,lastName);
-        if(user!= null){
+        if(user.getMedical()!= null || user.getBirthdate()!=null || user.getAllergies()!=null){
             user.setMedical(null);
             user.setAllergies(null);
             user.setBirthdate(null);

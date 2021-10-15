@@ -41,8 +41,14 @@ public class FireStationService {
      * @return true
      **/
     public boolean save(FireStation fireStation) {
+
+        if( listFirestations.stream().filter(fireStation1 -> fireStation1.getStation()==(fireStation.getStation()) && fireStation1.getAddress().equals(fireStation.getAddress())).count()!=0){
+            logger.error("Impossible de sauvegarder la firestation");
+            return false;
+        }else{
         listFirestations.add(fireStation);
         return true;
+    }
     }
 
     /**
@@ -50,8 +56,8 @@ public class FireStationService {
      * @Param firestation
      **/
     public boolean remove(FireStation fireStation) {
-        Optional<FireStation> resultFirestation = listFirestations.stream().filter(fireStation1 -> fireStation == fireStation1).findAny();
-        if (resultFirestation == null) {
+        Optional<FireStation> resultFirestation = listFirestations.stream().filter(fireStation1 -> fireStation1.getStation()==fireStation.getStation()).findAny();
+        if (!resultFirestation.isPresent()) {
             logger.error("Erreur sur la suppresion de la firestation");
             return false;
         } else {
