@@ -9,11 +9,10 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Service
@@ -206,13 +205,26 @@ public class PersonService {
      */
     public String childAlert(String address)  {
         List<Person> child = personsList.stream().filter(person -> person.isAdult()!= null && !person.isAdult() && person.getAddress().equals(address)).collect(Collectors.toList());
+        Set<String> item = new HashSet<>();
+         child.stream().filter(n -> !item.add(n.getAddress())).collect(Collectors.toSet());
+
         if(child.isEmpty()){
             return null;
         }else {
             JsonObject result = new JsonObject();
-            JsonObject jsonObject = filtre.filtreAllExceptListPerson(child, "address", "email", "city", "zip", "allergies", "birthdate", "zip", "medical", "adult");
+            AtomicInteger incremt = new AtomicInteger();
+            for(String addresss : item){
+                incremt.getAndIncrement();
 
-            result.add("Person", jsonObject.get("value"));
+
+                List<Person> resultPerChild = personsList.stream().filter(person -> person.getAddress().equals(addresss)).collect(Collectors.toList());
+                JsonObject json = filtre.filtreAllExceptListPerson(resultPerChild, "firstName","lastName", "city", "zip", "address","birthdate");
+
+                result.add("Foyer "+incremt.get(),json.get("value"));
+            }
+     //       JsonObject jsonObject = filtre.filtreAllExceptListPerson(child, "firstName","lastName", "city", "zip", "address","birthdate");
+
+ //           result.add("Person", jsonObject.get("value"));
             return result.toString();
         }
     }
