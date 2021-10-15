@@ -278,7 +278,10 @@ public class PersonService {
 
                 List<String> listPhone = new ArrayList<>();
                 for (Person per : personList) {
-                    listPhone.add(per.getPhone());
+                    if(!listPhone.contains(per.getPhone())){
+                        listPhone.add(per.getPhone());
+                    }
+                   
                 }
                 Gson gson = new Gson();
                 JsonParser jsonParser = new JsonParser();
