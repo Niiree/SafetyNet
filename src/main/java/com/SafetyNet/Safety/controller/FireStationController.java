@@ -41,7 +41,7 @@ public class FireStationController  {
      */
     @PutMapping(value = "/firestation/{id}")
     public ResponseEntity<?> firestationPut(@RequestBody FireStation firestation, @PathVariable int id)  {
-        logger.info("Put /Firestation with param id ");
+        logger.info("Put /Firestation with param id " + id);
         return builderResponse.responseBoolean(fireStationService.update(firestation,id));}
 
     /*
@@ -64,6 +64,7 @@ public class FireStationController  {
      */
     @GetMapping(value = "/firestation", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> firestation(@RequestParam int stationNumber)  {
+        logger.info("get /firestation?stationNumber with param "+stationNumber);
         return builderResponse.customResponse(personService.personByFirestation(fireStationService.findById(stationNumber))); }
 
 
@@ -73,6 +74,7 @@ public class FireStationController  {
      */
     @GetMapping(value = "/fire", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> fire(@RequestParam String address)   {
+        logger.info("get /fire?address= " +address);
         return  builderResponse.customResponse(personService.fire(address)); }
 
     /**
@@ -81,6 +83,7 @@ public class FireStationController  {
      */
     @GetMapping(value = "/flood/stations", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> flood(@RequestParam List<Integer> station_number)   {
+        logger.info("get /flood/stations?list<int> = " +station_number);
         return builderResponse.customResponse(personService.flood(station_number)); }
 
 }
