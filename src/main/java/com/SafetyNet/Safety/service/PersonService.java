@@ -9,11 +9,10 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Service
@@ -35,8 +34,13 @@ public class PersonService {
     public boolean personSave(Person person) {
         if (person != null) {
             if(person.getFirstName()!=null && person.getLastName()!=null){
+                //Vérification de doublon
+                if(personsList.stream().filter(person1 -> person1.getLastName().equals(person.getLastName()) && person1.getFirstName().equals(person.getFirstName())).count()!=0){
+                    return false;
+                }else{
                 personsList.add(person);
                 return true;
+                }
             }
         }
         logger.error("Sauvegarde de la person impossible");
@@ -45,7 +49,6 @@ public class PersonService {
 
     /**
      * Delete Person
-     * @param Person
      * @return true ou false
      */
     public boolean personDelete(String firstName, String lastName) {
@@ -54,7 +57,7 @@ public class PersonService {
             return true;
         } else {
             logger.error("Impossible de supprimer "+firstName +" "+ lastName);
-           return false;
+            return false;
         }
     }
 
@@ -104,7 +107,11 @@ public class PersonService {
      */
     public boolean personMedicalDelete(String firstName,String lastName){
         Person user = findByFirstNameLastName(firstName,lastName);
-        if(user!= null){
+        if (user == null){
+            logger.error("L'utilisateur suivante n'existe pas : "+ firstName + " "+lastName);
+            return false;
+        }
+        if(user.getMedical()!= null || user.getBirthdate()!=null || user.getAllergies()!=null){
             user.setMedical(null);
             user.setAllergies(null);
             user.setBirthdate(null);
@@ -176,7 +183,7 @@ public class PersonService {
     /**
      @param    Ville
      @return   Retourne une liste d'email en fonction de la ville
-    */
+     */
     public List<String> emailByCity(String city) {
         return personsList.stream().filter(user -> city.equals(user.getCity()))
                 .map(Person::getEmail)
@@ -184,9 +191,9 @@ public class PersonService {
     }
 
     /**
-    * personInfo?firstName=<firstName>&lastName=<lastName>
-    @param  Name
-    @return Cette url doit retourner le nom, l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments,posologie, allergies) de chaque habitant. Si plusieurs personnes portent le même nom, elles doivent toutes apparaître.
+     * personInfo?firstName=<firstName>&lastName=<lastName>
+     @param  Name
+     @return Cette url doit retourner le nom, l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments,posologie, allergies) de chaque habitant. Si plusieurs personnes portent le même nom, elles doivent toutes apparaître.
      */
     public String personByName(String firstName, String lastName) {
         List<Person> personlist = personsList.stream().filter(person -> lastName.equals(person.getLastName()) & firstName.equals(person.getFirstName())).collect(Collectors.toList());
@@ -200,28 +207,41 @@ public class PersonService {
     }
 
     /**
-    * childAlert?address=<address>
+     * childAlert?address=<address>
      @param (String Address)
      @return doit retourner une liste d'enfants (tout individu âgé de 18 ans ou moins) habitant à cette adresse.
      */
     public String childAlert(String address)  {
         List<Person> child = personsList.stream().filter(person -> person.isAdult()!= null && !person.isAdult() && person.getAddress().equals(address)).collect(Collectors.toList());
+        Set<String> item = new HashSet<>();
+        child.stream().filter(n -> !item.add(n.getAddress())).collect(Collectors.toSet());
+
         if(child.isEmpty()){
             return null;
         }else {
             JsonObject result = new JsonObject();
-            JsonObject jsonObject = filtre.filtreAllExceptListPerson(child, "address", "email", "city", "zip", "allergies", "birthdate", "zip", "medical", "adult");
+            AtomicInteger incremt = new AtomicInteger();
+            for(String addresss : item){
+                incremt.getAndIncrement();
 
-            result.add("Person", jsonObject.get("value"));
+
+                List<Person> resultPerChild = personsList.stream().filter(person -> person.getAddress().equals(addresss)).collect(Collectors.toList());
+                JsonObject json = filtre.filtreAllExceptListPerson(resultPerChild, "firstName","lastName", "city", "zip", "address","birthdate");
+
+                result.add("Foyer "+incremt.get(),json.get("value"));
+            }
+            //       JsonObject jsonObject = filtre.filtreAllExceptListPerson(child, "firstName","lastName", "city", "zip", "address","birthdate");
+
+            //           result.add("Person", jsonObject.get("value"));
             return result.toString();
         }
     }
 
     /**
-    * firestation?stationNumber=<station_number>
-    @param Firestation
-    @return Json d'une liste de person trié en fonction de l'adresse de la firestation
-    */
+     * firestation?stationNumber=<station_number>
+     @param Firestation
+     @return Json d'une liste de person trié en fonction de l'adresse de la firestation
+     */
     public String personByFirestation(FireStation firestation) {
         AtomicInteger adulte = new AtomicInteger();
         AtomicInteger child = new AtomicInteger();
@@ -252,10 +272,10 @@ public class PersonService {
     }
 
     /**
-    * phoneAlert?firestation=<firestation_number>
-    @param Firestation
-    @return doit retourner une liste des numéros de téléphone des résidents desservis par la caserne de pompiers
-    */
+     * phoneAlert?firestation=<firestation_number>
+     @param Firestation
+     @return doit retourner une liste des numéros de téléphone des résidents desservis par la caserne de pompiers
+     */
     public String phoneAlert(FireStation firestation) {
         JsonObject result = new JsonObject();
         if (firestation != null) {
@@ -266,7 +286,10 @@ public class PersonService {
 
                 List<String> listPhone = new ArrayList<>();
                 for (Person per : personList) {
-                    listPhone.add(per.getPhone());
+                    if(!listPhone.contains(per.getPhone())){
+                        listPhone.add(per.getPhone());
+                    }
+
                 }
                 Gson gson = new Gson();
                 JsonParser jsonParser = new JsonParser();
@@ -283,9 +306,9 @@ public class PersonService {
     }
 
     /**
-    * CommunityEmail?city=<city>
-    @param String City
-    @return Cette url doit retourner les adresses mail de tous les habitants de la ville.
+     * CommunityEmail?city=<city>
+     @param String City
+     @return Cette url doit retourner les adresses mail de tous les habitants de la ville.
      */
     public List<String> communityEmail(String city) {
 
@@ -294,18 +317,20 @@ public class PersonService {
         if (personList.size() != 0) {
             for (Person person : personList
             ) {
-                listEmail.add(person.getEmail());
+                if(!listEmail.contains(person.getEmail())){
+                    listEmail.add(person.getEmail());
+                }
             }
             return listEmail;
         } else {
-           return null;
+            return null;
         }
     }
 
     /**
-    * fire?address=<address>
-    @param String address
-    @return La liste doit inclure le nom, le numéro de téléphone, l'âge et les antécédents médicaux (médicaments, posologie et allergies) de chaque personne.
+     * fire?address=<address>
+     @param String address
+     @return La liste doit inclure le nom, le numéro de téléphone, l'âge et les antécédents médicaux (médicaments, posologie et allergies) de chaque personne.
      */
     public String fire(String address)  {
         List<Person> personList = personsList.stream().filter(person -> person.getAddress().equals(address)).collect(Collectors.toList());
@@ -321,10 +346,10 @@ public class PersonService {
     }
 
     /**
-    * flood/stations?stations=<a list of station_numbers>
-    @param Liste ID des Firestations
-    @return une liste de tous les foyers desservis par la caserne. Cette liste doit regrouper les personnes par adresse.
-    */
+     * flood/stations?stations=<a list of station_numbers>
+     @param Liste ID des Firestations
+     @return une liste de tous les foyers desservis par la caserne. Cette liste doit regrouper les personnes par adresse.
+     */
     public String flood(List<Integer> station_number)  {
         List<FireStation> fireStationList = new ArrayList<>();
         for (int id : station_number) {
