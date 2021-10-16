@@ -96,7 +96,7 @@ public class FireStationService {
             fire.setAddress(fireStations.getAddress());
             return true;
         } else {
-            logger.error("Update impossible sur la station" + fire.getStation());
+            logger.error("Update impossible sur la station " + fireStations.getStation());
             return false;
         }
     }
