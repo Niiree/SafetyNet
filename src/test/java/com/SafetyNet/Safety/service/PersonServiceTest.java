@@ -267,7 +267,7 @@ class PersonServiceTest {
          String result = personServiceUnderTest.childAlert("Address9");
 
         // Verify the results
-        assertThat(result).isEqualTo("{\"Person\":[{\"address\":\"Address9\",\"city\":\"city9\",\"zip\":\"zip\",\"email\":\"test@gmail.com\",\"birthdate\":\"21/09/2021\",\"allergies\":[\"nuts\"],\"medical\":[\"none\"],\"adult\":false}]}");
+        assertThat(result).isEqualTo("{\"Foyer 1\":[{\"firstName\":\"User3\",\"lastName\":\"User3\",\"address\":\"Address9\",\"city\":\"city9\",\"zip\":\"zip\",\"birthdate\":\"21/09/2021\"}]}");
     }
 
     @Test
