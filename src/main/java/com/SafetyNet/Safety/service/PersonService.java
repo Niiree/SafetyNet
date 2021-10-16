@@ -107,6 +107,10 @@ public class PersonService {
      */
     public boolean personMedicalDelete(String firstName,String lastName){
         Person user = findByFirstNameLastName(firstName,lastName);
+        if (user == null){
+            logger.error("L'utilisateur suivante n'existe pas : "+ firstName + " "+lastName);
+            return false;
+        }
         if(user.getMedical()!= null || user.getBirthdate()!=null || user.getAllergies()!=null){
             user.setMedical(null);
             user.setAllergies(null);
